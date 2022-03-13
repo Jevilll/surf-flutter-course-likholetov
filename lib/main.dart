@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const App());
+}
+
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Заголовок',
+      home: MyFirstStatefulWidget(),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -24,6 +36,9 @@ class MyFirstStatelessWidget extends StatelessWidget {
   MyFirstStatelessWidget({Key? key}) : super(key: key);
 
   int _counter = 0;
+
+  //Type getRuntimeType() => context.runtimeType;
+  //Error: The getter 'context' isn't defined for the class 'MyFirstStatelessWidget'.
 
   @override
   Widget build(BuildContext context) {
@@ -54,4 +69,6 @@ class _MyFirstStatefulWidgetState extends State<MyFirstStatefulWidget> {
       ),
     );
   }
+
+  Type getRuntimeType() => context.runtimeType;
 }
