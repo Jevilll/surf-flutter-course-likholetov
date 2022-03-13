@@ -30,13 +30,13 @@ flutter:
   fonts:
     - family: Roboto
       fonts:
-        - asset: fonts/Roboto-Regular.ttf
+        - asset: fonts/Roboto/Roboto-Regular.ttf
           style: normal
-        - asset: fonts/Roboto-Italic.ttf
+        - asset: fonts/Roboto/Roboto-Italic.ttf
           style: italic
-        - asset: fonts/Roboto-Bold.ttf
+        - asset: fonts/Roboto/Roboto-Bold.ttf
           style: normal
           weight: 700
-        - asset: fonts/Roboto-Light.ttf
+        - asset: fonts/Roboto/Roboto-Light.ttf
           style: normal
           weight: 300
