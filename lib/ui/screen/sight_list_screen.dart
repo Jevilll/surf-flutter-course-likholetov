@@ -13,13 +13,20 @@ class _SightListScreenState extends State<SightListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Список\nинтересных мест',
-          style: TextStyle(
-            fontFamily: 'Roboto',
-            color: Color(0xFF252849),
-            fontSize: 32,
-            fontWeight: FontWeight.w700,
+        title: RichText(
+          text: const TextSpan(
+            style: TextStyle(
+              fontFamily: 'Roboto',
+              color: Color(0xFF252849),
+              fontSize: 32,
+              fontWeight: FontWeight.w700,
+            ),
+            children: [
+              TextSpan(text: 'С', style: TextStyle(color: Colors.green),),
+              TextSpan(text: 'писок\n'),
+              TextSpan(text: 'и', style: TextStyle(color: Colors.yellow),),
+              TextSpan(text: 'нтересных мест'),
+            ],
           ),
           textAlign: TextAlign.left,
           maxLines: 2,
