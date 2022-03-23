@@ -107,7 +107,7 @@ packages:
     source: hosted
     version: "1.0.4"
   dart_code_metrics:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: dart_code_metrics
       url: "https://pub.dartlang.org"
@@ -140,7 +140,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_lints:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: flutter_lints
       url: "https://pub.dartlang.org"
