@@ -1,9 +1,11 @@
 import 'package:places/res/strings.dart';
+
 /// Модель данных достопримечательности.
 class Sight {
   String name;
   double lat;
   double long;
+  String shortDescription;
   String details;
   Type type;
 
@@ -11,6 +13,7 @@ class Sight {
     this.name, {
     this.lat = 0,
     this.long = 0,
+    this.shortDescription = '',
     this.details = '',
     this.type = Type.other,
   });
