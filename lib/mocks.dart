@@ -3,7 +3,7 @@ import 'package:places/domain/sight.dart';
 final List<Sight> mocks = [bronzeHorseman, timesSquare, lakeBaikal];
 
 final bronzeHorseman = Sight(
-  'Bronze Horseman',
+  'Бронзовый всадник',
   lat: 59.9363823,
   long: 30.3022308,
   details: 'Памятник Петру I на Сенатской площади в Санкт-Петербурге',
