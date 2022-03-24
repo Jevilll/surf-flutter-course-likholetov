@@ -1,3 +1,4 @@
+import 'package:places/res/strings.dart';
 /// Модель данных достопримечательности.
 class Sight {
   String name;
@@ -22,4 +23,21 @@ enum Type {
   lake,
   bridge,
   other,
+}
+
+extension TypeName on Type {
+  String get name {
+    switch (this) {
+      case Type.monument:
+        return monument;
+      case Type.square:
+        return square;
+      case Type.lake:
+        return lake;
+      case Type.bridge:
+        return bridge;
+      case Type.other:
+        return other;
+    }
+  }
 }

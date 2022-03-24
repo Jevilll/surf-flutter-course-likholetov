@@ -27,7 +27,7 @@ class SightCard extends StatelessWidget {
                   left: 16,
                   top: 16,
                   child: Text(
-                    sight.name,
+                    sight.type.name,
                     style: smallBold,
                   ),
                 ),
@@ -50,7 +50,7 @@ class SightCard extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      sight.details,
+                      sight.name,
                       maxLines: 2,
                       style: text,
                       textAlign: TextAlign.start,
