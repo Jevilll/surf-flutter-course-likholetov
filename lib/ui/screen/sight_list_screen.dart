@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:places/mocks.dart';
+import 'package:places/res/strings.dart';
+import 'package:places/ui/screen/sight_card.dart';
 
 /// Экран списка достопримечательностей.
 class SightListScreen extends StatefulWidget {
@@ -13,20 +16,13 @@ class _SightListScreenState extends State<SightListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: RichText(
-          text: const TextSpan(
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              color: Color(0xFF252849),
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-            ),
-            children: [
-              TextSpan(text: 'С', style: TextStyle(color: Colors.green),),
-              TextSpan(text: 'писок\n'),
-              TextSpan(text: 'и', style: TextStyle(color: Colors.yellow),),
-              TextSpan(text: 'нтересных мест'),
-            ],
+        title: const Text(
+          appName,
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            color: Color(0xFF252849),
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
           ),
           textAlign: TextAlign.left,
           maxLines: 2,
@@ -35,6 +31,15 @@ class _SightListScreenState extends State<SightListScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 100,
+      ),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        physics: const BouncingScrollPhysics(),
+        itemCount: mocks.length,
+        separatorBuilder: (context, index) => const SizedBox(
+          height: 16,
+        ),
+        itemBuilder: (context, index) => SightCard(mocks[index]),
       ),
     );
   }
