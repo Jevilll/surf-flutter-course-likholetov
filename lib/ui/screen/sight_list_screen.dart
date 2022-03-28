@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/mocks.dart';
-import 'package:places/res/strings.dart';
+import 'package:places/res/app_strings.dart';
 import 'package:places/ui/screen/sight_card.dart';
 
 /// Экран списка достопримечательностей.
@@ -17,7 +17,7 @@ class _SightListScreenState extends State<SightListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          appName,
+          AppStrings.appName,
           style: TextStyle(
             fontFamily: 'Roboto',
             color: Color(0xFF252849),

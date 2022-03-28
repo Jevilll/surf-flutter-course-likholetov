@@ -1,4 +1,4 @@
-import 'package:places/res/strings.dart';
+import 'package:places/res/app_strings.dart';
 
 /// Модель данных достопримечательности.
 class Sight {
@@ -32,15 +32,15 @@ extension TypeName on Type {
   String get name {
     switch (this) {
       case Type.monument:
-        return monument;
+        return AppStrings.monument;
       case Type.square:
-        return square;
+        return AppStrings.square;
       case Type.lake:
-        return lake;
+        return AppStrings.lake;
       case Type.bridge:
-        return bridge;
+        return AppStrings.bridge;
       case Type.other:
-        return other;
+        return AppStrings.other;
     }
   }
 }

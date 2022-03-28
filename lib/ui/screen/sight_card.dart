@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:places/domain/sight.dart';
-import 'package:places/res/colors.dart';
-import 'package:places/res/strings.dart';
-import 'package:places/res/styles.dart';
+import 'package:places/res/app_colors.dart';
+import 'package:places/res/app_strings.dart';
+import 'package:places/res/app_text_styles.dart';
 
 /// Виджет карточки достопримечательности.
 class SightCard extends StatelessWidget {
@@ -28,7 +28,7 @@ class SightCard extends StatelessWidget {
                   top: 16,
                   child: Text(
                     sight.type.name,
-                    style: smallBold,
+                    style: AppTextStyles.smallBold,
                   ),
                 ),
                 const Positioned(
@@ -40,7 +40,7 @@ class SightCard extends StatelessWidget {
             ),
           ),
           Container(
-            color: background,
+            color: AppColors.background,
             height: 92,
             width: double.infinity,
             child: Padding(
@@ -50,9 +50,9 @@ class SightCard extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      sight.name,
+                      sight.shortDescription,
                       maxLines: 2,
-                      style: text,
+                      style: AppTextStyles.text,
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -61,9 +61,9 @@ class SightCard extends StatelessWidget {
                     margin: const EdgeInsets.only(top: 2),
                     width: double.infinity,
                     child: const Text(
-                      shortDescription,
+                      AppStrings.shortDescription,
                       textAlign: TextAlign.left,
-                      style: small,
+                      style: AppTextStyles.small,
                     ),
                   ),
                 ],
