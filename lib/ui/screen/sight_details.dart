@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/app_colors.dart';
+import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_text_styles.dart';
 
 /// Экран детализиции достопримечательности.
@@ -43,7 +44,7 @@ class SightDetails extends StatelessWidget {
                   width: 16,
                 ),
                 const Text(
-                  'закрыто до 09:00', // todo заглушка для дизайна
+                  'закрыто до 09:00', // TODO(Jevil): заглушка для дизайна
                   style: AppTextStyles.small,
                 ),
               ],
@@ -81,8 +82,8 @@ class SightDetails extends StatelessWidget {
             width: double.infinity,
             child: Row(
               children: const [
-                ButtonWithText('Запланировать'),
-                ButtonWithText('В избранное'),
+                ButtonWithText(AppStrings.toSchedule),
+                ButtonWithText(AppStrings.toFavorites),
               ],
             ),
           ),

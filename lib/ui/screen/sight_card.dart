@@ -41,14 +41,13 @@ class SightCard extends StatelessWidget {
                 ],
               ),
             ),
-            // todo академическая вставка, убрать в дальнейшем
             const SizedBox(width: double.infinity, height: 16,),
             Expanded(
               child: Container(
                 color: AppColors.background,
                 width: double.infinity,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
                       SizedBox(

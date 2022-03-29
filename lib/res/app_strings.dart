@@ -7,4 +7,6 @@ abstract class AppStrings {
   static const String bridge = 'мост';
   static const String other = 'другое';
   static const String buildARoute = 'построить маршрут';
+  static const String toSchedule = 'Запланировать';
+  static const String toFavorites = 'В избранное';
 }
