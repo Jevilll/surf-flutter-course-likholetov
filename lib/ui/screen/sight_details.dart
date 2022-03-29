@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:places/domain/sight.dart';
-import 'package:places/res/colors.dart';
-import 'package:places/res/styles.dart';
+import 'package:places/res/app_colors.dart';
+import 'package:places/res/app_strings.dart';
+import 'package:places/res/app_text_styles.dart';
 
+/// Экран детализиции достопримечательности.
 class SightDetails extends StatelessWidget {
   final Sight sight;
 
@@ -25,7 +27,7 @@ class SightDetails extends StatelessWidget {
             width: double.infinity,
             child: Text(
               sight.name,
-              style: title,
+              style: AppTextStyles.title,
             ),
           ),
           Container(
@@ -36,14 +38,14 @@ class SightDetails extends StatelessWidget {
               children: [
                 Text(
                   sight.type.name,
-                  style: text,
+                  style: AppTextStyles.text,
                 ),
                 const SizedBox(
                   width: 16,
                 ),
                 const Text(
-                  'закрыто до 09:00', // todo заглушка для дизайна
-                  style: small,
+                  'закрыто до 09:00', // TODO(Jevil): заглушка для дизайна
+                  style: AppTextStyles.small,
                 ),
               ],
             ),
@@ -52,7 +54,7 @@ class SightDetails extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
             child: Text(
               sight.details,
-              style: small,
+              style: AppTextStyles.small,
             ),
           ),
           Container(
@@ -60,7 +62,7 @@ class SightDetails extends StatelessWidget {
             height: 48,
             width: double.infinity,
             decoration: const BoxDecoration(
-              color: whiteGreen,
+              color: AppColors.whiteGreen,
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             child: const Center(
@@ -73,36 +75,15 @@ class SightDetails extends StatelessWidget {
             margin: const EdgeInsets.only(left: 16, top: 24, right: 16),
             height: 1,
             width: double.infinity,
-            color: whiteInactiveBlack,
+            color: AppColors.whiteInactiveBlack,
           ),
           Container(
             margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
             width: double.infinity,
             child: Row(
-              children: [
-                Flexible(
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                        left: 16, top: 8, right: 16, bottom: 16,),
-                    width: double.infinity,
-                    child: const Center(
-                      child: Text('Запланировать', textAlign: TextAlign.center),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                        left: 16, top: 8, right: 16, bottom: 16,),
-                    width: double.infinity,
-                    child: const Center(
-                      child: Text(
-                        'В избранное',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
+              children: const [
+                ButtonWithText(AppStrings.toSchedule),
+                ButtonWithText(AppStrings.toFavorites),
               ],
             ),
           ),
@@ -111,3 +92,27 @@ class SightDetails extends StatelessWidget {
     );
   }
 }
+
+/// Заглушка в виде кнопки с текстом.
+class ButtonWithText extends StatelessWidget {
+  final String text;
+  const ButtonWithText(this.text, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Container(
+        margin: const EdgeInsets.only(
+          left: 16, top: 8, right: 16, bottom: 16,),
+        width: double.infinity,
+        child: Center(
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
