@@ -15,11 +15,30 @@ class SightDetails extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            color: Colors.amber,
-            child: const SizedBox(
-              height: 360,
-              width: double.infinity,
+          SizedBox(
+            height: 360,
+            width: double.infinity,
+            child: Image.network(
+              sight.image,
+              fit: BoxFit.cover,
+              loadingBuilder: (
+                  context,
+                  child,
+                  loadingProgress,
+                  ) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
             ),
           ),
           Container(

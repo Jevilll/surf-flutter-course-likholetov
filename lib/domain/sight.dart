@@ -8,6 +8,7 @@ class Sight {
   String shortDescription;
   String details;
   Type type;
+  String image;
 
   Sight(
     this.name, {
@@ -16,6 +17,7 @@ class Sight {
     this.shortDescription = '',
     this.details = '',
     this.type = Type.other,
+    this.image = '',
   });
 }
 
