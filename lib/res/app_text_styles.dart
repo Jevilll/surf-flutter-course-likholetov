@@ -7,6 +7,7 @@ abstract class AppTextStyles {
     fontWeight: FontWeight.w700,
     fontFamily: 'Roboto',
     fontStyle: FontStyle.normal,
+    color: AppColors.blackMain,
   );
 
   static const title = TextStyle(
@@ -14,6 +15,7 @@ abstract class AppTextStyles {
     fontWeight: FontWeight.w700,
     fontFamily: 'Roboto',
     fontStyle: FontStyle.normal,
+    color: AppColors.whiteMain,
   );
 
   static const subtitle = TextStyle(
@@ -21,6 +23,7 @@ abstract class AppTextStyles {
     fontWeight: FontWeight.w500,
     fontFamily: 'Roboto',
     fontStyle: FontStyle.normal,
+    color: AppColors.whiteMain,
   );
 
   static const text = TextStyle(
@@ -39,12 +42,20 @@ abstract class AppTextStyles {
     color: AppColors.white,
   );
 
-  static const small = TextStyle(
+  static const smallSecondary2 = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     fontFamily: 'Roboto',
     fontStyle: FontStyle.normal,
     color: AppColors.whiteSecondary2,
+  );
+
+  static const smallGreen = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    fontFamily: 'Roboto',
+    fontStyle: FontStyle.normal,
+    color: AppColors.whiteGreen,
   );
 
   static const button = TextStyle(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:places/mocks.dart';
 import 'package:places/res/app_sizes.dart';
 import 'package:places/res/app_strings.dart';
+import 'package:places/res/app_text_styles.dart';
 import 'package:places/ui/screen/sight_card.dart';
 
 /// Экран списка достопримечательностей.
@@ -24,7 +25,7 @@ class _SightListScreenState extends State<SightListScreen> {
         separatorBuilder: (context, index) => const SizedBox(
           height: 16,
         ),
-        itemBuilder: (context, index) => SightCard(mocks[index]),
+        itemBuilder: (context, index) => SightCard.interesting(mocks[index]),
       ),
     );
   }
@@ -45,12 +46,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: const Text(
         AppStrings.appName,
-        style: TextStyle(
-          fontFamily: 'Roboto',
-          color: Color(0xFF252849),
-          fontSize: 32,
-          fontWeight: FontWeight.w700,
-        ),
+        style: AppTextStyles.largeTitle,
         textAlign: TextAlign.left,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,

@@ -64,7 +64,7 @@ class SightDetails extends StatelessWidget {
                 ),
                 const Text(
                   'закрыто до 09:00', // TODO(Jevil): заглушка для дизайна
-                  style: AppTextStyles.small,
+                  style: AppTextStyles.smallSecondary2,
                 ),
               ],
             ),
@@ -73,7 +73,7 @@ class SightDetails extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
             child: Text(
               sight.details,
-              style: AppTextStyles.small,
+              style: AppTextStyles.smallSecondary2,
             ),
           ),
           Container(
