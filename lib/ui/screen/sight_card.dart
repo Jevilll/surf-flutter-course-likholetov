@@ -12,17 +12,20 @@ class SightCard extends StatelessWidget {
   const SightCard.interesting(
     this.sight, {
     Key? key,
-  }) : type = CardType.interesting, super(key: key);
+  })  : type = CardType.interesting,
+        super(key: key);
 
   const SightCard.toVisit(
     this.sight, {
     Key? key,
-  }) : type = CardType.toVisit, super(key: key);
+  })  : type = CardType.toVisit,
+        super(key: key);
 
   const SightCard.visited(
     this.sight, {
     Key? key,
-  }) : type = CardType.visited, super(key: key);
+  })  : type = CardType.visited,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -123,45 +126,20 @@ class TimeToVisitText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        late final Widget result;
-
-        if (sight.timeToVisit.isEmpty) return const SizedBox.shrink();
-
-        switch (type) {
-          case CardType.interesting:
-            result = const SizedBox.shrink();
-            break;
-          case CardType.toVisit:
-            result = Container(
-              margin: const EdgeInsets.symmetric(vertical: 2),
-              height: 28,
-              width: double.infinity,
-              child: Text(
-                sight.timeToVisit,
-                style: AppTextStyles.smallGreen,
-                textAlign: TextAlign.left,
-              ),
-            );
-            break;
-          case CardType.visited:
-            result = Container(
-              margin: const EdgeInsets.symmetric(vertical: 2),
-              height: 28,
-              width: double.infinity,
-              child: Text(
-                sight.timeToVisit,
-                style: AppTextStyles.smallSecondary2,
-                textAlign: TextAlign.left,
-              ),
-            );
-            break;
-        }
-
-        return result;
-      },
-    );
+    return sight.timeToVisit.isEmpty
+        ? const SizedBox.shrink()
+        : Container(
+            margin: const EdgeInsets.symmetric(vertical: 2),
+            height: 28,
+            width: double.infinity,
+            child: Text(
+              sight.timeToVisit,
+              style: type == CardType.toVisit
+                  ? AppTextStyles.smallGreen
+                  : AppTextStyles.smallSecondary2,
+              textAlign: TextAlign.left,
+            ),
+          );
   }
 }
 
@@ -178,7 +156,10 @@ class CardButtons extends StatelessWidget {
         late final Widget result;
         switch (type) {
           case CardType.interesting:
-            result = const InterestingButtons();
+            result = const Icon(
+              Icons.favorite_outline,
+              color: AppColors.white,
+            );
             break;
           case CardType.toVisit:
             result = const ToVisitButtons();
@@ -194,16 +175,6 @@ class CardButtons extends StatelessWidget {
   }
 }
 
-/// Кнопки интересных мест.
-class InterestingButtons extends StatelessWidget {
-  const InterestingButtons({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Icon(Icons.favorite_outline, color: AppColors.white,);
-  }
-}
-
 /// Кнопки мест к посящению.
 class ToVisitButtons extends StatelessWidget {
   const ToVisitButtons({Key? key}) : super(key: key);
@@ -212,11 +183,17 @@ class ToVisitButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: const [
-        Icon(Icons.calendar_month, color: AppColors.white,),
+        Icon(
+          Icons.calendar_month,
+          color: AppColors.white,
+        ),
         SizedBox(
           width: 16,
         ),
-        Icon(Icons.close, color: AppColors.white,),
+        Icon(
+          Icons.close,
+          color: AppColors.white,
+        ),
       ],
     );
   }
@@ -230,11 +207,17 @@ class VisitedButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: const [
-        Icon(Icons.share_outlined, color: AppColors.white,),
+        Icon(
+          Icons.share_outlined,
+          color: AppColors.white,
+        ),
         SizedBox(
           width: 16,
         ),
-        Icon(Icons.close, color: AppColors.white,),
+        Icon(
+          Icons.close,
+          color: AppColors.white,
+        ),
       ],
     );
   }
