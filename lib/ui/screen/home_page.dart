@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:places/res/app_colors.dart';
-import 'package:places/ui/screen/foo.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:places/mocks.dart';
+import 'package:places/ui/screen/sight_details.dart';
 import 'package:places/ui/screen/sight_list_screen.dart';
 import 'package:places/ui/screen/visiting_screen.dart';
 
@@ -15,9 +16,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final scenes = [
     const SightListScreen(),
-    const Foo(),
+    SightDetails(mocks[0]),
     const VisitingScreen(),
-    const Foo(),
+    SightDetails(mocks[1]),
   ];
 
   int currentIndex = 0;
@@ -27,32 +28,43 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: scenes[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: AppColors.whiteSecondary,
-        selectedItemColor: AppColors.whiteMain,
-        type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
         onTap: (index) => setState(() => currentIndex = index),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.format_list_bulleted_outlined),
-            label: '',
+        items: [
+          context.navSvgItem(
+            icon: 'assets/icons/list.svg',
+            activeIcon: 'assets/icons/list_full.svg',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map_outlined),
-            label: '',
+          context.navSvgItem(
+            icon: 'assets/icons/map.svg',
+            activeIcon: 'assets/icons/map_full.svg',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_outline),
-            label: '',
+          context.navSvgItem(
+            icon: 'assets/icons/heart.svg',
+            activeIcon: 'assets/icons/heart_full.svg',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            label: '',
+          context.navSvgItem(
+            icon: 'assets/icons/settings.svg',
+            activeIcon: 'assets/icons/settings_full.svg',
           ),
         ],
       ),
+    );
+  }
+}
+
+extension NavigationBarItem on BuildContext {
+  BottomNavigationBarItem navSvgItem({required String icon, required String activeIcon}) {
+    return BottomNavigationBarItem(
+      icon: SvgPicture.asset(
+        icon,
+        color: Theme.of(this).primaryColor,
+      ),
+      activeIcon: SvgPicture.asset(
+        activeIcon,
+        color: Theme.of(this).primaryColor,
+      ),
+      label: '',
     );
   }
 }

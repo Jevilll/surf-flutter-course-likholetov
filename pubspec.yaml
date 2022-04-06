@@ -24,18 +24,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/
-
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: fonts/Roboto/Roboto-Regular.ttf
-          style: normal
-        - asset: fonts/Roboto/Roboto-Italic.ttf
-          style: italic
-        - asset: fonts/Roboto/Roboto-Bold.ttf
-          style: normal
-          weight: 700
-        - asset: fonts/Roboto/Roboto-Light.ttf
-          style: normal
-          weight: 300
+    - assets/icons/

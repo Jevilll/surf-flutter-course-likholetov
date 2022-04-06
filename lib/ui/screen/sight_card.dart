@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/app_colors.dart';
-import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_text_styles.dart';
+import 'package:places/res/app_themes.dart';
+import 'package:places/ui/utils.dart';
 
 /// Виджет карточки достопримечательности.
 class SightCard extends StatelessWidget {
@@ -31,42 +33,21 @@ class SightCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 3 / 2,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
+      child: Card(
         child: Column(
           children: [
             Expanded(
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(
-                    sight.image,
-                    fit: BoxFit.fitWidth,
-                    loadingBuilder: (
-                      context,
-                      child,
-                      loadingProgress,
-                    ) {
-                      if (loadingProgress == null) {
-                        return child;
-                      }
-
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
-                    },
-                  ),
+                  sight.image.load(fit: BoxFit.cover),
                   Positioned(
                     left: 16,
                     top: 16,
                     child: Text(
                       sight.type.name,
-                      style: AppTextStyles.smallBold,
+                      style: AppTextStyles.smallBold
+                          .copyWith(color: Theme.of(context).colorScheme.white),
                     ),
                   ),
                   Positioned(
@@ -78,35 +59,32 @@ class SightCard extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Container(
-                color: AppColors.background,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          sight.shortDescription,
-                          maxLines: 2,
-                          style: AppTextStyles.text,
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        sight.name,
+                        maxLines: 2,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    TimeToVisitText(type, sight),
+                    Container(
+                      margin: const EdgeInsets.only(top: 2),
+                      width: double.infinity,
+                      child: Text(
+                        sight.workingHours,
+                        textAlign: TextAlign.left,
+                        style: AppTextStyles.small.copyWith(
+                          color: Theme.of(context).colorScheme.secondary2,
                         ),
                       ),
-                      TimeToVisitText(type, sight),
-                      Container(
-                        margin: const EdgeInsets.only(top: 2),
-                        width: double.infinity,
-                        child: const Text(
-                          AppStrings.shortDescription,
-                          textAlign: TextAlign.left,
-                          style: AppTextStyles.smallSecondary2,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -126,7 +104,7 @@ class TimeToVisitText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return sight.timeToVisit.isEmpty
+    return sight.timeToVisit.isEmpty || type == CardType.interesting
         ? const SizedBox.shrink()
         : Container(
             margin: const EdgeInsets.symmetric(vertical: 2),
@@ -134,9 +112,11 @@ class TimeToVisitText extends StatelessWidget {
             width: double.infinity,
             child: Text(
               sight.timeToVisit,
-              style: type == CardType.toVisit
-                  ? AppTextStyles.smallGreen
-                  : AppTextStyles.smallSecondary2,
+              style: AppTextStyles.small.copyWith(
+                color: type == CardType.toVisit
+                    ? Theme.of(context).colorScheme.green
+                    : Theme.of(context).secondaryHeaderColor,
+              ),
               textAlign: TextAlign.left,
             ),
           );
@@ -156,8 +136,8 @@ class CardButtons extends StatelessWidget {
         late final Widget result;
         switch (type) {
           case CardType.interesting:
-            result = const Icon(
-              Icons.favorite_outline,
+            result = SvgPicture.asset(
+              'assets/icons/heart.svg',
               color: AppColors.white,
             );
             break;
@@ -182,16 +162,16 @@ class ToVisitButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: const [
-        Icon(
-          Icons.calendar_month,
+      children: [
+        SvgPicture.asset(
+          'assets/icons/calendar.svg',
           color: AppColors.white,
         ),
-        SizedBox(
+        const SizedBox(
           width: 16,
         ),
-        Icon(
-          Icons.close,
+        SvgPicture.asset(
+          'assets/icons/close.svg',
           color: AppColors.white,
         ),
       ],
@@ -206,16 +186,16 @@ class VisitedButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: const [
-        Icon(
-          Icons.share_outlined,
+      children: [
+        SvgPicture.asset(
+          'assets/icons/share.svg',
           color: AppColors.white,
         ),
-        SizedBox(
+        const SizedBox(
           width: 16,
         ),
-        Icon(
-          Icons.close,
+        SvgPicture.asset(
+          'assets/icons/close.svg',
           color: AppColors.white,
         ),
       ],

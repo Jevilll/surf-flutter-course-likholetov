@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/mocks.dart';
-import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_strings.dart';
-import 'package:places/res/app_text_styles.dart';
 import 'package:places/ui/screen/sight_card.dart';
 
 /// Экран избранных мест.
@@ -20,29 +18,21 @@ class _VisitingScreenState extends State<VisitingScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
+          title: Text(
             AppStrings.favorites,
-            style: AppTextStyles.subtitle,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           centerTitle: true,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
         ),
         body: Column(children: [
           Container(
             margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),
-              color: AppColors.background,
+              color: Theme.of(context).cardColor,
             ),
-            child: TabBar(
-              indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                color: AppColors.whiteSecondary,
-              ),
-              labelStyle: AppTextStyles.smallBold,
-              unselectedLabelColor: AppColors.whiteInactiveBlack,
-              tabs: const [
+            child: const TabBar(
+              tabs: [
                 Tab(
                   text: AppStrings.wantToVisit,
                 ),

@@ -5,64 +5,42 @@ abstract class AppTextStyles {
   static const largeTitle = TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.w700,
-    fontFamily: 'Roboto',
-    fontStyle: FontStyle.normal,
-    color: AppColors.blackMain,
+    color: AppColors.secondary,
   );
 
   static const title = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w700,
-    fontFamily: 'Roboto',
-    fontStyle: FontStyle.normal,
-    color: AppColors.whiteMain,
+    color: AppColors.secondary,
   );
 
   static const subtitle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
-    fontFamily: 'Roboto',
-    fontStyle: FontStyle.normal,
-    color: AppColors.whiteMain,
+    color: AppColors.secondary,
   );
 
   static const text = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w500,
-    fontFamily: 'Roboto',
-    fontStyle: FontStyle.normal,
-    color: AppColors.whiteSecondary,
+    color: AppColors.secondary,
   );
 
   static const smallBold = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w700,
-    fontFamily: 'Roboto',
-    fontStyle: FontStyle.normal,
-    color: AppColors.white,
+    color: AppColors.secondary,
   );
 
-  static const smallSecondary2 = TextStyle(
+  static const small = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    fontFamily: 'Roboto',
-    fontStyle: FontStyle.normal,
-    color: AppColors.whiteSecondary2,
-  );
-
-  static const smallGreen = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    fontFamily: 'Roboto',
-    fontStyle: FontStyle.normal,
-    color: AppColors.whiteGreen,
+    color: AppColors.secondary,
   );
 
   static const button = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w700,
-    fontFamily: 'Roboto',
-    fontStyle: FontStyle.normal,
     letterSpacing: 0.03,
   );
 }
