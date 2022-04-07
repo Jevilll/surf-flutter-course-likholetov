@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/app_colors.dart';
+import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
-import 'package:places/ui/utils.dart';
+import 'package:places/ui/widget/image_preview.dart';
 
 /// Виджет карточки достопримечательности.
 class SightCard extends StatelessWidget {
@@ -31,6 +32,8 @@ class SightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return AspectRatio(
       aspectRatio: 3 / 2,
       child: Card(
@@ -40,14 +43,16 @@ class SightCard extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  sight.image.load(fit: BoxFit.cover),
+                  ImagePreview(
+                    imgUrl: sight.image,
+                  ),
                   Positioned(
                     left: 16,
                     top: 16,
                     child: Text(
                       sight.type.name,
                       style: AppTextStyles.smallBold
-                          .copyWith(color: Theme.of(context).colorScheme.white),
+                          .copyWith(color: theme.colorScheme.white),
                     ),
                   ),
                   Positioned(
@@ -68,7 +73,7 @@ class SightCard extends StatelessWidget {
                       child: Text(
                         sight.name,
                         maxLines: 2,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: theme.textTheme.bodyMedium,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -80,7 +85,7 @@ class SightCard extends StatelessWidget {
                         sight.workingHours,
                         textAlign: TextAlign.left,
                         style: AppTextStyles.small.copyWith(
-                          color: Theme.of(context).colorScheme.secondary2,
+                          color: theme.colorScheme.secondary2,
                         ),
                       ),
                     ),
@@ -104,6 +109,8 @@ class TimeToVisitText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return sight.timeToVisit.isEmpty || type == CardType.interesting
         ? const SizedBox.shrink()
         : Container(
@@ -114,8 +121,8 @@ class TimeToVisitText extends StatelessWidget {
               sight.timeToVisit,
               style: AppTextStyles.small.copyWith(
                 color: type == CardType.toVisit
-                    ? Theme.of(context).colorScheme.green
-                    : Theme.of(context).secondaryHeaderColor,
+                    ? theme.colorScheme.green
+                    : theme.secondaryHeaderColor,
               ),
               textAlign: TextAlign.left,
             ),
@@ -137,7 +144,7 @@ class CardButtons extends StatelessWidget {
         switch (type) {
           case CardType.interesting:
             result = SvgPicture.asset(
-              'assets/icons/heart.svg',
+              AppIcons.heart,
               color: AppColors.white,
             );
             break;
@@ -164,14 +171,14 @@ class ToVisitButtons extends StatelessWidget {
     return Row(
       children: [
         SvgPicture.asset(
-          'assets/icons/calendar.svg',
+          AppIcons.calendar,
           color: AppColors.white,
         ),
         const SizedBox(
           width: 16,
         ),
         SvgPicture.asset(
-          'assets/icons/close.svg',
+          AppIcons.close,
           color: AppColors.white,
         ),
       ],
@@ -188,14 +195,14 @@ class VisitedButtons extends StatelessWidget {
     return Row(
       children: [
         SvgPicture.asset(
-          'assets/icons/share.svg',
+          AppIcons.share,
           color: AppColors.white,
         ),
         const SizedBox(
           width: 16,
         ),
         SvgPicture.asset(
-          'assets/icons/close.svg',
+          AppIcons.close,
           color: AppColors.white,
         ),
       ],

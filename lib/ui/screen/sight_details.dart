@@ -4,7 +4,7 @@ import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
-import 'package:places/ui/utils.dart';
+import 'package:places/ui/widget/image_preview.dart';
 
 /// Экран детализиции достопримечательности.
 class SightDetails extends StatelessWidget {
@@ -20,7 +20,9 @@ class SightDetails extends StatelessWidget {
           SizedBox(
             height: 360,
             width: double.infinity,
-            child: sight.image.load(fit: BoxFit.cover),
+            child: ImagePreview(
+              imgUrl: sight.image,
+            ),
           ),
           Container(
             padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
@@ -65,7 +67,7 @@ class SightDetails extends StatelessWidget {
             height: 48,
             width: double.infinity,
             decoration: const BoxDecoration(
-              color: AppColorsLight.green,
+              color: AppColors.lightGreen,
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             child: const Center(

@@ -31,7 +31,7 @@ class AppThemes {
   static ThemeData get lightTheme {
     return ThemeData(
       primaryColor: AppColors.secondary,
-      cardColor: AppColorsLight.background,
+      cardColor: AppColors.lightBackground,
       scaffoldBackgroundColor: AppColors.white,
       appBarTheme: _appBarTheme.copyWith(
         backgroundColor: AppColors.white,
@@ -41,7 +41,7 @@ class AppThemes {
         ),
       ),
       bottomNavigationBarTheme: _bottomNavThemeData.copyWith(
-        backgroundColor: AppColorsLight.background,
+        backgroundColor: AppColors.lightBackground,
       ),
       tabBarTheme: _tabBarTheme.copyWith(
         indicator: BoxDecoration(
@@ -64,17 +64,17 @@ class AppThemes {
   static ThemeData get darkTheme {
     return ThemeData(
       primaryColor: AppColors.white,
-      cardColor: AppColorsDark.dark,
-      scaffoldBackgroundColor: AppColorsDark.main,
+      cardColor: AppColors.darkBlack,
+      scaffoldBackgroundColor: AppColors.darkMain,
       appBarTheme: _appBarTheme.copyWith(
-        backgroundColor: AppColorsDark.main,
+        backgroundColor: AppColors.darkMain,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
         ),
       ),
       bottomNavigationBarTheme: _bottomNavThemeData.copyWith(
-        backgroundColor: AppColorsDark.background,
+        backgroundColor: AppColors.darkBackground,
       ),
       tabBarTheme: _tabBarTheme.copyWith(
         indicator: BoxDecoration(
@@ -105,10 +105,10 @@ extension CustomColorScheme on ColorScheme {
   Color get inactiveBlack => AppColors.inactiveBlack;
 
   Color get background => brightness == Brightness.light
-      ? AppColorsLight.background
-      : AppColorsDark.background;
+      ? AppColors.lightBackground
+      : AppColors.darkBackground;
 
   Color get green => brightness == Brightness.light
-      ? AppColorsLight.green
-      : AppColorsDark.green;
+      ? AppColors.lightGreen
+      : AppColors.darkGreen;
 }
