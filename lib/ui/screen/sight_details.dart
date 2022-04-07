@@ -14,6 +14,8 @@ class SightDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -29,7 +31,7 @@ class SightDetails extends StatelessWidget {
             width: double.infinity,
             child: Text(
               sight.name,
-              style: Theme.of(context).textTheme.titleMedium,
+              style: theme.textTheme.titleMedium,
             ),
           ),
           Container(
@@ -41,7 +43,8 @@ class SightDetails extends StatelessWidget {
                 Text(
                   sight.type.name,
                   style: AppTextStyles.smallBold.copyWith(
-                      color: Theme.of(context).colorScheme.secondary2,),
+                    color: theme.colorScheme.secondary2,
+                  ),
                 ),
                 const SizedBox(
                   width: 16,
@@ -49,7 +52,7 @@ class SightDetails extends StatelessWidget {
                 Text(
                   sight.workingHours,
                   style: AppTextStyles.small.copyWith(
-                    color: Theme.of(context).colorScheme.inactiveBlack,
+                    color: theme.colorScheme.inactiveBlack,
                   ),
                 ),
               ],
@@ -59,7 +62,7 @@ class SightDetails extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
             child: Text(
               sight.details,
-              style: Theme.of(context).textTheme.bodySmall,
+              style: theme.textTheme.bodySmall,
             ),
           ),
           Container(

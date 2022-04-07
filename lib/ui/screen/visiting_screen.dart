@@ -14,13 +14,15 @@ class VisitingScreen extends StatefulWidget {
 class _VisitingScreenState extends State<VisitingScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
             AppStrings.favorites,
-            style: Theme.of(context).textTheme.titleMedium,
+            style: theme.textTheme.titleMedium,
           ),
           centerTitle: true,
         ),
@@ -29,7 +31,7 @@ class _VisitingScreenState extends State<VisitingScreen> {
             margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),
-              color: Theme.of(context).cardColor,
+              color: theme.cardColor,
             ),
             child: const TabBar(
               tabs: [

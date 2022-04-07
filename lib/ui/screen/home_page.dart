@@ -62,14 +62,16 @@ class _HomePageState extends State<HomePage> {
     required String icon,
     required String activeIcon,
   }) {
+    final theme = Theme.of(context);
+
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         icon,
-        color: Theme.of(context).primaryColor,
+        color: theme.primaryColor,
       ),
       activeIcon: SvgPicture.asset(
         activeIcon,
-        color: Theme.of(context).primaryColor,
+        color: theme.primaryColor,
       ),
       label: '',
     );
