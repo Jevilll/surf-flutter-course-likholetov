@@ -1,5 +1,4 @@
 abstract class AppStrings {
-  static const String shortDescription = 'краткое описание';
   static const String appName = 'Список\nинтересных мест';
   static const String monument = 'памятник';
   static const String square = 'площадь';
@@ -12,5 +11,4 @@ abstract class AppStrings {
   static const String favorites = 'Избранное';
   static const String wantToVisit = 'Хочу посетить';
   static const String visited = 'Посетил';
-
 }

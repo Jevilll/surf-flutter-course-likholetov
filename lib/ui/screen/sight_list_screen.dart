@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:places/mocks.dart';
 import 'package:places/res/app_sizes.dart';
 import 'package:places/res/app_strings.dart';
-import 'package:places/res/app_text_styles.dart';
 import 'package:places/ui/screen/sight_card.dart';
 
 /// Экран списка достопримечательностей.
@@ -33,7 +32,6 @@ class _SightListScreenState extends State<SightListScreen> {
 
 /// Виджет апп бара.
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-
   final double height;
 
   @override
@@ -44,19 +42,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text(
+      title: Text(
         AppStrings.appName,
-        style: AppTextStyles.largeTitle,
+        style: Theme.of(context).textTheme.titleLarge,
         textAlign: TextAlign.left,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
-      backgroundColor: Colors.transparent,
-      elevation: 0,
       toolbarHeight: height,
     );
   }
 }
-
-
-

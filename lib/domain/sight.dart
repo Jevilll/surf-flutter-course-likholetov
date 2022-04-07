@@ -10,6 +10,7 @@ class Sight {
   Type type;
   String image;
   String timeToVisit;
+  String workingHours;
 
   Sight(
     this.name, {
@@ -20,6 +21,7 @@ class Sight {
     this.type = Type.other,
     this.image = '',
     this.timeToVisit = '',
+    this.workingHours = '',
   });
 }
 

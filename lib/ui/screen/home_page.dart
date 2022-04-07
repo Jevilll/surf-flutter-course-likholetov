@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:places/res/app_colors.dart';
-import 'package:places/ui/screen/foo.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:places/mocks.dart';
+import 'package:places/res/app_icons.dart';
+import 'package:places/ui/screen/sight_details.dart';
 import 'package:places/ui/screen/sight_list_screen.dart';
 import 'package:places/ui/screen/visiting_screen.dart';
 
@@ -15,9 +17,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final scenes = [
     const SightListScreen(),
-    const Foo(),
+    SightDetails(mocks[0]),
     const VisitingScreen(),
-    const Foo(),
+    SightDetails(mocks[1]),
   ];
 
   int currentIndex = 0;
@@ -27,32 +29,51 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: scenes[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: AppColors.whiteSecondary,
-        selectedItemColor: AppColors.whiteMain,
-        type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
         onTap: (index) => setState(() => currentIndex = index),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.format_list_bulleted_outlined),
-            label: '',
+        items: [
+          _getItem(
+            context,
+            icon: AppIcons.list,
+            activeIcon: AppIcons.listFull,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map_outlined),
-            label: '',
+          _getItem(
+            context,
+            icon: AppIcons.map,
+            activeIcon: AppIcons.mapFull,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_outline),
-            label: '',
+          _getItem(
+            context,
+            icon: AppIcons.heart,
+            activeIcon: AppIcons.heartFull,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            label: '',
+          _getItem(
+            context,
+            icon: AppIcons.settings,
+            activeIcon: AppIcons.settingsFull,
           ),
         ],
       ),
+    );
+  }
+
+  BottomNavigationBarItem _getItem(
+    BuildContext context, {
+    required String icon,
+    required String activeIcon,
+  }) {
+    final theme = Theme.of(context);
+
+    return BottomNavigationBarItem(
+      icon: SvgPicture.asset(
+        icon,
+        color: theme.primaryColor,
+      ),
+      activeIcon: SvgPicture.asset(
+        activeIcon,
+        color: theme.primaryColor,
+      ),
+      label: '',
     );
   }
 }
