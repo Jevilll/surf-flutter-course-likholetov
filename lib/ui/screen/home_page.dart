@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/mocks.dart';
 import 'package:places/res/app_icons.dart';
-import 'package:places/ui/screen/sight_details.dart';
+import 'package:places/ui/screen/filters_screen.dart';
+import 'package:places/ui/screen/settings_screen.dart';
 import 'package:places/ui/screen/sight_list_screen.dart';
 import 'package:places/ui/screen/visiting_screen.dart';
 
@@ -17,12 +17,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final scenes = [
     const SightListScreen(),
-    SightDetails(mocks[0]),
+    const FiltersScreen(),
     const VisitingScreen(),
-    SightDetails(mocks[1]),
+    // SightDetails(mocks[0]),
+    const SettingsScreen(),
   ];
 
-  int currentIndex = 0;
+  int currentIndex = 1;
 
   @override
   Widget build(BuildContext context) {

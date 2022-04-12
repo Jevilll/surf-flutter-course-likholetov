@@ -28,9 +28,17 @@ class AppThemes {
     ),
   );
 
+  static final _sliderTheme = ThemeData.light().sliderTheme.copyWith(
+        trackHeight: 1,
+        inactiveTrackColor: AppColors.inactiveBlack,
+        thumbColor: AppColors.white,
+      );
+
   static ThemeData get lightTheme {
     return ThemeData(
+      brightness: Brightness.light,
       primaryColor: AppColors.secondary,
+      splashColor: AppColors.inactiveBlack,
       cardColor: AppColors.lightBackground,
       scaffoldBackgroundColor: AppColors.white,
       appBarTheme: _appBarTheme.copyWith(
@@ -58,11 +66,16 @@ class AppThemes {
         bodySmall: AppTextStyles.small,
       ),
       cardTheme: _cartTheme,
+      sliderTheme: _sliderTheme.copyWith(
+        activeTrackColor: AppColors.lightGreen,
+      ),
     );
   }
 
   static ThemeData get darkTheme {
     return ThemeData(
+      brightness: Brightness.dark,
+      splashColor: AppColors.inactiveBlack,
       primaryColor: AppColors.white,
       cardColor: AppColors.darkBlack,
       scaffoldBackgroundColor: AppColors.darkMain,
@@ -91,6 +104,9 @@ class AppThemes {
         bodySmall: AppTextStyles.small.copyWith(color: AppColors.white),
       ),
       cardTheme: _cartTheme,
+      sliderTheme: _sliderTheme.copyWith(
+        activeTrackColor: AppColors.darkGreen,
+      ),
     );
   }
 }
@@ -98,11 +114,14 @@ class AppThemes {
 extension CustomColorScheme on ColorScheme {
   Color get white => AppColors.white;
 
-  Color get secondary => AppColors.secondary;
+  Color get secondary1 => AppColors.secondary;
 
   Color get secondary2 => AppColors.secondary2;
 
   Color get inactiveBlack => AppColors.inactiveBlack;
+
+  Color get text =>
+      brightness == Brightness.light ? AppColors.secondary : AppColors.white;
 
   Color get background => brightness == Brightness.light
       ? AppColors.lightBackground
@@ -111,4 +130,10 @@ extension CustomColorScheme on ColorScheme {
   Color get green => brightness == Brightness.light
       ? AppColors.lightGreen
       : AppColors.darkGreen;
+
+  Color get main =>
+      brightness == Brightness.light ? AppColors.lightMain : AppColors.white;
+
+  Color get mainInverse =>
+      brightness == Brightness.light ? AppColors.white : AppColors.lightMain;
 }

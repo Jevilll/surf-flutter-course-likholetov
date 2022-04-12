@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/res/app_colors.dart';
+import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
+import 'package:places/ui/widget/button/button_rounded.dart';
+import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/image_preview.dart';
+import 'package:places/utils/common.dart';
 
 /// Экран детализиции достопримечательности.
 class SightDetails extends StatelessWidget {
@@ -60,24 +64,20 @@ class SightDetails extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
-            child: Text(
-              sight.details,
-              style: theme.textTheme.bodySmall,
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 16, top: 24, right: 16),
-            height: 48,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              color: AppColors.lightGreen,
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            child: const Center(
+            child: Align(
+              alignment: Alignment.centerLeft,
               child: Text(
-                AppStrings.buildARoute,
+                sight.details,
+                style: theme.textTheme.bodySmall,
               ),
             ),
+          ),
+          ButtonRounded(
+            title: AppStrings.buildARoute,
+            onPressed: () {
+              logger.i('Нажатие на кнопку построить маршрут');
+            },
+            icon: AppIcons.go,
           ),
           Container(
             margin: const EdgeInsets.only(left: 16, top: 24, right: 16),
@@ -89,41 +89,30 @@ class SightDetails extends StatelessWidget {
             margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
             width: double.infinity,
             child: Row(
-              children: const [
-                ButtonWithText(AppStrings.toSchedule),
-                ButtonWithText(AppStrings.toFavorites),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ButtonWithoutBorders(
+                  title: AppStrings.toSchedule,
+                  icon: AppIcons.calendar,
+                  height: 40,
+                  width: 164,
+                  color: Theme.of(context).colorScheme.text,
+                  onPressed: null,
+                ),
+                ButtonWithoutBorders(
+                  title: AppStrings.toFavorites,
+                  icon: AppIcons.heart,
+                  height: 40,
+                  width: 164,
+                  color: Theme.of(context).colorScheme.text,
+                  onPressed: () {
+                    logger.i('Нажатие на кнопку в избранное');
+                  },
+                ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Заглушка в виде кнопки с текстом.
-class ButtonWithText extends StatelessWidget {
-  final String text;
-
-  const ButtonWithText(this.text, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      child: Container(
-        margin: const EdgeInsets.only(
-          left: 16,
-          top: 8,
-          right: 16,
-          bottom: 16,
-        ),
-        width: double.infinity,
-        child: Center(
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-          ),
-        ),
       ),
     );
   }

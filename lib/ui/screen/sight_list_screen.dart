@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:places/mocks.dart';
 import 'package:places/res/app_sizes.dart';
 import 'package:places/res/app_strings.dart';
-import 'package:places/ui/screen/sight_card.dart';
+import 'package:places/ui/widget/sight_card.dart';
 
 /// Экран списка достопримечательностей.
 class SightListScreen extends StatefulWidget {

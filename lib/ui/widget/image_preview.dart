@@ -73,19 +73,17 @@ class _ImageBuilder extends StatelessWidget {
   final ImageProvider imageProvider;
   final BoxFit fit;
 
-  const _ImageBuilder(
-      {Key? key, required this.imageProvider, required this.fit,})
-      : super(key: key);
+  const _ImageBuilder({
+    Key? key,
+    required this.imageProvider,
+    required this.fit,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: imageProvider,
-          fit: fit,
-        ),
-      ),
+    return Ink.image(
+      fit: fit,
+      image: imageProvider,
     );
   }
 }

@@ -1,37 +1,53 @@
+import 'package:places/domain/position.dart';
 import 'package:places/domain/sight.dart';
 
 final List<Sight> mocks = [
   Sight(
-    'Бронзовый всадник',
-    lat: 59.9363823,
-    long: 30.3022308,
-    shortDescription:
-        'Бронзовый всадник - Памятник Петру I на Сенатской площади в Санкт-Петербурге',
-    details:
-        'Медный всадник в Санкт-Петербурге — самый известный памятник Петру I. Он расположен в открытом сквере на Сенатской площади и является уникальным произведением русской и мировой культуры.',
-    type: Type.monument,
-    image: 'https://hotel.democrat/wp-content/uploads/2015/10/mednyy-vsadnik.jpg',
+    'лучший отель',
+    Position(55.75222, 37.61556),
+    details: 'Описание',
+    type: Type.hotel,
+    image:
+        'https://dynl.mktgcdn.com/p/AysCZU1TCaImKSFxQhzPq9HiOWjMRz3ywq4h1pYqtII/600x450.jpg',
     timeToVisit: 'Запланировано на 12 окт. 2020',
     workingHours: 'закрыто до 9:00',
   ),
   Sight(
-    'Times Square',
-    lat: 40.75773,
-    long: -73.985708,
-    shortDescription: 'Times Square - Площадь в центральной части Манхэттена',
-    details:
-        'Таймс-сквер является одной из самых посещаемых достопримечательностей мира, привлекающей около 50 миллионов посетителей ежегодно.',
-    type: Type.square,
-    image: 'https://fs.tonkosti.ru/11/q6/11q60iy3utzkc8ws4gwgocs4w.jpg',
+    'Средний ресторан',
+    Position(55.75222, 37.61556),
+    details: 'Описание',
+    type: Type.restaurant,
+    image:
+        'https://media.admagazine.ru/photos/61407d5e9ecf4e1934c46f10/16:9/w_2560%2Cc_limit/IMG_7838.jpg',
   ),
   Sight(
-    'Озеро Байкал',
-    lat: 51.90503,
-    long: 126.62002,
-    shortDescription: 'Озеро Байкал - Самое глубокое озеро на планете',
-    details:
-        'Озеро тектонического происхождения в южной части Восточной Сибири, самое глубокое озеро на планете, крупнейший природный резервуар пресной воды и самое большое по площади пресноводное озеро на континенте.',
-    type: Type.lake,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/%D0%9C%D1%8B%D1%81_%D0%9B%D1%83%D0%B4%D0%B0%D1%80%D1%8C%2C_17_%D0%B8%D1%8E%D0%BD%D1%8F_2013_%D0%B3%D0%BE%D0%B4%D0%B0.jpg/1920px-%D0%9C%D1%8B%D1%81_%D0%9B%D1%83%D0%B4%D0%B0%D1%80%D1%8C%2C_17_%D0%B8%D1%8E%D0%BD%D1%8F_2013_%D0%B3%D0%BE%D0%B4%D0%B0.jpg',
+    'Самое особое',
+    Position(55.75222, 37.61556),
+    details: 'Описание',
+    image:
+        'https://gcdn.tomesto.ru/img/place/000/026/236/restoran-osoboe-mesto-v-trehprudnom-pereulke_9940e_full-174438.jpg',
+  ),
+  Sight(
+    'Большой парк',
+    Position(55.75222, 37.61556),
+    details: 'Описание',
+    type: Type.park,
+    image:
+        'https://static5.depositphotos.com/1004999/458/i/600/depositphotos_4582193-stock-photo-beautiful-spring-park.jpg',
+  ),
+  Sight(
+    'Старый музей',
+    Position(55.75222, 37.61556),
+    details: 'Описание',
+    type: Type.museum,
+    image: 'https://cdn.culture.ru/c/75570.jpg',
+  ),
+  Sight(
+    'Небольшое кафе',
+    Position(55.75222, 37.61556),
+    details: 'Описание',
+    type: Type.cafe,
+    image:
+        'https://gcdn.tomesto.ru/img/place/000/023/404/restoran-corner-cafe-korner-kafe-na-kompozitorskoy-ulitse_bc545_full-317836.jpg',
   ),
 ];
