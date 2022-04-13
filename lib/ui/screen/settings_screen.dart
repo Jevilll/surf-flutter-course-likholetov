@@ -5,7 +5,6 @@ import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_themes.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
-import 'package:places/ui/widget/text_with_right_view.dart';
 import 'package:places/utils/common.dart';
 
 /// Экран настроек.
@@ -34,9 +33,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            TextWithRightView(
-              AppStrings.darkTheme,
-              child: CupertinoSwitch(
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Text(
+                AppStrings.darkTheme,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyLarge,
+              ),
+              trailing: CupertinoSwitch(
                 trackColor: AppColors.inactiveBlack,
                 value: value,
                 onChanged: (currentValue) {
@@ -47,9 +53,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const Divider(
               thickness: 1,
             ),
-            TextWithRightView(
-              AppStrings.watchTutorial,
-              child: ButtonSvgIcon(
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Text(
+                AppStrings.watchTutorial,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyLarge,
+              ),
+              trailing: ButtonSvgIcon(
                 icon: AppIcons.info,
                 onPressed: () {},
                 color: theme.colorScheme.green,

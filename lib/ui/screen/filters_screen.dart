@@ -1,9 +1,12 @@
 import 'dart:core';
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:places/domain/category.dart';
 import 'package:places/domain/position.dart';
+import 'package:places/domain/sight.dart';
+import 'package:places/mocks.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_text_styles.dart';
@@ -12,7 +15,6 @@ import 'package:places/ui/widget/button/button_rounded.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/check_box/category_item.dart';
-import 'package:places/utils/common.dart';
 
 /// Экран фильтрации списка достопримечательностей.
 class FiltersScreen extends StatefulWidget {
@@ -25,26 +27,31 @@ class FiltersScreen extends StatefulWidget {
 class _FiltersScreenState extends State<FiltersScreen> {
   final List<Category> _categories = [
     Category(
-      icon: AppIcons.tick,
+      type: Type.cafe,
+      icon: AppIcons.cafe,
       name: 'Отель',
     ),
     Category(
-      icon: AppIcons.clear,
+      type: Type.hotel,
+      icon: AppIcons.hotel,
       name: 'Ресторан',
     ),
     Category(
-      icon: AppIcons.settings,
+      type: Type.museum,
+      icon: AppIcons.museum,
       name: 'Особое место',
     ),
-    Category(icon: AppIcons.photo, name: 'Парк'),
-    Category(icon: AppIcons.photo, name: 'Музей'),
-    Category(icon: AppIcons.photo, name: 'Кафе'),
+    Category(type: Type.park, icon: AppIcons.park, name: 'Парк'),
+    Category(type: Type.special, icon: AppIcons.particularPlace, name: 'Музей'),
+    Category(type: Type.restaurant, icon: AppIcons.restaurant, name: 'Кафе'),
   ];
 
   double startValue = 100;
   double endValue = 10000;
 
   RangeValues values = const RangeValues(100, 10000);
+  int numberOfFound = 0;
+  List<bool> _selected = List.generate(6, (index) => false);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +74,10 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 width: 82,
                 color: Theme.of(context).colorScheme.green,
                 onPressed: () {
-                  logger.i('Нажатие на кнопку в очистить');
+                  setState(() {
+                    _clearCategories();
+                    countSights();
+                  });
                 },
               ),
             ],
@@ -79,7 +89,15 @@ class _FiltersScreenState extends State<FiltersScreen> {
               style: AppTextStyles.superSmall,
             ),
           ),
-          _CategoriesGrid(_categories),
+          SelectedCategories(
+            selected: _selected,
+            child: CategoriesGrid(
+              _categories,
+              onPressed: () {
+                setState(countSights);
+              },
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(top: 24),
             child: Row(
@@ -104,13 +122,28 @@ class _FiltersScreenState extends State<FiltersScreen> {
             },
           ),
           const Spacer(),
-          ButtonRounded(
-            title: AppStrings.show,
-            onPressed: () {},
+          CountButtonText(
+            count: numberOfFound,
+            child: CategoriesButton(
+              onPressed: () {},
+            ),
           ),
         ],
       ),
     );
+  }
+
+  int countSights() {
+    numberOfFound = 0;
+    _selected.forEachIndexed((index, selectedCategory) {
+      if (selectedCategory) {
+        final type = _categories[index].type;
+        numberOfFound =
+            numberOfFound + mocks.where((sight) => sight.type == type).length;
+      }
+    });
+
+    return numberOfFound;
   }
 
   String _convert(double value) {
@@ -127,24 +160,36 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
     return sqrt(dx * dx + dy + dy) <= km;
   }
+
+  void _clearCategories() {
+    _selected = _selected.map((e) => false).toList();
+  }
 }
 
 /// Виджет списка категорий.
-class _CategoriesGrid extends StatefulWidget {
+class CategoriesGrid extends StatefulWidget {
+  final VoidCallback onPressed;
   final List<Category> _categories;
 
-  const _CategoriesGrid(this._categories, {Key? key}) : super(key: key);
+  const CategoriesGrid(this._categories, {required this.onPressed, Key? key})
+      : super(key: key);
 
   @override
-  State<_CategoriesGrid> createState() => _CategoriesGridState();
+  State<CategoriesGrid> createState() => _CategoriesGridState();
+
+  static _CategoriesGridState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_CategoriesGridState>();
 }
 
-class _CategoriesGridState extends State<_CategoriesGrid> {
+class _CategoriesGridState extends State<CategoriesGrid> {
   @override
   Widget build(BuildContext context) {
+    final selected = SelectedCategories.of(context).selected;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: widget._categories.length,
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -152,14 +197,82 @@ class _CategoriesGridState extends State<_CategoriesGrid> {
         ),
         itemBuilder: (context, index) => CategoryItem(
           widget._categories[index],
+          isSelected: selected[index],
           onTap: () {
             setState(() {
-              widget._categories[index].isSelected =
-                  !widget._categories[index].isSelected;
+              selected[index] = !selected[index];
+              widget.onPressed();
             });
           },
         ),
       ),
     );
+  }
+}
+
+class CategoriesButton extends StatefulWidget {
+  final VoidCallback onPressed;
+
+  const CategoriesButton({required this.onPressed, Key? key}) : super(key: key);
+
+  @override
+  State<CategoriesButton> createState() => _CategoriesButtonState();
+}
+
+class _CategoriesButtonState extends State<CategoriesButton> {
+  @override
+  Widget build(BuildContext context) {
+    final text = CountButtonText.of(context).title;
+
+    return ButtonRounded(
+      title: text,
+      onPressed: text.isEmpty ? null : widget.onPressed,
+    );
+  }
+}
+
+class SelectedCategories extends InheritedWidget {
+  final List<bool> selected;
+
+  const SelectedCategories({
+    Key? key,
+    required this.selected,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(covariant SelectedCategories oldWidget) =>
+      selected != oldWidget.selected;
+
+  static SelectedCategories of(BuildContext context) {
+    final result =
+        context.dependOnInheritedWidgetOfExactType<SelectedCategories>();
+    assert(result != null, 'No SelectedCategories found in context');
+
+    return result!;
+  }
+}
+
+class CountButtonText extends InheritedWidget {
+  final int count;
+
+  String get title => count != 0 ? '${AppStrings.show} ($count)' : '';
+
+  const CountButtonText({
+    Key? key,
+    required this.count,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(covariant CountButtonText oldWidget) =>
+      count != oldWidget.count;
+
+  static CountButtonText of(BuildContext context) {
+    final result =
+        context.dependOnInheritedWidgetOfExactType<CountButtonText>();
+    assert(result != null, 'No CountButtonText found in context');
+
+    return result!;
   }
 }

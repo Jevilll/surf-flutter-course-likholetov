@@ -7,9 +7,11 @@ import 'package:places/res/app_themes.dart';
 /// Виджет элемента категории.
 class CategoryItem extends StatelessWidget {
   final Category category;
+  final bool isSelected;
   final VoidCallback onTap;
 
-  const CategoryItem(this.category, {required this.onTap, Key? key}) : super(key: key);
+  const CategoryItem(this.category, {required this.isSelected, required this.onTap, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +41,16 @@ class CategoryItem extends StatelessWidget {
                 ),
               ),
             ),
-            if (category.isSelected) _CheckItem(),
+            if (isSelected) _CheckItem(),
           ],
         ),
-        Padding(padding: const EdgeInsets.only(top: 12),child: Text(category.name, style: theme.textTheme.bodySmall,)),
+        Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: Text(
+            category.name,
+            style: theme.textTheme.bodySmall,
+          ),
+        ),
       ],
     );
   }

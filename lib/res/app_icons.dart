@@ -41,6 +41,13 @@ abstract class AppIcons {
   static const wayArrowLeft = '$_baseAssetsPath/way_arrow_left.svg';
   static const wayArrowRight = '$_baseAssetsPath/way_arrow_right.svg';
   static const wayArrowTop = '$_baseAssetsPath/way_arrow_top.svg';
+  static const cafe = '$_baseAssetsPath/cafe.svg';
+  static const hotel = '$_baseAssetsPath/hotel.svg';
+  static const museum = '$_baseAssetsPath/museum.svg';
+  static const park = '$_baseAssetsPath/park.svg';
+  static const particularPlace = '$_baseAssetsPath/particular_place.svg';
+  static const restaurant = '$_baseAssetsPath/restaurant.svg';
+
 
   static const _baseAssetsPath = 'assets/icons';
 }

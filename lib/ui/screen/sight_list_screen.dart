@@ -41,15 +41,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(
-        AppStrings.appName,
-        style: Theme.of(context).textTheme.titleLarge,
-        textAlign: TextAlign.left,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: AppBar(
+        title: Text(
+          AppStrings.appName,
+          style: Theme.of(context).textTheme.titleLarge,
+          textAlign: TextAlign.left,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        toolbarHeight: height,
       ),
-      toolbarHeight: height,
     );
   }
 }

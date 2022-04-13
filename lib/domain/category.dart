@@ -1,8 +1,10 @@
+import 'package:places/domain/sight.dart';
+
 /// Модель данных категории.
 class Category {
   final String icon;
   final String name;
-  bool isSelected;
+  final Type type;
 
-  Category({required this.icon, required this.name, this.isSelected = false});
+  Category({required this.type, required this.icon, required this.name});
 }
