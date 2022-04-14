@@ -1,11 +1,10 @@
+import 'package:places/domain/position.dart';
 import 'package:places/res/app_strings.dart';
 
 /// Модель данных достопримечательности.
 class Sight {
   String name;
-  double lat;
-  double long;
-  String shortDescription;
+  Position position;
   String details;
   Type type;
   String image;
@@ -13,12 +12,9 @@ class Sight {
   String workingHours;
 
   Sight(
-    this.name, {
-    this.lat = 0,
-    this.long = 0,
-    this.shortDescription = '',
+    this.name, this.position, {
     this.details = '',
-    this.type = Type.other,
+    this.type = Type.special,
     this.image = '',
     this.timeToVisit = '',
     this.workingHours = '',
@@ -27,26 +23,29 @@ class Sight {
 
 /// Тип достопримечательности.
 enum Type {
-  monument,
-  square,
-  lake,
-  bridge,
-  other,
+  hotel,
+  restaurant,
+  special,
+  park,
+  museum,
+  cafe,
 }
 
 extension TypeName on Type {
   String get name {
     switch (this) {
-      case Type.monument:
-        return AppStrings.monument;
-      case Type.square:
-        return AppStrings.square;
-      case Type.lake:
-        return AppStrings.lake;
-      case Type.bridge:
-        return AppStrings.bridge;
-      case Type.other:
-        return AppStrings.other;
+      case Type.hotel:
+        return AppStrings.hotel;
+      case Type.restaurant:
+        return AppStrings.restaurant;
+      case Type.special:
+        return AppStrings.special;
+      case Type.park:
+        return AppStrings.park;
+      case Type.museum:
+        return AppStrings.museum;
+      case Type.cafe:
+        return AppStrings.cafe;
     }
   }
 }

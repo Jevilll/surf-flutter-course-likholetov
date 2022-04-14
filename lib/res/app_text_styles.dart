@@ -38,6 +38,12 @@ abstract class AppTextStyles {
     color: AppColors.secondary,
   );
 
+  static const superSmall = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: AppColors.inactiveBlack,
+  );
+
   static const button = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w700,
