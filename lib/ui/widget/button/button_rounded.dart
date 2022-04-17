@@ -37,7 +37,8 @@ class ButtonRounded extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          primary: color ?? theme.colorScheme.green,
+          primary: onPressed != null ? color ?? theme.colorScheme.green : theme.colorScheme.disabledButton,
+          // onSurface: Colors.red,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -54,7 +55,7 @@ class ButtonRounded extends StatelessWidget {
             Text(
               title,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: AppColors.white,
+                color: onPressed != null ? AppColors.white : AppColors.inactiveBlack,
               ),
             ),
           ],

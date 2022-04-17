@@ -5,7 +5,6 @@ import 'package:places/res/app_colors.dart';
 /// Кнопка svg иконки.
 class ButtonSvgIcon extends StatelessWidget {
   final String icon;
-  final double size;
   final Color color;
   final VoidCallback? onPressed;
 
@@ -13,19 +12,18 @@ class ButtonSvgIcon extends StatelessWidget {
     Key? key,
     required this.icon,
     required this.onPressed,
-    this.size = 100,
     this.color = AppColors.white,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      splashRadius: 24,
       icon: SvgPicture.asset(
         icon,
         color: color,
       ),
-      padding: EdgeInsets.zero,
-      onPressed: () {},
+      onPressed: onPressed,
     );
   }
 }

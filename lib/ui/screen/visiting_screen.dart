@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:places/mocks.dart';
 import 'package:places/res/app_strings.dart';
+import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/sight_card.dart';
 
 /// Экран избранных мест.
@@ -19,13 +20,7 @@ class _VisitingScreenState extends State<VisitingScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            AppStrings.favorites,
-            style: theme.textTheme.titleMedium,
-          ),
-          centerTitle: true,
-        ),
+        appBar: const CustomAppBar(title: AppStrings.favorites),
         body: Column(children: [
           Container(
             margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),

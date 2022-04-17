@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final scenes = [
+    // const AddSightScreen(),
     const SightListScreen(),
     const FiltersScreen(),
     const VisitingScreen(),
@@ -23,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     const SettingsScreen(),
   ];
 
-  int currentIndex = 1;
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
