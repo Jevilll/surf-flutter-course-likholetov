@@ -4,20 +4,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 
-/// Загружает картинку из сети,
-/// [height] - высота изображения
-/// [isBlackout] - добавляет затемнение
+/// Загружает картинку из сети.
 class ImagePreview extends StatelessWidget {
   final String imgUrl;
   final double height;
-  final bool isBlackout;
+  final double width;
   final BoxFit fit;
+  final BorderRadius? borderRadius;
 
   const ImagePreview({
     Key? key,
     required this.imgUrl,
     this.height = double.infinity,
-    this.isBlackout = true,
+    this.width = double.infinity,
+    this.borderRadius,
     this.fit = BoxFit.cover,
   }) : super(key: key);
 
@@ -28,43 +28,18 @@ class ImagePreview extends StatelessWidget {
       imageBuilder: (_, imageProvider) => _ImageBuilder(
         imageProvider: imageProvider,
         fit: fit,
+        borderRadius: borderRadius,
       ),
       placeholder: (_, __) => const _ImagePlaceholder(),
       // ignore: implicit_dynamic_parameter
       errorWidget: (_, __, ___) => const _ImagePlaceholder(),
     );
 
-    return isBlackout
-        ? Stack(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: height,
-                child: child,
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: height,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        AppColors.lightMain.withOpacity(0.3),
-                        AppColors.secondary.withOpacity(0.08),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-        : SizedBox(
-            width: double.infinity,
-            height: height,
-            child: child,
-          );
+    return SizedBox(
+      width: width,
+      height: height,
+      child: child,
+    );
   }
 }
 
@@ -72,18 +47,25 @@ class ImagePreview extends StatelessWidget {
 class _ImageBuilder extends StatelessWidget {
   final ImageProvider imageProvider;
   final BoxFit fit;
+  final BorderRadius? borderRadius;
 
   const _ImageBuilder({
     Key? key,
     required this.imageProvider,
     required this.fit,
+    this.borderRadius,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Ink.image(
-      fit: fit,
-      image: imageProvider,
+    return Ink(
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        image: DecorationImage(
+          image: imageProvider,
+          fit: fit,
+        ),
+      ),
     );
   }
 }

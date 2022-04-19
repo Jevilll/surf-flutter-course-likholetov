@@ -6,6 +6,7 @@ import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
 import 'package:places/ui/widget/button/button_rounded.dart';
+import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/image_preview.dart';
 import 'package:places/utils/common.dart';
@@ -20,14 +21,38 @@ class SightDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SingleChildScrollView(
-      child: Column(
+    return Scaffold(
+      body: Column(
         children: [
-          SizedBox(
-            height: 360,
-            width: double.infinity,
-            child: ImagePreview(
-              imgUrl: sight.image,
+          Material(
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: 360,
+                  width: double.infinity,
+                  child: ImagePreview(
+                    imgUrl: sight.image,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, top: 36),
+                  child: Container(
+                    height: 32,
+                    width: 32,
+                    decoration: const BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: ButtonSvgIcon(
+                      icon: AppIcons.arrow,
+                      color: Theme.of(context).colorScheme.main,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Container(

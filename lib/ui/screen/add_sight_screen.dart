@@ -34,7 +34,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
             width: 82,
             color: theme.colorScheme.green,
             onPressed: () {
-              setState(() {});
+              Navigator.pop(context);
             },
           ),
         ),

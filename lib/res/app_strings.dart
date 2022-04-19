@@ -34,4 +34,10 @@ abstract class AppStrings {
   static const String description = 'ОПИСАНИЕ';
   static const String enterText = 'введите текст';
   static const String create = 'СОЗДАТЬ';
+  static const String search = 'Поиск';
+  static const String nothingFound = 'Ничего не найдено.';
+  static const String tryToChangeSearchParameters =
+      'Попробуйте изменить параметры поиска';
+  static const String youSearched = 'ВЫ ИСКАЛИ';
+  static const String clearHistory = 'Очистить историю';
 }

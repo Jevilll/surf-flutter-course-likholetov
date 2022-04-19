@@ -123,7 +123,7 @@ extension CustomColorScheme on ColorScheme {
   Color get text =>
       brightness == Brightness.light ? AppColors.secondary : AppColors.white;
 
-  Color get background => brightness == Brightness.light
+  Color get background2 => brightness == Brightness.light
       ? AppColors.lightBackground
       : AppColors.darkBackground;
 

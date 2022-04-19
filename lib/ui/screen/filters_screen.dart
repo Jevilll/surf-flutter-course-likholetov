@@ -60,7 +60,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
         leading: ButtonSvgIcon(
           icon: AppIcons.arrow,
           color: Theme.of(context).colorScheme.main,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         actions: [
           Padding(

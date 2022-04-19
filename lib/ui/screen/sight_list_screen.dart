@@ -4,8 +4,14 @@ import 'package:places/mocks.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
+import 'package:places/res/app_themes.dart';
+import 'package:places/ui/screen/add_sight_screen.dart';
+import 'package:places/ui/screen/filters_screen.dart';
+import 'package:places/ui/screen/sight_search_screen.dart';
 import 'package:places/ui/widget/app_bar.dart';
+import 'package:places/ui/widget/search_bar.dart';
 import 'package:places/ui/widget/sight_card.dart';
+
 
 /// Экран списка достопримечательностей.
 class SightListScreen extends StatefulWidget {
@@ -18,8 +24,35 @@ class SightListScreen extends StatefulWidget {
 class _SightListScreenState extends State<SightListScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      appBar: const CustomAppBar(title: AppStrings.listOfInterestingPlaces),
+      appBar: CustomAppBar(
+        title: AppStrings.listOfInterestingPlaces,
+        bottomWidget: SearchBar(
+          isReadOnly: true,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<SightSearchScreen>(
+                builder: <BuildContext>(context) => const SightSearchScreen(),
+              ),
+            );
+          },
+          suffix: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<FiltersScreen>(builder: <BuildContext> (context) => const FiltersScreen()),
+              );
+            },
+            child: SvgPicture.asset(
+              AppIcons.filter,
+              color: theme.colorScheme.green,
+            ),
+          ),
+        ),
+      ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         physics: const BouncingScrollPhysics(),
@@ -39,7 +72,14 @@ class _SightListScreenState extends State<SightListScreen> {
           ),
         ),
         child: FloatingActionButton.extended(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<AddSightScreen>(
+                builder: <BuildContext>(context) => const AddSightScreen(),
+              ),
+            );
+          },
           label: const Text(AppStrings.newPlace),
           backgroundColor: Colors.transparent,
           elevation: 0,
