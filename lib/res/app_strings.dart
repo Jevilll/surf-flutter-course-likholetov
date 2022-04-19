@@ -20,7 +20,7 @@ abstract class AppStrings {
   static const String km = 'км';
   static const String clear = 'Очистить';
   static const String categories = 'КАТЕГОРИИ';
-  static const String category = 'КАТЕГОРИЯ';
+  static const String category = 'Категория';
   static const String settings = 'Настройки';
   static const String darkTheme = 'Тёмная тема';
   static const String watchTutorial = 'Смотреть туториал';
@@ -40,4 +40,5 @@ abstract class AppStrings {
       'Попробуйте изменить параметры поиска';
   static const String youSearched = 'ВЫ ИСКАЛИ';
   static const String clearHistory = 'Очистить историю';
+  static const String save = 'Сохранить';
 }

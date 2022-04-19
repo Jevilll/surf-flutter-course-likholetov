@@ -139,4 +139,7 @@ extension CustomColorScheme on ColorScheme {
 
   Color get disabledButton =>
       brightness == Brightness.light ? AppColors.lightBackground : AppColors.darkBlack;
+
+  Color get red =>
+      brightness == Brightness.light ? AppColors.lightRed : AppColors.darkRed;
 }

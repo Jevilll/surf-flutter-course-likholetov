@@ -12,6 +12,9 @@ class CustomTextField extends StatefulWidget {
   final String? hint;
   final TextInputAction textInputAction;
   final VoidCallback? onEditingComplete;
+  final TextInputType? textInputType;
+  final ValueChanged<String>? onFieldSubmitted;
+  final FormFieldValidator<String>? validator;
 
   const CustomTextField({
     this.controller,
@@ -20,6 +23,9 @@ class CustomTextField extends StatefulWidget {
     this.hint,
     this.textInputAction = TextInputAction.done,
     this.onEditingComplete,
+    this.textInputType,
+    this.onFieldSubmitted,
+    this.validator,
     Key? key,
   }) : super(key: key);
 
@@ -51,21 +57,29 @@ class _CustomTextFieldState extends State<CustomTextField> {
         maxLines: widget.maxLines,
         textInputAction: widget.textInputAction,
         onEditingComplete: widget.onEditingComplete,
+        keyboardType: widget.textInputType,
+        onFieldSubmitted: widget.onFieldSubmitted,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return '';
+          }
+
+          if (widget.validator?.call(value) != null) return '';
+
+          return null;
+        },
         decoration: InputDecoration(
           hintText: widget.hint,
           hintStyle: AppTextStyles.superSmall,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: theme.colorScheme.green),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(width: 2, color: theme.colorScheme.green),
-          ),
+          errorStyle: const TextStyle(height: 0),
+          enabledBorder: _border(theme, 1),
+          focusedBorder: _border(theme, 2),
           suffixIconConstraints: const BoxConstraints(
             minHeight: 20,
             minWidth: 20,
           ),
+          errorBorder: _errorBorder(theme, 1),
+          focusedErrorBorder: _errorBorder(theme, 2),
           contentPadding: const EdgeInsets.all(10.0),
           suffixIcon: _controller.text.isNotEmpty
               ? Padding(
@@ -91,4 +105,19 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _controller.dispose();
     super.dispose();
   }
+
+  OutlineInputBorder _border(ThemeData theme, double width) =>
+      OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(width: width, color: theme.colorScheme.green),
+      );
+
+  OutlineInputBorder _errorBorder(ThemeData theme, double width) =>
+      OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(
+          width: width,
+          color: theme.colorScheme.red.withOpacity(0.4),
+        ),
+      );
 }
