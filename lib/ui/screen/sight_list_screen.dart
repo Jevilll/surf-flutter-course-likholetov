@@ -12,7 +12,6 @@ import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/search_bar.dart';
 import 'package:places/ui/widget/sight_card.dart';
 
-
 /// Экран списка достопримечательностей.
 class SightListScreen extends StatefulWidget {
   const SightListScreen({Key? key}) : super(key: key);
@@ -43,7 +42,9 @@ class _SightListScreenState extends State<SightListScreen> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute<FiltersScreen>(builder: <BuildContext> (context) => const FiltersScreen()),
+                MaterialPageRoute<FiltersScreen>(
+                  builder: <BuildContext>(context) => const FiltersScreen(),
+                ),
               );
             },
             child: SvgPicture.asset(
@@ -72,13 +73,14 @@ class _SightListScreenState extends State<SightListScreen> {
           ),
         ),
         child: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.push(
+          onPressed: () async {
+            await Navigator.push(
               context,
               MaterialPageRoute<AddSightScreen>(
                 builder: <BuildContext>(context) => const AddSightScreen(),
               ),
             );
+            setState(() {});
           },
           label: const Text(AppStrings.newPlace),
           backgroundColor: Colors.transparent,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:places/domain/position.dart';
+import 'package:places/domain/sight.dart';
+import 'package:places/mocks.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_text_styles.dart';
@@ -7,7 +10,6 @@ import 'package:places/res/app_themes.dart';
 import 'package:places/ui/screen/sight_type_selector_screen.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_rounded.dart';
-import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/custom_text_field.dart';
 
@@ -28,7 +30,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
   final _focusNodeLong = FocusNode();
   final _focusNodeDescription = FocusNode();
   final _formKey = GlobalKey<FormState>();
-  String? _category = AppStrings.notChosen;
+  Type? _sightType;
 
   @override
   void initState() {
@@ -88,19 +90,22 @@ class _AddSightScreenState extends State<AddSightScreen> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       onTap: () async {
-                        final result = await Navigator.push<String>(
+                        final result = await Navigator.push<Type>(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const SightTypeSelectorScreen(),
+                            builder: (context) => SightTypeSelectorScreen(
+                              type: _sightType,
+                            ),
                           ),
                         );
                         setState(() {
-                          _category = result;
+                          _sightType = result;
                         });
                       },
                       leading: Text(
-                        _category ?? AppStrings.notChosen,
+                        _sightType != null
+                            ? _sightType!.name
+                            : AppStrings.notChosen,
                         style: theme.textTheme.bodySmall,
                       ),
                       trailing: SvgPicture.asset(
@@ -116,7 +121,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                       textInputAction: TextInputAction.next,
                       controller: _controllerName,
                       onEditingComplete: () =>
-                          FocusScope.of(context).nextFocus(),
+                          FocusScope.of(context).requestFocus(_focusNodeLat),
                     ),
                     Row(
                       children: [
@@ -127,8 +132,15 @@ class _AddSightScreenState extends State<AddSightScreen> {
                             textInputAction: TextInputAction.next,
                             textInputType: TextInputType.number,
                             focusNode: _focusNodeLat,
-                            onEditingComplete: () =>
-                                FocusScope.of(context).nextFocus(),
+                            validator: (value) {
+                              if (!_isNumeric(value)) {
+                                return '';
+                              }
+
+                              return null;
+                            },
+                            onEditingComplete: () => FocusScope.of(context)
+                                .requestFocus(_focusNodeLong),
                           ),
                         ),
                         const SizedBox(
@@ -141,6 +153,13 @@ class _AddSightScreenState extends State<AddSightScreen> {
                             textInputAction: TextInputAction.next,
                             textInputType: TextInputType.number,
                             focusNode: _focusNodeLong,
+                            validator: (value) {
+                              if (!_isNumeric(value)) {
+                                return '';
+                              }
+
+                              return null;
+                            },
                             onEditingComplete: () => FocusScope.of(context)
                                 .requestFocus(_focusNodeDescription),
                           ),
@@ -171,7 +190,17 @@ class _AddSightScreenState extends State<AddSightScreen> {
                       title: AppStrings.create,
                       onPressed: _isButtonEnabled()
                           ? () {
-                              _formKey.currentState!.validate();
+                              if (_formKey.currentState!.validate()) {
+                                mocks.add(Sight(
+                                  _controllerName.text,
+                                  details: _controllerDescription.text,
+                                  position: Position(
+                                    double.tryParse(_controllerLat.text) ?? 0,
+                                    double.tryParse(_controllerLong.text) ?? 0,
+                                  ),
+                                ));
+                                Navigator.pop(context);
+                              }
                             }
                           : null,
                     ),
@@ -183,6 +212,14 @@ class _AddSightScreenState extends State<AddSightScreen> {
         ],
       ),
     );
+  }
+
+  bool _isNumeric(String? s) {
+    if (s == null) {
+      return false;
+    }
+
+    return double.tryParse(s) != null;
   }
 
   bool _isButtonEnabled() {
@@ -204,6 +241,7 @@ class EditableItem extends StatefulWidget {
   final VoidCallback? onEditingComplete;
   final TextInputType? textInputType;
   final ValueChanged<String>? onFieldSubmitted;
+  final FormFieldValidator<String>? validator;
 
   const EditableItem({
     required this.name,
@@ -215,6 +253,7 @@ class EditableItem extends StatefulWidget {
     this.onEditingComplete,
     this.textInputType,
     this.onFieldSubmitted,
+    this.validator,
     Key? key,
   }) : super(key: key);
 
@@ -249,20 +288,9 @@ class _EditableItemState extends State<EditableItem> {
           onEditingComplete: widget.onEditingComplete,
           textInputType: widget.textInputType,
           onFieldSubmitted: widget.onFieldSubmitted,
-          validator: (value) {
-            if(!isNumeric(value))  {
-              return '';
-            }
-          },
+          validator: widget.validator,
         ),
       ],
     );
-  }
-  bool isNumeric(String? s) {
-    if (s == null) {
-      return false;
-    }
-
-    return double.tryParse(s) != null;
   }
 }

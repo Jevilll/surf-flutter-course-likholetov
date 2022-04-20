@@ -59,6 +59,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         onEditingComplete: widget.onEditingComplete,
         keyboardType: widget.textInputType,
         onFieldSubmitted: widget.onFieldSubmitted,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return '';

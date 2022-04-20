@@ -10,7 +10,8 @@ import 'package:places/ui/widget/button/button_svg_icon.dart';
 
 /// Экран выбора типа достопримечательности.
 class SightTypeSelectorScreen extends StatefulWidget {
-  const SightTypeSelectorScreen({Key? key}) : super(key: key);
+  final Type? type;
+  const SightTypeSelectorScreen({this.type, Key? key}) : super(key: key);
 
   @override
   State<SightTypeSelectorScreen> createState() =>
@@ -20,6 +21,12 @@ class SightTypeSelectorScreen extends StatefulWidget {
 class _SightTypeSelectorScreenState extends State<SightTypeSelectorScreen> {
   final _types = Type.values;
   int? _selectedIndex;
+
+  @override
+  void initState() {
+   _selectedIndex = widget.type != null ? _types.indexOf(widget.type!) : null;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +74,7 @@ class _SightTypeSelectorScreenState extends State<SightTypeSelectorScreen> {
             child: ButtonRounded(
               title: AppStrings.save,
               onPressed: _selectedIndex != null ? () {
-                Navigator.pop(context, _types[_selectedIndex!].name);
+                Navigator.pop(context, _types[_selectedIndex!]);
               } : null,
             ),
           ),

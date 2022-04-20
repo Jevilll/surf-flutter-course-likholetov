@@ -40,10 +40,19 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         title: AppStrings.listOfInterestingPlaces,
+        leading: ButtonSvgIcon(
+          icon: AppIcons.arrow,
+          color: Theme.of(context).colorScheme.main,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         bottomWidget: SearchBar(
           controller: _controller,
           onEditingComplete: () {
-            _history.add(_controller.text);
+            if (_controller.text.isNotEmpty) {
+              _history.add(_controller.text);
+            }
           },
           suffix: _controller.text.isNotEmpty
               ? Padding(
@@ -96,10 +105,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                       width: 56,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    title: Text(
-                      _searchedSights[index].name,
-                      style: theme.textTheme.bodyLarge,
-                    ),
+                    title: HighlightText(
+                        _searchedSights[index].name, _controller.text),
                     subtitle: Text(
                       _searchedSights[index].type.name,
                       style: theme.textTheme.bodySmall,
@@ -117,8 +124,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
 
   void _search() {
     final suggestions = mocks.where((sight) {
-      final name = sight.name;
-      final input = _controller.text;
+      final name = sight.name.toLowerCase();
+      final input = _controller.text.toLowerCase();
 
       return input.isNotEmpty && name.contains(input);
     }).toList();
@@ -244,5 +251,50 @@ class NothingFound extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Виджет отображения текста с выделением поисковой строки.
+class HighlightText extends StatefulWidget {
+  final String _text;
+  final String _substring;
+
+  const HighlightText(this._text, this._substring, {Key? key}) : super(key: key);
+
+  @override
+  State<HighlightText> createState() => _HighlightTextState();
+}
+
+class _HighlightTextState extends State<HighlightText> {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final startIndex = widget._text.toLowerCase().indexOf(widget._substring.toLowerCase());
+    final endIndex = startIndex + widget._substring.length;
+
+    final textBefore = widget._text.substring(0, startIndex);
+    final textHighlight = widget._text.substring(startIndex, endIndex);
+    final textAfter = widget._text.substring(endIndex, widget._text.length);
+
+    return RichText(
+      text: TextSpan(
+        children: [
+          _normalSpan(theme, textBefore),
+          _highlightSpan(theme, textHighlight),
+          _normalSpan(theme, textAfter),
+        ],
+      ),
+    );
+  }
+
+  TextSpan _highlightSpan(ThemeData theme, String? content) {
+    return TextSpan(
+      text: content,
+      style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
+    );
+  }
+
+  TextSpan _normalSpan(ThemeData theme, String? content) {
+    return TextSpan(text: content, style: theme.textTheme.bodyLarge);
   }
 }
