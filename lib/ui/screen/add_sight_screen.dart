@@ -22,10 +22,10 @@ class AddSightScreen extends StatefulWidget {
 }
 
 class _AddSightScreenState extends State<AddSightScreen> {
-  final _controllerName = TextEditingController();
-  final _controllerLat = TextEditingController();
-  final _controllerLong = TextEditingController();
-  final _controllerDescription = TextEditingController();
+  late final TextEditingController _controllerName;
+  late final TextEditingController _controllerLat;
+  late final TextEditingController _controllerLong;
+  late final TextEditingController _controllerDescription;
   final _focusNodeLat = FocusNode();
   final _focusNodeLong = FocusNode();
   final _focusNodeDescription = FocusNode();
@@ -34,11 +34,15 @@ class _AddSightScreenState extends State<AddSightScreen> {
 
   @override
   void initState() {
+    super.initState();
+    _controllerName = TextEditingController();
+    _controllerLat = TextEditingController();
+    _controllerLong = TextEditingController();
+    _controllerDescription = TextEditingController();
     _controllerName.addListener(() => setState(() {}));
     _controllerLat.addListener(() => setState(() {}));
     _controllerLong.addListener(() => setState(() {}));
     _controllerDescription.addListener(() => setState(() {}));
-    super.initState();
   }
 
   @override
@@ -99,7 +103,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                           ),
                         );
                         setState(() {
-                          _sightType = result;
+                          _sightType = _sightType ?? result;
                         });
                       },
                       leading: Text(
@@ -190,17 +194,16 @@ class _AddSightScreenState extends State<AddSightScreen> {
                       title: AppStrings.create,
                       onPressed: _isButtonEnabled()
                           ? () {
-                              if (_formKey.currentState!.validate()) {
-                                mocks.add(Sight(
-                                  _controllerName.text,
-                                  details: _controllerDescription.text,
-                                  position: Position(
-                                    double.tryParse(_controllerLat.text) ?? 0,
-                                    double.tryParse(_controllerLong.text) ?? 0,
-                                  ),
-                                ));
-                                Navigator.pop(context);
-                              }
+                              mocks.add(Sight(
+                                _controllerName.text,
+                                details: _controllerDescription.text,
+                                type: _sightType!,
+                                position: Position(
+                                  double.tryParse(_controllerLat.text) ?? 0,
+                                  double.tryParse(_controllerLong.text) ?? 0,
+                                ),
+                              ));
+                              Navigator.pop(context);
                             }
                           : null,
                     ),
@@ -226,7 +229,9 @@ class _AddSightScreenState extends State<AddSightScreen> {
     return _controllerName.text.isNotEmpty &&
         _controllerLat.text.isNotEmpty &&
         _controllerLong.text.isNotEmpty &&
-        _controllerDescription.text.isNotEmpty;
+        _controllerDescription.text.isNotEmpty &&
+        _sightType != null &&
+        _formKey.currentState!.validate();
   }
 }
 

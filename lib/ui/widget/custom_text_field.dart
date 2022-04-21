@@ -101,12 +101,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
     );
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   OutlineInputBorder _border(ThemeData theme, double width) =>
       OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),

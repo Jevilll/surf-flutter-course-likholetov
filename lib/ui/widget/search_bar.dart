@@ -12,7 +12,7 @@ class SearchBar extends StatefulWidget implements PreferredSizeWidget {
   final VoidCallback? onTap;
   final Widget? suffix;
   final VoidCallback? onEditingComplete;
-
+  final ValueChanged<String>? onChanged;
   @override
   Size get preferredSize => const Size.fromHeight(40);
 
@@ -22,6 +22,7 @@ class SearchBar extends StatefulWidget implements PreferredSizeWidget {
     this.onTap,
     this.suffix,
     this.onEditingComplete,
+    this.onChanged,
     Key? key,
   }) : super(key: key);
 
@@ -42,8 +43,10 @@ class _SearchBarState extends State<SearchBar> {
         onTap: widget.onTap,
         onEditingComplete: widget.onEditingComplete,
         readOnly: widget.isReadOnly,
+        autofocus: true,
         cursorColor: theme.colorScheme.main,
         textInputAction: TextInputAction.done,
+        onChanged: widget.onChanged,
         onSubmitted: (_) {
           FocusManager.instance.primaryFocus?.unfocus();
         },

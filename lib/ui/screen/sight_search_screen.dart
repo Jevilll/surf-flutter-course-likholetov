@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gradient_progress_indicator/gradient_progress_indicator.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/mocks.dart';
 import 'package:places/res/app_colors.dart';
@@ -22,15 +25,21 @@ class SightSearchScreen extends StatefulWidget {
 }
 
 class _SightSearchScreenState extends State<SightSearchScreen> {
+  late final  ValueChanged<String>? _onChanged;
   final List<String> _history = [];
+  bool _showProgress = false;
   List<Sight> _searchedSights = [];
   late TextEditingController _controller;
+  Timer? _debounce;
+
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
-    _controller.addListener(_search);
+    _onChanged = (value) => setState(() {
+      _onSearchChanged(value);
+    });
   }
 
   @override
@@ -49,17 +58,16 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
         ),
         bottomWidget: SearchBar(
           controller: _controller,
-          onEditingComplete: () {
-            if (_controller.text.isNotEmpty) {
-              _history.add(_controller.text);
-            }
-          },
+          onChanged: _onChanged,
           suffix: _controller.text.isNotEmpty
               ? Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: InkWell(
                     onTap: () {
-                      _controller.clear();
+                      setState(() {
+                        _controller.clear();
+                        _searchedSights.clear();
+                      });
                     },
                     child: SvgPicture.asset(
                       AppIcons.clear,
@@ -70,49 +78,65 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
               : null,
         ),
       ),
-      body: _searchedSights.isEmpty && _controller.text.isNotEmpty
-          ? const NothingFound()
-          : _searchedSights.isEmpty && _controller.text.isEmpty
-              ? History(_history, (historyElement) {
-                  setState(() {
-                    _controller
-                      ..text = historyElement
-                      ..selection = TextSelection.fromPosition(
-                        TextPosition(offset: _controller.text.length),
-                      );
-                  });
-                })
-              : ListView.separated(
-                  padding: const EdgeInsets.only(top: 16),
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: _searchedSights.length,
-                  separatorBuilder: (context, index) => const Divider(
-                    height: 1,
-                  ),
-                  itemBuilder: (context, index) => ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<SightDetails>(
-                          builder: <BuildContext>(context) =>
-                              SightDetails(mocks[index]),
+      body: _showProgress
+          ? const Center(
+              child: GradientProgressIndicator(
+                radius: 52,
+                gradientColors: [AppColors.fabGreen, AppColors.darkGreen],
+                gradientStops: [
+                  0.2,
+                  0.8,
+                ],
+                duration: 1,
+                strokeWidth: 8,
+                child: SizedBox(),
+              ),
+            )
+          : _searchedSights.isEmpty && _controller.text.isNotEmpty
+              ? const NothingFound()
+              : _searchedSights.isEmpty && _controller.text.isEmpty
+                  ? History(_history, (historyElement) {
+                      setState(() {
+                        _controller
+                          ..text = historyElement
+                          ..selection = TextSelection.fromPosition(
+                            TextPosition(offset: _controller.text.length),
+                          );
+                      });
+                    })
+                  : ListView.separated(
+                      padding: const EdgeInsets.only(top: 16),
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: _searchedSights.length,
+                      separatorBuilder: (context, index) => const Divider(
+                        height: 1,
+                      ),
+                      itemBuilder: (context, index) => ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<SightDetails>(
+                              builder: <BuildContext>(context) =>
+                                  SightDetails(_searchedSights[index]),
+                            ),
+                          );
+                        },
+                        leading: ImagePreview(
+                          imgUrl: _searchedSights[index].image,
+                          height: 56,
+                          width: 56,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      );
-                    },
-                    leading: ImagePreview(
-                      imgUrl: _searchedSights[index].image,
-                      height: 56,
-                      width: 56,
-                      borderRadius: BorderRadius.circular(10),
+                        title: HighlightText(
+                          _searchedSights[index].name,
+                          _controller.text,
+                        ),
+                        subtitle: Text(
+                          _searchedSights[index].type.name,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
                     ),
-                    title: HighlightText(
-                        _searchedSights[index].name, _controller.text),
-                    subtitle: Text(
-                      _searchedSights[index].type.name,
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  ),
-                ),
     );
   }
 
@@ -122,101 +146,121 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
     super.dispose();
   }
 
-  void _search() {
-    final suggestions = mocks.where((sight) {
-      final name = sight.name.toLowerCase();
-      final input = _controller.text.toLowerCase();
+  void _onSearchChanged(String value) {
+    if (value.isNotEmpty) {
+      if (!_showProgress) {
+        setState(() {
+          _showProgress = true;
+        });
+      }
+      if (_debounce?.isActive ?? false) _debounce?.cancel();
+      _debounce = Timer(const Duration(milliseconds: 2000), () {
+        final suggestions = mocks.where((sight) {
+          final name = sight.name.toLowerCase();
+          final input = value.toLowerCase();
 
-      return input.isNotEmpty && name.contains(input);
-    }).toList();
+          return input.isNotEmpty && name.contains(input);
+        }).toList();
 
-    setState(() => _searchedSights = suggestions);
+        _history.add(value);
+
+        setState(() {
+          _searchedSights = suggestions;
+          _showProgress = false;
+        });
+      });
+    } else {
+      _searchedSights.clear();
+    }
   }
+}
+
+/// Enum состояния экрана.
+enum ScreenState {
+  searchResult,
+  progress,
+  nothingFound,
+  history,
 }
 
 /// Виджет истории поиска.
 class History extends StatefulWidget {
-  final ValueChanged<String> onHistoryTap;
+  final ValueChanged<String> _onHistoryTap;
   final List<String> _history;
 
-  const History(this._history, this.onHistoryTap, {Key? key}) : super(key: key);
+  const History(this._history, this._onHistoryTap, {Key? key}) : super(key: key);
 
   @override
   State<History> createState() => _HistoryState();
 }
 
 class _HistoryState extends State<History> {
-  late List<String> _history;
-
-  @override
-  void initState() {
-    _history = List<String>.from(widget._history);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return _history.isNotEmpty
-        ? Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    AppStrings.youSearched,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ),
-              ),
-              ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                itemCount: _history.length,
-                shrinkWrap: true,
-                separatorBuilder: (context, index) => const Divider(
-                  height: 1,
-                ),
-                itemBuilder: (context, index) => ListTile(
-                  onTap: () {
-                    widget.onHistoryTap(_history[index]);
-                  },
-                  title: Text(
-                    _history[index],
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                  trailing: ButtonSvgIcon(
-                    icon: AppIcons.delete,
-                    color: theme.colorScheme.secondary2,
-                    onPressed: () {
-                      setState(() {
-                        _history.removeAt(index);
-                      });
-                    },
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 6, bottom: 16),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: UnconstrainedBox(
-                    child: ButtonWithoutBorders(
-                      title: AppStrings.clearHistory,
-                      onPressed: () {
-                        setState(() {
-                          _history.clear();
-                        });
-                      },
-                      width: 141,
-                      height: 20,
-                      color: theme.colorScheme.green,
+    return widget._history.isNotEmpty
+        ? SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      AppStrings.youSearched,
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
                 ),
-              ),
-            ],
+                ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: widget._history.length,
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) => const Divider(
+                    height: 1,
+                  ),
+                  itemBuilder: (context, index) => ListTile(
+                    onTap: () {
+                      widget._onHistoryTap(widget._history[index]);
+                    },
+                    title: Text(
+                      widget._history[index],
+                      style: theme.textTheme.bodyLarge,
+                    ),
+                    trailing: ButtonSvgIcon(
+                      icon: AppIcons.delete,
+                      color: theme.colorScheme.secondary2,
+                      onPressed: () {
+                        setState(() {
+                          widget._history.removeAt(index);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 6, bottom: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: UnconstrainedBox(
+                      child: ButtonWithoutBorders(
+                        title: AppStrings.clearHistory,
+                        onPressed: () {
+                          setState(() {
+                            widget._history.clear();
+                          });
+                        },
+                        width: 141,
+                        height: 20,
+                        color: theme.colorScheme.green,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           )
         : const SizedBox();
   }
@@ -259,7 +303,8 @@ class HighlightText extends StatefulWidget {
   final String _text;
   final String _substring;
 
-  const HighlightText(this._text, this._substring, {Key? key}) : super(key: key);
+  const HighlightText(this._text, this._substring, {Key? key})
+      : super(key: key);
 
   @override
   State<HighlightText> createState() => _HighlightTextState();
@@ -269,7 +314,8 @@ class _HighlightTextState extends State<HighlightText> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final startIndex = widget._text.toLowerCase().indexOf(widget._substring.toLowerCase());
+    final startIndex =
+        widget._text.toLowerCase().indexOf(widget._substring.toLowerCase());
     final endIndex = startIndex + widget._substring.length;
 
     final textBefore = widget._text.substring(0, startIndex);
