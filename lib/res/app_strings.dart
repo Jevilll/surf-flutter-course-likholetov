@@ -1,5 +1,5 @@
 abstract class AppStrings {
-  static const String appName = 'Список\nинтересных мест';
+  static const String listOfInterestingPlaces = 'Список интересных мест';
   static const String hotel = 'отель';
   static const String restaurant = 'ресторан';
   static const String special = 'особое место';
@@ -20,7 +20,26 @@ abstract class AppStrings {
   static const String km = 'км';
   static const String clear = 'Очистить';
   static const String categories = 'КАТЕГОРИИ';
+  static const String category = 'Категория';
   static const String settings = 'Настройки';
   static const String darkTheme = 'Тёмная тема';
   static const String watchTutorial = 'Смотреть туториал';
+  static const String newPlace = 'Новое место';
+  static const String cancel = 'Отмена';
+  static const String notChosen = 'Не выбрано';
+  static const String name = 'НАЗВАНИЕ';
+  static const String latitude = 'ШИРОТА';
+  static const String longitude = 'ДОЛГОТА';
+  static const String indicateOnMap = 'Указать на карте';
+  static const String description = 'ОПИСАНИЕ';
+  static const String enterText = 'введите текст';
+  static const String create = 'СОЗДАТЬ';
+  static const String search = 'Поиск';
+  static const String nothingFound = 'Ничего не найдено.';
+  static const String tryToChangeSearchParameters =
+      'Попробуйте изменить параметры поиска';
+  static const String youSearched = 'ВЫ ИСКАЛИ';
+  static const String clearHistory = 'Очистить историю';
+  static const String save = 'Сохранить';
+  static const String placeAdded = 'Место добавлено';
 }

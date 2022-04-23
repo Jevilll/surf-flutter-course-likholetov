@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:places/domain/sight.dart';
+import 'package:places/mocks.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
+import 'package:places/ui/screen/sight_details.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/image_preview.dart';
 import 'package:places/utils/common.dart';
@@ -38,7 +40,15 @@ class SightCard extends StatelessWidget {
       aspectRatio: 3 / 2,
       child: Card(
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<SightDetails>(
+                builder: <BuildContext>(context) =>
+                    SightDetails(sight),
+              ),
+            );
+          },
           child: Column(
             children: [
               Expanded(

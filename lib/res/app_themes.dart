@@ -58,9 +58,9 @@ class AppThemes {
         ),
       ),
       textTheme: const TextTheme(
-        titleLarge: AppTextStyles.largeTitle,
-        titleMedium: AppTextStyles.title,
-        titleSmall: AppTextStyles.subtitle,
+        titleLarge: AppTextStyles.title,
+        titleMedium: AppTextStyles.subtitle,
+        titleSmall: AppTextStyles.superSmall,
         bodyLarge: AppTextStyles.text,
         bodyMedium: AppTextStyles.smallBold,
         bodySmall: AppTextStyles.small,
@@ -96,8 +96,8 @@ class AppThemes {
         ),
       ),
       textTheme: TextTheme(
-        titleLarge: AppTextStyles.largeTitle.copyWith(color: AppColors.white),
-        titleMedium: AppTextStyles.title.copyWith(color: AppColors.white),
+        titleLarge: AppTextStyles.title.copyWith(color: AppColors.white),
+        titleMedium: AppTextStyles.subtitle.copyWith(color: AppColors.white),
         titleSmall: AppTextStyles.subtitle.copyWith(color: AppColors.white),
         bodyLarge: AppTextStyles.text.copyWith(color: AppColors.white),
         bodyMedium: AppTextStyles.smallBold.copyWith(color: AppColors.white),
@@ -123,7 +123,7 @@ extension CustomColorScheme on ColorScheme {
   Color get text =>
       brightness == Brightness.light ? AppColors.secondary : AppColors.white;
 
-  Color get background => brightness == Brightness.light
+  Color get background2 => brightness == Brightness.light
       ? AppColors.lightBackground
       : AppColors.darkBackground;
 
@@ -136,4 +136,10 @@ extension CustomColorScheme on ColorScheme {
 
   Color get mainInverse =>
       brightness == Brightness.light ? AppColors.white : AppColors.lightMain;
+
+  Color get inactive =>
+      brightness == Brightness.light ? AppColors.lightBackground : AppColors.darkBlack;
+
+  Color get red =>
+      brightness == Brightness.light ? AppColors.lightRed : AppColors.darkRed;
 }

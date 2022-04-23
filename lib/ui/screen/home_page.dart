@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:places/mocks.dart';
 import 'package:places/res/app_icons.dart';
+import 'package:places/ui/screen/add_sight_screen.dart';
 import 'package:places/ui/screen/filters_screen.dart';
 import 'package:places/ui/screen/settings_screen.dart';
+import 'package:places/ui/screen/sight_details.dart';
 import 'package:places/ui/screen/sight_list_screen.dart';
+import 'package:places/ui/screen/sight_search_screen.dart';
 import 'package:places/ui/screen/visiting_screen.dart';
+
 
 /// Экран разводной.
 class HomePage extends StatefulWidget {
@@ -16,14 +21,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final scenes = [
+    // const SightSearchScreen(),
     const SightListScreen(),
-    const FiltersScreen(),
+    // const AddSightScreen(),
+    const SightSearchScreen(),
+    // const FiltersScreen(),
     const VisitingScreen(),
-    // SightDetails(mocks[0]),
-    const SettingsScreen(),
+    SightDetails(mocks[0]),
+    // const SettingsScreen(),
   ];
 
-  int currentIndex = 1;
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {

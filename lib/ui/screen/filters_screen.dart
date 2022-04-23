@@ -9,8 +9,8 @@ import 'package:places/domain/sight.dart';
 import 'package:places/mocks.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
-import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
+import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_rounded.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
@@ -55,80 +55,86 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24, left: 16, bottom: 8, right: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ButtonSvgIcon(
-                icon: AppIcons.arrow,
-                color: Theme.of(context).colorScheme.main,
-                onPressed: () {},
-              ),
-              ButtonWithoutBorders(
-                title: AppStrings.clear,
-                height: 32,
-                width: 82,
-                color: Theme.of(context).colorScheme.green,
-                onPressed: () {
-                  setState(() {
-                    _clearCategories();
-                    countSights();
-                  });
-                },
-              ),
-            ],
-          ),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              AppStrings.categories,
-              style: AppTextStyles.superSmall,
-            ),
-          ),
-          SelectedCategories(
-            selected: _selected,
-            child: CategoriesGrid(
-              _categories,
+    return Scaffold(
+      appBar: CustomAppBar(
+        leading: ButtonSvgIcon(
+          icon: AppIcons.arrow,
+          color: Theme.of(context).colorScheme.main,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: ButtonWithoutBorders(
+              title: AppStrings.clear,
+              height: 32,
+              width: 82,
+              color: Theme.of(context).colorScheme.green,
               onPressed: () {
-                setState(countSights);
+                setState(() {
+                  _clearCategories();
+                  countSights();
+                });
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(AppStrings.distance),
-                Text(
-                  '${AppStrings.from} ${_convert(values.start)} ${AppStrings.to} ${_convert(values.end)}',
-                ),
-              ],
-            ),
-          ),
-          RangeSlider(
-            min: 100,
-            max: 10000,
-            values: values,
-            divisions: 99,
-            onChanged: (newRange) {
-              setState(() {
-                values = newRange;
-              });
-            },
-          ),
-          const Spacer(),
-          CountButtonText(
-            count: numberOfFound,
-            child: CategoriesButton(
-              onPressed: () {},
-            ),
-          ),
         ],
+      ),
+      body: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 24, left: 16, bottom: 8, right: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppStrings.categories,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+              ),
+              SelectedCategories(
+                selected: _selected,
+                child: CategoriesGrid(
+                  _categories,
+                  onPressed: () {
+                    setState(countSights);
+                  },
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(AppStrings.distance),
+                  Text(
+                    '${AppStrings.from} ${_convert(values.start)} ${AppStrings.to} ${_convert(values.end)}',
+                  ),
+                ],
+              ),
+              RangeSlider(
+                min: 100,
+                max: 10000,
+                values: values,
+                divisions: 99,
+                onChanged: (newRange) {
+                  setState(() {
+                    values = newRange;
+                  });
+                },
+              ),
+              const Spacer(),
+              CountButtonText(
+                count: numberOfFound,
+                child: CategoriesButton(
+                  onPressed: () {},
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -187,7 +193,7 @@ class _CategoriesGridState extends State<CategoriesGrid> {
     final selected = SelectedCategories.of(context).selected;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
         itemCount: widget._categories.length,
@@ -210,6 +216,7 @@ class _CategoriesGridState extends State<CategoriesGrid> {
   }
 }
 
+/// Кнопка показать отфильтрованные достопримечательности.
 class CategoriesButton extends StatefulWidget {
   final VoidCallback onPressed;
 
@@ -225,12 +232,13 @@ class _CategoriesButtonState extends State<CategoriesButton> {
     final text = CountButtonText.of(context).title;
 
     return ButtonRounded(
-      title: text,
+      title: text.isEmpty ? AppStrings.show : text,
       onPressed: text.isEmpty ? null : widget.onPressed,
     );
   }
 }
 
+/// Виджет для проброса выбранных категорий вниз по дереву.
 class SelectedCategories extends InheritedWidget {
   final List<bool> selected;
 
@@ -253,6 +261,7 @@ class SelectedCategories extends InheritedWidget {
   }
 }
 
+/// Виджет для проброса количества выбранных достопримечательностей вниз по дереву.
 class CountButtonText extends InheritedWidget {
   final int count;
 

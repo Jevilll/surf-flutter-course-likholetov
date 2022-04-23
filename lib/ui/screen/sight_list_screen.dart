@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/mocks.dart';
-import 'package:places/res/app_sizes.dart';
+import 'package:places/res/app_colors.dart';
+import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
+import 'package:places/res/app_themes.dart';
+import 'package:places/ui/screen/add_sight_screen.dart';
+import 'package:places/ui/screen/filters_screen.dart';
+import 'package:places/ui/screen/sight_search_screen.dart';
+import 'package:places/ui/widget/app_bar.dart';
+import 'package:places/ui/widget/search_bar.dart';
 import 'package:places/ui/widget/sight_card.dart';
 
 /// Экран списка достопримечательностей.
@@ -15,8 +23,37 @@ class SightListScreen extends StatefulWidget {
 class _SightListScreenState extends State<SightListScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      appBar: const CustomAppBar(AppSizes.appBarHeight),
+      appBar: CustomAppBar(
+        title: AppStrings.listOfInterestingPlaces,
+        bottomWidget: SearchBar(
+          isReadOnly: true,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<SightSearchScreen>(
+                builder: <BuildContext>(context) => const SightSearchScreen(),
+              ),
+            );
+          },
+          suffix: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<FiltersScreen>(
+                  builder: <BuildContext>(context) => const FiltersScreen(),
+                ),
+              );
+            },
+            child: SvgPicture.asset(
+              AppIcons.filter,
+              color: theme.colorScheme.green,
+            ),
+          ),
+        ),
+      ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         physics: const BouncingScrollPhysics(),
@@ -26,33 +63,35 @@ class _SightListScreenState extends State<SightListScreen> {
         ),
         itemBuilder: (context, index) => SightCard.interesting(mocks[index]),
       ),
-    );
-  }
-}
-
-/// Виджет апп бара.
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final double height;
-
-  @override
-  Size get preferredSize => Size(double.infinity, height);
-
-  const CustomAppBar(this.height, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: AppBar(
-        title: Text(
-          AppStrings.appName,
-          style: Theme.of(context).textTheme.titleLarge,
-          textAlign: TextAlign.left,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
+      floatingActionButton: Container(
+        height: 48,
+        width: 177,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: const LinearGradient(
+            colors: [AppColors.fabGreen, AppColors.darkGreen],
+          ),
         ),
-        toolbarHeight: height,
+        child: FloatingActionButton.extended(
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute<AddSightScreen>(
+                builder: <BuildContext>(context) => const AddSightScreen(),
+              ),
+            );
+            setState(() {});
+          },
+          label: const Text(AppStrings.newPlace),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          icon: SvgPicture.asset(
+            AppIcons.plus,
+            color: AppColors.white,
+          ),
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

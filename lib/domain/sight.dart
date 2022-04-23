@@ -4,7 +4,7 @@ import 'package:places/res/app_strings.dart';
 /// Модель данных достопримечательности.
 class Sight {
   String name;
-  Position position;
+  Position? position;
   String details;
   Type type;
   String image;
@@ -12,7 +12,8 @@ class Sight {
   String workingHours;
 
   Sight(
-    this.name, this.position, {
+    this.name, {
+    this.position,
     this.details = '',
     this.type = Type.special,
     this.image = '',

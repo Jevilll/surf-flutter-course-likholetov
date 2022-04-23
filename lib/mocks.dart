@@ -4,7 +4,7 @@ import 'package:places/domain/sight.dart';
 final List<Sight> mocks = [
   Sight(
     'лучший отель',
-    Position(55.75222, 37.61556),
+    position: Position(55.75222, 37.61556),
     details: 'Описание',
     type: Type.hotel,
     image:
@@ -14,7 +14,7 @@ final List<Sight> mocks = [
   ),
   Sight(
     'Средний ресторан',
-    Position(55.75222, 37.61556),
+    position: Position(55.75222, 37.61556),
     details: 'Описание',
     type: Type.restaurant,
     image:
@@ -22,14 +22,14 @@ final List<Sight> mocks = [
   ),
   Sight(
     'Самое особое',
-    Position(55.75222, 37.61556),
+    position: Position(55.75222, 37.61556),
     details: 'Описание',
     image:
         'https://gcdn.tomesto.ru/img/place/000/026/236/restoran-osoboe-mesto-v-trehprudnom-pereulke_9940e_full-174438.jpg',
   ),
   Sight(
     'Большой парк',
-    Position(55.75222, 37.61556),
+    position: Position(55.75222, 37.61556),
     details: 'Описание',
     type: Type.park,
     image:
@@ -37,14 +37,14 @@ final List<Sight> mocks = [
   ),
   Sight(
     'Старый музей',
-    Position(55.75222, 37.61556),
+    position: Position(55.75222, 37.61556),
     details: 'Описание',
     type: Type.museum,
     image: 'https://cdn.culture.ru/c/75570.jpg',
   ),
   Sight(
     'Небольшое кафе',
-    Position(55.75222, 37.61556),
+    position: Position(55.75222, 37.61556),
     details: 'Описание',
     type: Type.cafe,
     image:

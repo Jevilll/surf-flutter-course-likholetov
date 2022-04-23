@@ -5,6 +5,7 @@ abstract class AppColors {
   static const secondary = Color(0xFF3B3E5B);
   static const secondary2 = Color(0xFF7C7E92);
   static const inactiveBlack = Color(0x8F7C7E92);
+  static const fabGreen = Color(0xFFFCDD3D);
 
   // Светлая тема.
   static const lightBackground = Color(0xFFF5F5F5);
