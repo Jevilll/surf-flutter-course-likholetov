@@ -79,17 +79,17 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
         ),
       ),
       body: _showProgress
-          ? const Center(
+          ? Center(
               child: GradientProgressIndicator(
-                radius: 52,
-                gradientColors: [AppColors.fabGreen, AppColors.darkGreen],
-                gradientStops: [
+                radius: 20,
+                gradientColors: [AppColors.secondary2, theme.colorScheme.inactive],
+                gradientStops: const [
                   0.2,
                   0.8,
                 ],
                 duration: 1,
-                strokeWidth: 8,
-                child: SizedBox(),
+                strokeWidth: 4,
+                child: const SizedBox(),
               ),
             )
           : _searchedSights.isEmpty && _controller.text.isNotEmpty

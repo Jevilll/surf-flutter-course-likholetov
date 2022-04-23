@@ -41,4 +41,5 @@ abstract class AppStrings {
   static const String youSearched = 'ВЫ ИСКАЛИ';
   static const String clearHistory = 'Очистить историю';
   static const String save = 'Сохранить';
+  static const String placeAdded = 'Место добавлено';
 }

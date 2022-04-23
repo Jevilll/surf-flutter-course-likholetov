@@ -37,7 +37,7 @@ class ButtonRounded extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          primary: onPressed != null ? color ?? theme.colorScheme.green : theme.colorScheme.disabledButton,
+          primary: onPressed != null ? color ?? theme.colorScheme.green : theme.colorScheme.inactive,
           // onSurface: Colors.red,
         ),
         child: Row(

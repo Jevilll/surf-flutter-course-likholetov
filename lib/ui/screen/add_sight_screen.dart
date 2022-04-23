@@ -103,7 +103,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                           ),
                         );
                         setState(() {
-                          _sightType = _sightType ?? result;
+                          _sightType = result ?? _sightType;
                         });
                       },
                       leading: Text(
@@ -204,6 +204,11 @@ class _AddSightScreenState extends State<AddSightScreen> {
                                 ),
                               ));
                               Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(AppStrings.placeAdded),
+                                ),
+                              );
                             }
                           : null,
                     ),
