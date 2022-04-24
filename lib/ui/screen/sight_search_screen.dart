@@ -14,6 +14,7 @@ import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/image_preview.dart';
+import 'package:places/ui/widget/nothing_found.dart';
 import 'package:places/ui/widget/search_bar.dart';
 
 /// Экран поиска достопримечательностей.
@@ -25,21 +26,20 @@ class SightSearchScreen extends StatefulWidget {
 }
 
 class _SightSearchScreenState extends State<SightSearchScreen> {
-  late final  ValueChanged<String>? _onChanged;
+  late final ValueChanged<String>? _onChanged;
   final List<String> _history = [];
   bool _showProgress = false;
   List<Sight> _searchedSights = [];
   late TextEditingController _controller;
   Timer? _debounce;
 
-
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
     _onChanged = (value) => setState(() {
-      _onSearchChanged(value);
-    });
+          _onSearchChanged(value);
+        });
   }
 
   @override
@@ -82,7 +82,10 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
           ? Center(
               child: GradientProgressIndicator(
                 radius: 20,
-                gradientColors: [AppColors.secondary2, theme.colorScheme.inactive],
+                gradientColors: [
+                  AppColors.secondary2,
+                  theme.colorScheme.inactive,
+                ],
                 gradientStops: const [
                   0.2,
                   0.8,
@@ -93,7 +96,11 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
               ),
             )
           : _searchedSights.isEmpty && _controller.text.isNotEmpty
-              ? const NothingFound()
+              ? const NothingFound(
+                  icon: AppIcons.search64,
+                  title: AppStrings.nothingFound,
+                  subtitle: AppStrings.tryToChangeSearchParameters,
+                )
               : _searchedSights.isEmpty && _controller.text.isEmpty
                   ? History(_history, (historyElement) {
                       setState(() {
@@ -188,14 +195,14 @@ class History extends StatefulWidget {
   final ValueChanged<String> _onHistoryTap;
   final List<String> _history;
 
-  const History(this._history, this._onHistoryTap, {Key? key}) : super(key: key);
+  const History(this._history, this._onHistoryTap, {Key? key})
+      : super(key: key);
 
   @override
   State<History> createState() => _HistoryState();
 }
 
 class _HistoryState extends State<History> {
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -263,38 +270,6 @@ class _HistoryState extends State<History> {
             ),
           )
         : const SizedBox();
-  }
-}
-
-/// Виджет сообщения об отсутсвии результата поиска.
-class NothingFound extends StatelessWidget {
-  const NothingFound({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            AppIcons.search64,
-            color: AppColors.inactiveBlack,
-          ),
-          Text(
-            AppStrings.nothingFound,
-            style: theme.textTheme.titleMedium
-                ?.copyWith(color: AppColors.inactiveBlack),
-          ),
-          Text(
-            AppStrings.tryToChangeSearchParameters,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: AppColors.inactiveBlack),
-          ),
-        ],
-      ),
-    );
   }
 }
 

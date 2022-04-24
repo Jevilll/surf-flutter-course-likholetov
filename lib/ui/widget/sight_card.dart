@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:places/domain/sight.dart';
-import 'package:places/mocks.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
@@ -13,24 +12,14 @@ import 'package:places/utils/common.dart';
 class SightCard extends StatelessWidget {
   final Sight sight;
   final CardType type;
+  final VoidCallback? onDelete;
 
-  const SightCard.interesting(this.sight, {
-    Key? key,
-  })
-      : type = CardType.interesting,
-        super(key: key);
-
-  const SightCard.toVisit(this.sight, {
-    Key? key,
-  })
-      : type = CardType.toVisit,
-        super(key: key);
-
-  const SightCard.visited(this.sight, {
-    Key? key,
-  })
-      : type = CardType.visited,
-        super(key: key);
+  const SightCard(
+      this.sight, {
+        this.onDelete,
+        this.type = CardType.interesting,
+        Key? key,
+      }): super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +33,7 @@ class SightCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute<SightDetails>(
-                builder: <BuildContext>(context) =>
-                    SightDetails(sight),
+                builder: <BuildContext>(context) => SightDetails(sight),
               ),
             );
           },
@@ -70,7 +58,10 @@ class SightCard extends StatelessWidget {
                     Positioned(
                       top: 4,
                       right: 4,
-                      child: CardButtons(type),
+                      child: CardButtons(
+                        type,
+                        onDelete: onDelete,
+                      ),
                     ),
                   ],
                 ),
@@ -127,27 +118,28 @@ class TimeToVisitText extends StatelessWidget {
     return sight.timeToVisit.isEmpty || type == CardType.interesting
         ? const SizedBox.shrink()
         : Container(
-      margin: const EdgeInsets.symmetric(vertical: 2),
-      height: 28,
-      width: double.infinity,
-      child: Text(
-        sight.timeToVisit,
-        style: AppTextStyles.small.copyWith(
-          color: type == CardType.toVisit
-              ? theme.colorScheme.green
-              : theme.secondaryHeaderColor,
-        ),
-        textAlign: TextAlign.left,
-      ),
-    );
+            margin: const EdgeInsets.symmetric(vertical: 2),
+            height: 28,
+            width: double.infinity,
+            child: Text(
+              sight.timeToVisit,
+              style: AppTextStyles.small.copyWith(
+                color: type == CardType.toVisit
+                    ? theme.colorScheme.green
+                    : theme.secondaryHeaderColor,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          );
   }
 }
 
 /// Виджет отображения кнопок, зависящик от типа карточки [CardType].
 class CardButtons extends StatelessWidget {
   final CardType type;
+  final VoidCallback? onDelete;
 
-  const CardButtons(this.type, {Key? key}) : super(key: key);
+  const CardButtons(this.type, {this.onDelete, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -164,10 +156,14 @@ class CardButtons extends StatelessWidget {
             );
             break;
           case CardType.toVisit:
-            result = const ToVisitButtons();
+            result = ToVisitButtons(
+              onDelete: onDelete,
+            );
             break;
           case CardType.visited:
-            result = const VisitedButtons();
+            result = VisitedButtons(
+              onDelete: onDelete,
+            );
             break;
         }
 
@@ -179,7 +175,9 @@ class CardButtons extends StatelessWidget {
 
 /// Кнопки мест к посящению.
 class ToVisitButtons extends StatelessWidget {
-  const ToVisitButtons({Key? key}) : super(key: key);
+  final VoidCallback? onDelete;
+
+  const ToVisitButtons({this.onDelete, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -193,9 +191,7 @@ class ToVisitButtons extends StatelessWidget {
         ),
         ButtonSvgIcon(
           icon: AppIcons.close,
-          onPressed: () {
-            logger.i('Нажатие на кнопку close');
-          },
+          onPressed: onDelete,
         ),
       ],
     );
@@ -204,7 +200,9 @@ class ToVisitButtons extends StatelessWidget {
 
 /// Кнопки посещенных мест.
 class VisitedButtons extends StatelessWidget {
-  const VisitedButtons({Key? key}) : super(key: key);
+  final VoidCallback? onDelete;
+
+  const VisitedButtons({this.onDelete, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -216,14 +214,9 @@ class VisitedButtons extends StatelessWidget {
             logger.i('Нажатие на кнопку share');
           },
         ),
-        const SizedBox(
-          width: 16,
-        ),
         ButtonSvgIcon(
           icon: AppIcons.close,
-          onPressed: () {
-            logger.i('Нажатие на кнопку close');
-          },
+          onPressed: onDelete,
         ),
       ],
     );

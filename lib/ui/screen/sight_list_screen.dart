@@ -61,7 +61,9 @@ class _SightListScreenState extends State<SightListScreen> {
         separatorBuilder: (context, index) => const SizedBox(
           height: 16,
         ),
-        itemBuilder: (context, index) => SightCard.interesting(mocks[index]),
+        itemBuilder: (context, index) => SightCard(
+          mocks[index],
+        ),
       ),
       floatingActionButton: Container(
         height: 48,
