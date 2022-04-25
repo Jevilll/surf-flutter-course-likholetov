@@ -42,4 +42,7 @@ abstract class AppStrings {
   static const String clearHistory = 'Очистить историю';
   static const String save = 'Сохранить';
   static const String placeAdded = 'Место добавлено';
+  static const String empty = 'Пусто';
+  static const String emptyToVisit = 'Отмечайте понравившиеся\nместа и они появиятся здесь.';
+  static const String emptyVisited = 'Завершите маршрут,\nчтобы место попало сюда.';
 }
