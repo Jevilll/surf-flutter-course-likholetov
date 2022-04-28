@@ -47,56 +47,53 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SizedBox(
-      height: widget.maxLines * 40,
-      child: TextFormField(
-        controller: _controller,
-        cursorColor: theme.colorScheme.main,
-        focusNode: widget.focusNode,
-        style: theme.textTheme.bodyLarge,
-        maxLines: widget.maxLines,
-        textInputAction: widget.textInputAction,
-        onEditingComplete: widget.onEditingComplete,
-        keyboardType: widget.textInputType,
-        onFieldSubmitted: widget.onFieldSubmitted,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return '';
-          }
+    return TextFormField(
+      controller: _controller,
+      cursorColor: theme.colorScheme.main,
+      focusNode: widget.focusNode,
+      style: theme.textTheme.bodyLarge,
+      maxLines: widget.maxLines,
+      textInputAction: widget.textInputAction,
+      onEditingComplete: widget.onEditingComplete,
+      keyboardType: widget.textInputType,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return '';
+        }
 
-          if (widget.validator?.call(value) != null) return '';
+        if (widget.validator?.call(value) != null) return '';
 
-          return null;
-        },
-        decoration: InputDecoration(
-          hintText: widget.hint,
-          hintStyle: AppTextStyles.superSmall,
-          errorStyle: const TextStyle(height: 0),
-          enabledBorder: _border(theme, 1),
-          focusedBorder: _border(theme, 2),
-          suffixIconConstraints: const BoxConstraints(
-            minHeight: 20,
-            minWidth: 20,
-          ),
-          errorBorder: _errorBorder(theme, 1),
-          focusedErrorBorder: _errorBorder(theme, 2),
-          contentPadding: const EdgeInsets.all(10.0),
-          suffixIcon: _controller.text.isNotEmpty
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: InkWell(
-                    onTap: () {
-                      _controller.clear();
-                    },
-                    child: SvgPicture.asset(
-                      AppIcons.clear,
-                      color: theme.colorScheme.main,
-                    ),
-                  ),
-                )
-              : null,
+        return null;
+      },
+      decoration: InputDecoration(
+        hintText: widget.hint,
+        hintStyle: AppTextStyles.superSmall,
+        errorStyle: const TextStyle(height: 0),
+        enabledBorder: _border(theme, 1),
+        focusedBorder: _border(theme, 2),
+        suffixIconConstraints: const BoxConstraints(
+          minHeight: 20,
+          minWidth: 20,
         ),
+        errorBorder: _errorBorder(theme, 1),
+        focusedErrorBorder: _errorBorder(theme, 2),
+        contentPadding: const EdgeInsets.all(10.0),
+        suffixIcon: _controller.text.isNotEmpty
+            ? Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: InkWell(
+                  onTap: () {
+                    _controller.clear();
+                  },
+                  child: SvgPicture.asset(
+                    AppIcons.clear,
+                    color: theme.colorScheme.main,
+                  ),
+                ),
+              )
+            : null,
       ),
     );
   }
