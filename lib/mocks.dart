@@ -51,3 +51,6 @@ final List<Sight> mocks = [
         'https://gcdn.tomesto.ru/img/place/000/023/404/restoran-corner-cafe-korner-kafe-na-kompozitorskoy-ulitse_bc545_full-317836.jpg',
   ),
 ];
+
+final List<Sight> mocksToVisit = List.from(mocks);
+final List<Sight> mocksVisited = List.from(mocks);
