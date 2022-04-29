@@ -10,7 +10,6 @@ import 'package:places/ui/screen/sight_list_screen.dart';
 import 'package:places/ui/screen/sight_search_screen.dart';
 import 'package:places/ui/screen/visiting_screen.dart';
 
-
 /// Экран разводной.
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,17 +20,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final scenes = [
-    // const SightSearchScreen(),
-    const SightListScreen(),
-    // const AddSightScreen(),
     const SightSearchScreen(),
+    // const SightListScreen(),
+    const AddSightScreen(),
+    // const SightSearchScreen(),
     // const FiltersScreen(),
     const VisitingScreen(),
     SightDetails(mocks[0]),
     // const SettingsScreen(),
   ];
 
-  int currentIndex = 0;
+  int currentIndex = 1;
 
   @override
   Widget build(BuildContext context) {

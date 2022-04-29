@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/position.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/mocks.dart';
+import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_text_styles.dart';
@@ -30,6 +31,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
   final _focusNodeLong = FocusNode();
   final _focusNodeDescription = FocusNode();
   final _formKey = GlobalKey<FormState>();
+  final _photos = ['add'];
   Type? _sightType;
 
   @override
@@ -75,121 +77,167 @@ class _AddSightScreenState extends State<AddSightScreen> {
         ),
       ),
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverFillRemaining(
             hasScrollBody: false,
             child: Container(
-              padding: const EdgeInsets.all(16),
+              // padding: const EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppStrings.category.toUpperCase(),
-                        style: AppTextStyles.superSmall,
+                    Container(
+                      margin: const EdgeInsets.only(top: 24),
+                      height: 72,
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _photos.length,
+                        itemBuilder: (context, index) => index != 0
+                            ? _PhotoCard(
+                                photoAsset: _photos[index],
+                                onDelete: () {
+                                  setState(() {
+                                    _photos.removeAt(index);
+                                  });
+                                },
+                              )
+                            : AddPhotoButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _photos.insert(1, getRandomPhoto());
+                                  });
+                                },
+                              ),
                       ),
                     ),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      onTap: () async {
-                        final result = await Navigator.push<Type>(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SightTypeSelectorScreen(
-                              type: _sightType,
-                            ),
-                          ),
-                        );
-                        setState(() {
-                          _sightType = result ?? _sightType;
-                        });
-                      },
-                      leading: Text(
-                        _sightType != null
-                            ? _sightType!.name
-                            : AppStrings.notChosen,
-                        style: theme.textTheme.bodySmall,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, top: 24),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppStrings.category.toUpperCase(),
+                          style: AppTextStyles.superSmall,
+                        ),
                       ),
-                      trailing: SvgPicture.asset(
-                        AppIcons.view,
-                        color: theme.colorScheme.main,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        onTap: () async {
+                          final result = await Navigator.push<Type>(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SightTypeSelectorScreen(
+                                type: _sightType,
+                              ),
+                            ),
+                          );
+                          setState(() {
+                            _sightType = result ?? _sightType;
+                          });
+                        },
+                        leading: Text(
+                          _sightType != null
+                              ? _sightType!.name
+                              : AppStrings.notChosen,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        trailing: SvgPicture.asset(
+                          AppIcons.view,
+                          color: theme.colorScheme.main,
+                        ),
                       ),
                     ),
                     const Divider(
+                      indent: 16,
+                      endIndent: 16,
                       thickness: 1,
                     ),
-                    EditableItem(
-                      name: AppStrings.name,
-                      textInputAction: TextInputAction.next,
-                      controller: _controllerName,
-                      onEditingComplete: () =>
-                          FocusScope.of(context).requestFocus(_focusNodeLat),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: _EditableItem(
+                        name: AppStrings.name,
+                        textInputAction: TextInputAction.next,
+                        controller: _controllerName,
+                        onEditingComplete: () =>
+                            FocusScope.of(context).requestFocus(_focusNodeLat),
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: EditableItem(
-                            name: AppStrings.latitude,
-                            controller: _controllerLat,
-                            textInputAction: TextInputAction.next,
-                            textInputType: TextInputType.number,
-                            focusNode: _focusNodeLat,
-                            validator: (value) {
-                              if (!_isNumeric(value)) {
-                                return '';
-                              }
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _EditableItem(
+                              name: AppStrings.latitude,
+                              controller: _controllerLat,
+                              textInputAction: TextInputAction.next,
+                              textInputType: TextInputType.number,
+                              focusNode: _focusNodeLat,
+                              validator: (value) {
+                                if (!_isNumeric(value)) {
+                                  return '';
+                                }
 
-                              return null;
-                            },
-                            onEditingComplete: () => FocusScope.of(context)
-                                .requestFocus(_focusNodeLong),
+                                return null;
+                              },
+                              onEditingComplete: () => FocusScope.of(context)
+                                  .requestFocus(_focusNodeLong),
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        Expanded(
-                          child: EditableItem(
-                            name: AppStrings.longitude,
-                            controller: _controllerLong,
-                            textInputAction: TextInputAction.next,
-                            textInputType: TextInputType.number,
-                            focusNode: _focusNodeLong,
-                            validator: (value) {
-                              if (!_isNumeric(value)) {
-                                return '';
-                              }
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          Expanded(
+                            child: _EditableItem(
+                              name: AppStrings.longitude,
+                              controller: _controllerLong,
+                              textInputAction: TextInputAction.next,
+                              textInputType: TextInputType.number,
+                              focusNode: _focusNodeLong,
+                              validator: (value) {
+                                if (!_isNumeric(value)) {
+                                  return '';
+                                }
 
-                              return null;
-                            },
-                            onEditingComplete: () => FocusScope.of(context)
-                                .requestFocus(_focusNodeDescription),
+                                return null;
+                              },
+                              onEditingComplete: () => FocusScope.of(context)
+                                  .requestFocus(_focusNodeDescription),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: UnconstrainedBox(
-                        child: ButtonWithoutBorders(
-                          title: AppStrings.indicateOnMap,
-                          onPressed: () {},
-                          width: 130,
-                          height: 20,
-                          color: theme.colorScheme.green,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: UnconstrainedBox(
+                          child: ButtonWithoutBorders(
+                            title: AppStrings.indicateOnMap,
+                            onPressed: () {},
+                            width: 130,
+                            height: 20,
+                            color: theme.colorScheme.green,
+                          ),
                         ),
                       ),
                     ),
-                    EditableItem(
-                      name: AppStrings.description,
-                      controller: _controllerDescription,
-                      focusNode: _focusNodeDescription,
-                      maxLines: 3,
-                      hint: AppStrings.enterText,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: _EditableItem(
+                        name: AppStrings.description,
+                        controller: _controllerDescription,
+                        focusNode: _focusNodeDescription,
+                        maxLines: 3,
+                        hint: AppStrings.enterText,
+                      ),
                     ),
-                    const Spacer(),
+                    // const Spacer(),
                     ButtonRounded(
                       title: AppStrings.create,
                       onPressed: _isButtonEnabled()
@@ -212,6 +260,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                             }
                           : null,
                     ),
+                    const SizedBox(height: 16,),
                   ],
                 ),
               ),
@@ -241,7 +290,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
 }
 
 /// Виджет радактируемого поля.
-class EditableItem extends StatefulWidget {
+class _EditableItem extends StatefulWidget {
   final String name;
   final TextEditingController? controller;
   final FocusNode? focusNode;
@@ -253,7 +302,7 @@ class EditableItem extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final FormFieldValidator<String>? validator;
 
-  const EditableItem({
+  const _EditableItem({
     required this.name,
     this.controller,
     this.focusNode,
@@ -268,10 +317,10 @@ class EditableItem extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<EditableItem> createState() => _EditableItemState();
+  State<_EditableItem> createState() => _EditableItemState();
 }
 
-class _EditableItemState extends State<EditableItem> {
+class _EditableItemState extends State<_EditableItem> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -301,6 +350,111 @@ class _EditableItemState extends State<EditableItem> {
           validator: widget.validator,
         ),
       ],
+    );
+  }
+}
+
+/// Карточка добавленной фотограции.
+class _PhotoCard extends StatelessWidget {
+  final String photoAsset;
+  final VoidCallback onDelete;
+
+  const _PhotoCard({
+    required this.photoAsset,
+    required this.onDelete,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 16),
+      child: Stack(
+        children: [
+          UnconstrainedBox(
+            child: GestureDetector(
+              onTap: onDelete,
+              child: Dismissible(
+                direction: DismissDirection.up,
+                key: UniqueKey(),
+                background: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: RotatedBox(
+                    quarterTurns: 3,
+                    child: SvgPicture.asset(
+                      AppIcons.view,
+                      color: theme.colorScheme.main,
+                    ),
+                  ),
+                ),
+                onDismissed: (_) {
+                  onDelete.call();
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    photoAsset,
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: IgnorePointer(
+              child: SvgPicture.asset(
+                AppIcons.clear,
+                height: 24,
+                color: AppColors.white,
+              ),
+            ),
+          ),
+        ],
+
+      ),
+    );
+  }
+}
+
+/// Кнопка добавления фотографии.
+class AddPhotoButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+
+  const AddPhotoButton({this.onPressed, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return UnconstrainedBox(
+          child: Container(
+            margin: const EdgeInsets.only(left: 16, right: 16),
+            width: 72,
+            height: 72,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(
+                  width: 2.0,
+                  color: theme.colorScheme.green.withOpacity(0.5),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: onPressed,
+              child: SvgPicture.asset(
+                AppIcons.plus,
+                height: 40,
+                color: theme.colorScheme.green,
+              ),
+            ),
+          ),
     );
   }
 }
