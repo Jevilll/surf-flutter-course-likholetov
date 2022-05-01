@@ -7,7 +7,7 @@ import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_themes.dart';
 import 'package:places/ui/widget/app_bar.dart';
-import 'package:places/ui/widget/nothing_found.dart';
+import 'package:places/ui/widget/center_content.dart';
 import 'package:places/ui/widget/sight_card.dart';
 
 /// Экран избранных мест.
@@ -136,7 +136,7 @@ class _ReorderableDismissibleListState
             },
             onReorder: _reorderData,
           )
-        : NothingFound(
+        : CenterContent(
             icon: AppIcons.card64,
             title: AppStrings.empty,
             subtitle: _type == CardType.toVisit

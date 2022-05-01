@@ -47,7 +47,9 @@ abstract class AppIcons {
   static const park = '$_baseAssetsPath/park.svg';
   static const particularPlace = '$_baseAssetsPath/particular_place.svg';
   static const restaurant = '$_baseAssetsPath/restaurant.svg';
-
+  static const tutorial1 = '$_baseAssetsPath/tutorial_1.svg';
+  static const tutorial2 = '$_baseAssetsPath/tutorial_2.svg';
+  static const tutorial3 = '$_baseAssetsPath/tutorial_3.svg';
 
   static const _baseAssetsPath = 'assets/icons';
 }
