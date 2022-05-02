@@ -45,7 +45,7 @@ class SightCard extends StatelessWidget {
                   fit: StackFit.expand,
                   children: [
                     ImagePreview(
-                      imgUrl: sight.image,
+                      imgUrl: sight.images[0],
                     ),
                     Positioned(
                       left: 16,

@@ -137,13 +137,13 @@ class DotsIndicator extends AnimatedWidget {
   }
 
   Widget _buildDot(int index) {
-    final selecting = Curves.easeOut.transform(
+    final value = Curves.easeOut.transform(
       max(
         0.0,
         1.0 - ((controller.page ?? controller.initialPage) - index).abs(),
       ),
     );
-    final zoom = 1.0 + (_maxZoom - 1.0) * selecting;
+    final zoom = 1.0 + (_maxZoom - 1.0) * value;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -153,7 +153,7 @@ class DotsIndicator extends AnimatedWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: ColorTween(begin: AppColors.inactiveBlack, end: activeItemColor)
-              .evaluate(AlwaysStoppedAnimation(selecting)),
+              .evaluate(AlwaysStoppedAnimation(value)),
         ),
       ),
     );

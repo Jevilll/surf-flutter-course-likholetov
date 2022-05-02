@@ -129,7 +129,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                           );
                         },
                         leading: ImagePreview(
-                          imgUrl: _searchedSights[index].image,
+                          imgUrl: _searchedSights[index].images[0],
                           height: 56,
                           width: 56,
                           borderRadius: BorderRadius.circular(10),
