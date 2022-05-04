@@ -8,7 +8,6 @@ import 'package:places/res/app_themes.dart';
 import 'package:places/ui/screen/add_sight_screen.dart';
 import 'package:places/ui/screen/filters_screen.dart';
 import 'package:places/ui/screen/sight_search_screen.dart';
-import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/search_bar.dart';
 import 'package:places/ui/widget/sight_card.dart';
 
@@ -26,44 +25,71 @@ class _SightListScreenState extends State<SightListScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: CustomAppBar(
-        title: AppStrings.listOfInterestingPlaces,
-        bottomWidget: SearchBar(
-          isReadOnly: true,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute<SightSearchScreen>(
-                builder: <BuildContext>(context) => const SightSearchScreen(),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 140,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.all(16.0),
+              expandedTitleScale: 1.8,
+              centerTitle: true,
+              title: Text(
+                AppStrings.listOfInterestingPlacesTwoLines,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
-            );
-          },
-          suffix: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<FiltersScreen>(
-                  builder: <BuildContext>(context) => const FiltersScreen(),
-                ),
-              );
-            },
-            child: SvgPicture.asset(
-              AppIcons.filter,
-              color: theme.colorScheme.green,
             ),
           ),
-        ),
-      ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(16),
-        physics: const BouncingScrollPhysics(),
-        itemCount: mocks.length,
-        separatorBuilder: (context, index) => const SizedBox(
-          height: 16,
-        ),
-        itemBuilder: (context, index) => SightCard(
-          mocks[index],
-        ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: SearchBar(
+                isReadOnly: true,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<SightSearchScreen>(
+                      builder: <BuildContext>(context) =>
+                          const SightSearchScreen(),
+                    ),
+                  );
+                },
+                suffix: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<FiltersScreen>(
+                        builder: <BuildContext>(context) =>
+                            const FiltersScreen(),
+                      ),
+                    );
+                  },
+                  child: SvgPicture.asset(
+                    AppIcons.filter,
+                    color: theme.colorScheme.green,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: SightCard(
+                      mocks[index],
+                    ),
+                  );
+                },
+                childCount: mocks.length,
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: Container(
         height: 48,
