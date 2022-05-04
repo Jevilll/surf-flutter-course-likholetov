@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/res/app_themes.dart';
-import 'package:places/ui/screen/home_page.dart';
+import 'package:places/ui/screen/splash_screen.dart';
 import 'package:places/utils/common.dart';
 
 void main() {
@@ -28,7 +28,7 @@ class _AppState extends State<App> {
     });
 
     return MaterialApp(
-      home: const HomePage(),
+      home: const SplashScreen(),
       theme: theme,
       debugShowCheckedModeBanner: false,
     );
