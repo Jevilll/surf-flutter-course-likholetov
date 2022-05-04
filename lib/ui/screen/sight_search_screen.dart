@@ -9,12 +9,12 @@ import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_themes.dart';
-import 'package:places/ui/screen/sight_details.dart';
+import 'package:places/ui/screen/sight_details_screen.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/image_preview.dart';
-import 'package:places/ui/widget/nothing_found.dart';
+import 'package:places/ui/widget/center_content.dart';
 import 'package:places/ui/widget/search_bar.dart';
 
 /// Экран поиска достопримечательностей.
@@ -96,7 +96,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
               ),
             )
           : _searchedSights.isEmpty && _controller.text.isNotEmpty
-              ? const NothingFound(
+              ? const CenterContent(
                   icon: AppIcons.search64,
                   title: AppStrings.nothingFound,
                   subtitle: AppStrings.tryToChangeSearchParameters,
@@ -129,7 +129,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                           );
                         },
                         leading: ImagePreview(
-                          imgUrl: _searchedSights[index].image,
+                          imgUrl: _searchedSights[index].images[0],
                           height: 56,
                           width: 56,
                           borderRadius: BorderRadius.circular(10),

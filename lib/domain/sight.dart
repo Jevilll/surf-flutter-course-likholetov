@@ -7,7 +7,7 @@ class Sight {
   Position? position;
   String details;
   Type type;
-  String image;
+  List<String> images;
   String timeToVisit;
   String workingHours;
 
@@ -16,7 +16,7 @@ class Sight {
     this.position,
     this.details = '',
     this.type = Type.special,
-    this.image = '',
+    this.images = const [],
     this.timeToVisit = '',
     this.workingHours = '',
   });

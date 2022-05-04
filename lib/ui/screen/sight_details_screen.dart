@@ -12,10 +12,33 @@ import 'package:places/ui/widget/image_preview.dart';
 import 'package:places/utils/common.dart';
 
 /// Экран детализиции достопримечательности.
-class SightDetails extends StatelessWidget {
+class SightDetails extends StatefulWidget {
   final Sight sight;
 
   const SightDetails(this.sight, {Key? key}) : super(key: key);
+
+  @override
+  State<SightDetails> createState() => _SightDetailsState();
+}
+
+class _SightDetailsState extends State<SightDetails> {
+  late final PageController _pageController;
+  int indicatorsCount = 0;
+
+  @override
+  void initState() {
+    _pageController = PageController();
+    _pageController.addListener(() => setState(() {
+          indicatorsCount = _pageController.page?.toInt() ?? 0;
+        }));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +54,35 @@ class SightDetails extends StatelessWidget {
                   SizedBox(
                     height: 360,
                     width: double.infinity,
-                    child: ImagePreview(
-                      imgUrl: sight.image,
+                    child: PageView.builder(
+                      itemCount: widget.sight.images.length,
+                      controller: _pageController,
+                      onPageChanged: (page) {},
+                      itemBuilder: (context, position) {
+                        return ImagePreview(
+                          imgUrl: widget.sight.images[position],
+                        );
+                      },
                     ),
                   ),
+                  if (widget.sight.images.length > 1)
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: _PageIndicator(
+                          controller: _pageController,
+                          pageCount: widget.sight.images.length,
+                        ),
+                      ),
+                    ),
                   Padding(
                     padding: const EdgeInsets.only(left: 16, top: 36),
                     child: Container(
                       height: 32,
                       width: 32,
                       decoration: const BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: ButtonSvgIcon(
                         icon: AppIcons.arrow,
@@ -60,7 +100,7 @@ class SightDetails extends StatelessWidget {
               padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
               width: double.infinity,
               child: Text(
-                sight.name,
+                widget.sight.name,
                 style: theme.textTheme.titleMedium,
               ),
             ),
@@ -71,7 +111,7 @@ class SightDetails extends StatelessWidget {
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
-                    sight.type.name,
+                    widget.sight.type.name,
                     style: AppTextStyles.smallBold.copyWith(
                       color: theme.colorScheme.secondary2,
                     ),
@@ -80,7 +120,7 @@ class SightDetails extends StatelessWidget {
                     width: 16,
                   ),
                   Text(
-                    sight.workingHours,
+                    widget.sight.workingHours,
                     style: AppTextStyles.small.copyWith(
                       color: theme.colorScheme.inactiveBlack,
                     ),
@@ -93,7 +133,7 @@ class SightDetails extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  sight.details,
+                  widget.sight.details,
                   style: theme.textTheme.bodySmall,
                 ),
               ),
@@ -139,6 +179,41 @@ class SightDetails extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Виджет индикатора.
+class _PageIndicator extends StatelessWidget {
+  final PageController controller;
+  final int pageCount;
+
+  const _PageIndicator({
+    Key? key,
+    required this.controller,
+    required this.pageCount,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (_, child) => FractionallySizedBox(
+        alignment: Alignment.bottomLeft,
+        widthFactor: ((controller.page ?? 0) + 1) / pageCount,
+        child: child,
+      ),
+      child: SizedBox(
+        height: 8,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius:
+                const BorderRadius.horizontal(right: Radius.circular(8.0)),
+            border: Border.all(color: AppColors.inactiveBlack),
+            color: AppColors.lightMain,
+          ),
         ),
       ),
     );

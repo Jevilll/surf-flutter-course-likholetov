@@ -44,6 +44,13 @@ abstract class AppStrings {
   static const String placeAdded = 'Место добавлено';
   static const String empty = 'Пусто';
   static const String remove = 'Удалить';
+  static const String skip = 'Пропустить';
   static const String emptyToVisit = 'Отмечайте понравившиеся\nместа и они появиятся здесь.';
   static const String emptyVisited = 'Завершите маршрут,\nчтобы место попало сюда.';
+  static const String slide1Title = 'Добро пожаловать\nв Путеводитель';
+  static const String slide2Title = 'Построй маршрут\nи отправляйся в путь';
+  static const String slide3Title = 'Добавляй места,\nкоторые нашёл сам';
+  static const String slide1Subtitle = 'Ищи новые локации и сохраняй\nсамые любимые.';
+  static const String slide2Subtitle = 'Достигай цели максимально\nбыстро и комфортно.';
+  static const String slide3Subtitle = 'Делись самыми интересными\nи помоги нам стать лучше!';
 }

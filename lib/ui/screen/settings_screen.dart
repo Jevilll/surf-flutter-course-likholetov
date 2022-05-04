@@ -4,6 +4,7 @@ import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_themes.dart';
+import 'package:places/ui/screen/on_boarding_screen.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/utils/common.dart';
@@ -53,7 +54,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               trailing: ButtonSvgIcon(
                 icon: AppIcons.info,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<OnBoardingScreen>(
+                      builder: <BuildContext>(context) => const OnBoardingScreen(),
+                    ),
+                  );
+                },
                 color: theme.colorScheme.green,
               ),
             ),

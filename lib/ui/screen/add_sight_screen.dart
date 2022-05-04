@@ -81,188 +81,185 @@ class _AddSightScreenState extends State<AddSightScreen> {
         slivers: [
           SliverFillRemaining(
             hasScrollBody: false,
-            child: Container(
-              // padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 24),
-                      height: 72,
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _photos.length,
-                        itemBuilder: (context, index) => index != 0
-                            ? _PhotoCard(
-                                photoAsset: _photos[index],
-                                onDelete: () {
-                                  setState(() {
-                                    _photos.removeAt(index);
-                                  });
-                                },
-                              )
-                            : AddPhotoButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _photos.insert(1, getRandomPhoto());
-                                  });
-                                },
-                              ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16, top: 24),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          AppStrings.category.toUpperCase(),
-                          style: AppTextStyles.superSmall,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        onTap: () async {
-                          final result = await Navigator.push<Type>(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SightTypeSelectorScreen(
-                                type: _sightType,
-                              ),
-                            ),
-                          );
-                          setState(() {
-                            _sightType = result ?? _sightType;
-                          });
-                        },
-                        leading: Text(
-                          _sightType != null
-                              ? _sightType!.name
-                              : AppStrings.notChosen,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        trailing: SvgPicture.asset(
-                          AppIcons.view,
-                          color: theme.colorScheme.main,
-                        ),
-                      ),
-                    ),
-                    const Divider(
-                      indent: 16,
-                      endIndent: 16,
-                      thickness: 1,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: _EditableItem(
-                        name: AppStrings.name,
-                        textInputAction: TextInputAction.next,
-                        controller: _controllerName,
-                        onEditingComplete: () =>
-                            FocusScope.of(context).requestFocus(_focusNodeLat),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _EditableItem(
-                              name: AppStrings.latitude,
-                              controller: _controllerLat,
-                              textInputAction: TextInputAction.next,
-                              textInputType: TextInputType.number,
-                              focusNode: _focusNodeLat,
-                              validator: (value) {
-                                if (!_isNumeric(value)) {
-                                  return '';
-                                }
-
-                                return null;
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 24),
+                    height: 72,
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _photos.length,
+                      itemBuilder: (context, index) => index != 0
+                          ? _PhotoCard(
+                              photoAsset: _photos[index],
+                              onDelete: () {
+                                setState(() {
+                                  _photos.removeAt(index);
+                                });
                               },
-                              onEditingComplete: () => FocusScope.of(context)
-                                  .requestFocus(_focusNodeLong),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 16,
-                          ),
-                          Expanded(
-                            child: _EditableItem(
-                              name: AppStrings.longitude,
-                              controller: _controllerLong,
-                              textInputAction: TextInputAction.next,
-                              textInputType: TextInputType.number,
-                              focusNode: _focusNodeLong,
-                              validator: (value) {
-                                if (!_isNumeric(value)) {
-                                  return '';
-                                }
-
-                                return null;
+                            )
+                          : AddPhotoButton(
+                              onPressed: () {
+                                setState(() {
+                                  _photos.insert(1, getRandomPhoto());
+                                });
                               },
-                              onEditingComplete: () => FocusScope.of(context)
-                                  .requestFocus(_focusNodeDescription),
                             ),
-                          ),
-                        ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, top: 24),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        AppStrings.category.toUpperCase(),
+                        style: AppTextStyles.superSmall,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: UnconstrainedBox(
-                          child: ButtonWithoutBorders(
-                            title: AppStrings.indicateOnMap,
-                            onPressed: () {},
-                            width: 130,
-                            height: 20,
-                            color: theme.colorScheme.green,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      onTap: () async {
+                        final result = await Navigator.push<Type>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SightTypeSelectorScreen(
+                              type: _sightType,
+                            ),
                           ),
+                        );
+                        setState(() {
+                          _sightType = result ?? _sightType;
+                        });
+                      },
+                      leading: Text(
+                        _sightType != null
+                            ? _sightType!.name
+                            : AppStrings.notChosen,
+                        style: theme.textTheme.bodySmall,
+                      ),
+                      trailing: SvgPicture.asset(
+                        AppIcons.view,
+                        color: theme.colorScheme.main,
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    indent: 16,
+                    endIndent: 16,
+                    thickness: 1,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: _EditableItem(
+                      name: AppStrings.name,
+                      textInputAction: TextInputAction.next,
+                      controller: _controllerName,
+                      onEditingComplete: () =>
+                          FocusScope.of(context).requestFocus(_focusNodeLat),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _EditableItem(
+                            name: AppStrings.latitude,
+                            controller: _controllerLat,
+                            textInputAction: TextInputAction.next,
+                            textInputType: TextInputType.number,
+                            focusNode: _focusNodeLat,
+                            validator: (value) {
+                              if (!_isNumeric(value)) {
+                                return '';
+                              }
+
+                              return null;
+                            },
+                            onEditingComplete: () => FocusScope.of(context)
+                                .requestFocus(_focusNodeLong),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        Expanded(
+                          child: _EditableItem(
+                            name: AppStrings.longitude,
+                            controller: _controllerLong,
+                            textInputAction: TextInputAction.next,
+                            textInputType: TextInputType.number,
+                            focusNode: _focusNodeLong,
+                            validator: (value) {
+                              if (!_isNumeric(value)) {
+                                return '';
+                              }
+
+                              return null;
+                            },
+                            onEditingComplete: () => FocusScope.of(context)
+                                .requestFocus(_focusNodeDescription),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: UnconstrainedBox(
+                        child: ButtonWithoutBorders(
+                          title: AppStrings.indicateOnMap,
+                          onPressed: () {},
+                          width: 130,
+                          height: 20,
+                          color: theme.colorScheme.green,
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: _EditableItem(
-                        name: AppStrings.description,
-                        controller: _controllerDescription,
-                        focusNode: _focusNodeDescription,
-                        maxLines: 3,
-                        hint: AppStrings.enterText,
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: _EditableItem(
+                      name: AppStrings.description,
+                      controller: _controllerDescription,
+                      focusNode: _focusNodeDescription,
+                      maxLines: 3,
+                      hint: AppStrings.enterText,
                     ),
-                    // const Spacer(),
-                    ButtonRounded(
-                      title: AppStrings.create,
-                      onPressed: _isButtonEnabled()
-                          ? () {
-                              mocks.add(Sight(
-                                _controllerName.text,
-                                details: _controllerDescription.text,
-                                type: _sightType!,
-                                position: Position(
-                                  double.tryParse(_controllerLat.text) ?? 0,
-                                  double.tryParse(_controllerLong.text) ?? 0,
-                                ),
-                              ));
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(AppStrings.placeAdded),
-                                ),
-                              );
-                            }
-                          : null,
-                    ),
-                    const SizedBox(height: 16,),
-                  ],
-                ),
+                  ),
+                  // const Spacer(),
+                  ButtonRounded(
+                    title: AppStrings.create,
+                    onPressed: _isButtonEnabled()
+                        ? () {
+                            mocks.add(Sight(
+                              _controllerName.text,
+                              details: _controllerDescription.text,
+                              type: _sightType!,
+                              position: Position(
+                                double.tryParse(_controllerLat.text) ?? 0,
+                                double.tryParse(_controllerLong.text) ?? 0,
+                              ),
+                            ));
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(AppStrings.placeAdded),
+                              ),
+                            );
+                          }
+                        : null,
+                  ),
+                  const SizedBox(height: 16,),
+                ],
               ),
             ),
           ),

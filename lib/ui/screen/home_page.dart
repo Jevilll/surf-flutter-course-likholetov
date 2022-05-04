@@ -4,8 +4,9 @@ import 'package:places/mocks.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/ui/screen/add_sight_screen.dart';
 import 'package:places/ui/screen/filters_screen.dart';
+import 'package:places/ui/screen/on_boarding_screen.dart';
 import 'package:places/ui/screen/settings_screen.dart';
-import 'package:places/ui/screen/sight_details.dart';
+import 'package:places/ui/screen/sight_details_screen.dart';
 import 'package:places/ui/screen/sight_list_screen.dart';
 import 'package:places/ui/screen/sight_search_screen.dart';
 import 'package:places/ui/screen/visiting_screen.dart';
@@ -20,17 +21,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final scenes = [
-    const SightSearchScreen(),
-    // const SightListScreen(),
+    // const OnBoardingScreen(),
+    // const SightSearchScreen(),
+    const SightListScreen(),
     const AddSightScreen(),
     // const SightSearchScreen(),
     // const FiltersScreen(),
-    const VisitingScreen(),
+    // const VisitingScreen(),
     SightDetails(mocks[0]),
-    // const SettingsScreen(),
+    const SettingsScreen(),
   ];
 
-  int currentIndex = 1;
+  int currentIndex = 2;
 
   @override
   Widget build(BuildContext context) {
