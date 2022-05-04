@@ -1,5 +1,6 @@
 abstract class AppStrings {
   static const String listOfInterestingPlaces = 'Список интересных мест';
+  static const String listOfInterestingPlacesTwoLines = 'Список интересных\u00A0мест';
   static const String hotel = 'отель';
   static const String restaurant = 'ресторан';
   static const String special = 'особое место';
