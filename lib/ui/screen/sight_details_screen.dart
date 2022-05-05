@@ -65,7 +65,7 @@ class _SightDetailsState extends State<SightDetails> {
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
-                Container(
+                Padding(
                   padding: const EdgeInsets.only(left: 16, top: 2, right: 16),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,

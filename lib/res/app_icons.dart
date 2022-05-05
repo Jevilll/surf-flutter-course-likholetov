@@ -50,6 +50,7 @@ abstract class AppIcons {
   static const tutorial1 = '$_baseAssetsPath/tutorial_1.svg';
   static const tutorial2 = '$_baseAssetsPath/tutorial_2.svg';
   static const tutorial3 = '$_baseAssetsPath/tutorial_3.svg';
+  static const mapRounded = '$_baseAssetsPath/map_rounded.svg';
 
   static const _baseAssetsPath = 'assets/icons';
 }

@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     const SettingsScreen(),
   ];
 
-  int currentIndex = 2;
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
