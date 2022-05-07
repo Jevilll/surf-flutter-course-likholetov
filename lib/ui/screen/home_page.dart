@@ -24,11 +24,10 @@ class _HomePageState extends State<HomePage> {
     // const OnBoardingScreen(),
     // const SightSearchScreen(),
     const SightListScreen(),
-    const AddSightScreen(),
+    // const AddSightScreen(),
     // const SightSearchScreen(),
-    // const FiltersScreen(),
-    // const VisitingScreen(),
-    SightDetails(mocks[0]),
+    const FiltersScreen(),
+    const VisitingScreen(),
     const SettingsScreen(),
   ];
 

@@ -120,13 +120,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                       ),
                       itemBuilder: (context, index) => ListTile(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<SightDetails>(
-                              builder: <BuildContext>(context) =>
-                                  SightDetails(_searchedSights[index]),
-                            ),
-                          );
+                          showDetails(_searchedSights[index], context);
                         },
                         leading: ImagePreview(
                           imgUrl: _searchedSights[index].images[0],

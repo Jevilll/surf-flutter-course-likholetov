@@ -31,12 +31,7 @@ class SightCard extends StatelessWidget {
         margin: EdgeInsets.zero,
         child: InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute<SightDetails>(
-                builder: <BuildContext>(context) => SightDetails(sight),
-              ),
-            );
+            showDetails(sight, context);
           },
           child: Column(
             children: [
