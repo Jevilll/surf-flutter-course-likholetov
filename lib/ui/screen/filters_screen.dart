@@ -85,14 +85,15 @@ class _FiltersScreenState extends State<FiltersScreen> {
       body: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.only(top: 24, left: 16, bottom: 8, right: 16),
+          padding:
+              const EdgeInsets.only(top: 24, left: 16, bottom: 8, right: 16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  AppStrings.categories,
+                  AppStrings.categories.toUpperCase(),
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
               ),
@@ -232,7 +233,7 @@ class _CategoriesButtonState extends State<CategoriesButton> {
     final text = CountButtonText.of(context).title;
 
     return ButtonRounded(
-      title: text.isEmpty ? AppStrings.show : text,
+      title: text.isEmpty ? AppStrings.show.toUpperCase() : text,
       onPressed: text.isEmpty ? null : widget.onPressed,
     );
   }
@@ -265,7 +266,8 @@ class SelectedCategories extends InheritedWidget {
 class CountButtonText extends InheritedWidget {
   final int count;
 
-  String get title => count != 0 ? '${AppStrings.show} ($count)' : '';
+  String get title =>
+      count != 0 ? '${AppStrings.show.toUpperCase()} ($count)' : '';
 
   const CountButtonText({
     Key? key,

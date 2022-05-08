@@ -44,6 +44,7 @@ class AppThemes {
       primaryColor: AppColors.secondary,
       splashColor: AppColors.inactiveBlack,
       cardColor: AppColors.lightBackground,
+      backgroundColor: AppColors.white,
       scaffoldBackgroundColor: AppColors.white,
       appBarTheme: _appBarTheme.copyWith(
         backgroundColor: AppColors.white,
@@ -83,6 +84,7 @@ class AppThemes {
       splashColor: AppColors.inactiveBlack,
       primaryColor: AppColors.white,
       cardColor: AppColors.darkBlack,
+      backgroundColor: AppColors.darkMain,
       scaffoldBackgroundColor: AppColors.darkMain,
       appBarTheme: _appBarTheme.copyWith(
         backgroundColor: AppColors.darkMain,

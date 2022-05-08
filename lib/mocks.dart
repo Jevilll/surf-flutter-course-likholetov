@@ -71,16 +71,3 @@ final List<Sight> mocks = [
 
 final List<Sight> mocksToVisit = List.from(mocks);
 final List<Sight> mocksVisited = List.from(mocks);
-final List<String> _testImages = [
-  'assets/test_photos/1.jpg',
-  'assets/test_photos/2.jpg',
-  'assets/test_photos/3.jpg',
-  'assets/test_photos/4.jpg',
-  'assets/test_photos/5.jpg',
-  'assets/test_photos/6.jpg',
-  'assets/test_photos/7.jpg',
-  'assets/test_photos/8.jpg',
-  'assets/test_photos/9.jpg',
-];
-
-String getRandomPhoto() => _testImages[Random().nextInt(_testImages.length)];

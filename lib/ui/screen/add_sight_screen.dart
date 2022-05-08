@@ -13,6 +13,7 @@ import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_rounded.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/custom_text_field.dart';
+import 'package:places/ui/widget/photo_dialog_picker.dart';
 
 /// Экран добавления достопримечательности.
 class AddSightScreen extends StatefulWidget {
@@ -104,7 +105,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                           : AddPhotoButton(
                               onPressed: () {
                                 setState(() {
-                                  _photos.insert(1, getRandomPhoto());
+                                  addPhoto(context);
                                 });
                               },
                             ),
@@ -157,7 +158,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: _EditableItem(
-                      name: AppStrings.name,
+                      name: AppStrings.name.toUpperCase(),
                       textInputAction: TextInputAction.next,
                       controller: _controllerName,
                       onEditingComplete: () =>
@@ -170,7 +171,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                       children: [
                         Expanded(
                           child: _EditableItem(
-                            name: AppStrings.latitude,
+                            name: AppStrings.latitude.toUpperCase(),
                             controller: _controllerLat,
                             textInputAction: TextInputAction.next,
                             textInputType: TextInputType.number,
@@ -191,7 +192,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                         ),
                         Expanded(
                           child: _EditableItem(
-                            name: AppStrings.longitude,
+                            name: AppStrings.longitude.toUpperCase(),
                             controller: _controllerLong,
                             textInputAction: TextInputAction.next,
                             textInputType: TextInputType.number,
@@ -228,7 +229,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: _EditableItem(
-                      name: AppStrings.description,
+                      name: AppStrings.description.toUpperCase(),
                       controller: _controllerDescription,
                       focusNode: _focusNodeDescription,
                       maxLines: 3,
@@ -237,7 +238,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                   ),
                   // const Spacer(),
                   ButtonRounded(
-                    title: AppStrings.create,
+                    title: AppStrings.create.toUpperCase(),
                     onPressed: _isButtonEnabled()
                         ? () {
                             mocks.add(Sight(

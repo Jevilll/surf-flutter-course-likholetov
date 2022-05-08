@@ -64,7 +64,6 @@ class _SightDetailsState extends State<_SightDetails> {
       builder: (context, scrollController) {
         return CustomScrollView(
           controller: scrollController,
-          physics: const BouncingScrollPhysics(),
           slivers: [
             SliverPersistentHeader(
               delegate: _GalleryDelegate(
@@ -127,7 +126,7 @@ class _SightDetailsState extends State<_SightDetails> {
                       ),
                     ),
                     ButtonRounded(
-                      title: AppStrings.buildARoute,
+                      title: AppStrings.buildARoute.toUpperCase(),
                       onPressed: () {
                         logger.i('Нажатие на кнопку построить маршрут');
                       },

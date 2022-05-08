@@ -9,7 +9,7 @@ import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_themes.dart';
-import 'package:places/ui/screen/sight_details_screen.dart';
+import 'package:places/ui/bottom_sheet/sight_details_bottom_sheet.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
@@ -210,7 +210,7 @@ class _HistoryState extends State<History> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppStrings.youSearched,
+                      AppStrings.youSearched.toUpperCase(),
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
