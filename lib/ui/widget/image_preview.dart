@@ -24,6 +24,8 @@ class ImagePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final child = CachedNetworkImage(
+      height: height,
+      width: width,
       imageUrl: imgUrl,
       imageBuilder: (_, imageProvider) => _ImageBuilder(
         imageProvider: imageProvider,
@@ -35,11 +37,8 @@ class ImagePreview extends StatelessWidget {
       errorWidget: (_, __, ___) => const _ImagePlaceholder(),
     );
 
-    return SizedBox(
-      width: width,
-      height: height,
-      child: child,
-    );
+    return child;
+
   }
 }
 

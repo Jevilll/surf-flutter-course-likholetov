@@ -20,6 +20,10 @@ class AppThemes {
     unselectedLabelColor: AppColors.inactiveBlack,
   );
 
+  static const _bottomSheetTheme = BottomSheetThemeData(
+    backgroundColor: Colors.transparent,
+  );
+
   static final _cartTheme = CardTheme(
     clipBehavior: Clip.hardEdge,
     elevation: 0,
@@ -40,6 +44,7 @@ class AppThemes {
       primaryColor: AppColors.secondary,
       splashColor: AppColors.inactiveBlack,
       cardColor: AppColors.lightBackground,
+      backgroundColor: AppColors.white,
       scaffoldBackgroundColor: AppColors.white,
       appBarTheme: _appBarTheme.copyWith(
         backgroundColor: AppColors.white,
@@ -69,6 +74,7 @@ class AppThemes {
       sliderTheme: _sliderTheme.copyWith(
         activeTrackColor: AppColors.lightGreen,
       ),
+      bottomSheetTheme: _bottomSheetTheme,
     );
   }
 
@@ -78,6 +84,7 @@ class AppThemes {
       splashColor: AppColors.inactiveBlack,
       primaryColor: AppColors.white,
       cardColor: AppColors.darkBlack,
+      backgroundColor: AppColors.darkMain,
       scaffoldBackgroundColor: AppColors.darkMain,
       appBarTheme: _appBarTheme.copyWith(
         backgroundColor: AppColors.darkMain,
@@ -107,6 +114,7 @@ class AppThemes {
       sliderTheme: _sliderTheme.copyWith(
         activeTrackColor: AppColors.darkGreen,
       ),
+      bottomSheetTheme: _bottomSheetTheme,
     );
   }
 }

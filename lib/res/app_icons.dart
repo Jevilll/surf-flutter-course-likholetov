@@ -12,7 +12,7 @@ abstract class AppIcons {
   static const close = '$_baseAssetsPath/close.svg';
   static const delete = '$_baseAssetsPath/delete.svg';
   static const divider = '$_baseAssetsPath/divider.svg';
-  static const fail = '$_baseAssetsPath/fail.svg';
+  static const file = '$_baseAssetsPath/file.svg';
   static const filter = '$_baseAssetsPath/filter.svg';
   static const geolocation = '$_baseAssetsPath/geolocation.svg';
   static const go = '$_baseAssetsPath/go.svg';
