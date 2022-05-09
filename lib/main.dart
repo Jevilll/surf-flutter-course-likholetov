@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:places/res/app_themes.dart';
 import 'package:places/ui/screen/splash_screen.dart';
 import 'package:places/utils/common.dart';
@@ -31,6 +32,12 @@ class _AppState extends State<App> {
       home: const SplashScreen(),
       theme: theme,
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ru'),
+      ],
     );
   }
 }

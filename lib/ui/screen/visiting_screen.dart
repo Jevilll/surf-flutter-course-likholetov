@@ -128,6 +128,7 @@ class _ReorderableDismissibleListState
                             widget.sights.remove(sight);
                           });
                         },
+                        onDatePick: _putRemainder,
                       ),
                     ),
                   ),
@@ -150,6 +151,28 @@ class _ReorderableDismissibleListState
       final items = widget.sights.removeAt(oldItem);
       widget.sights.insert(newItem > oldItem ? newItem - 1 : newItem, items);
     });
+  }
+
+  Future<void> _putRemainder() async {
+    final now = DateTime.now();
+    final dateResult = await showDatePicker(
+      context: context,
+      locale: const Locale("ru", "RU"),
+      helpText: AppStrings.chooseDateOfVisit,
+      confirmText: AppStrings.chooseTime,
+      cancelText: AppStrings.cancel2,
+      initialDate: now,
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 360)),
+    );
+    if (dateResult != null) {
+      final timeResult = await showTimePicker(
+          context: context,
+          helpText: AppStrings.chooseTimeOfVisit,
+          cancelText: AppStrings.cancel2,
+          confirmText: AppStrings.plan,
+          initialTime: TimeOfDay.now(),);
+    }
   }
 }
 

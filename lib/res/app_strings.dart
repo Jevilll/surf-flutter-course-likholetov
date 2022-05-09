@@ -49,6 +49,11 @@ abstract class AppStrings {
   static const String camera = 'Камера';
   static const String photo = 'Фотография';
   static const String file = 'Файл';
+  static const String chooseDateOfVisit = 'Выбрать дату посещения';
+  static const String chooseTimeOfVisit = 'Выбрать время посещения';
+  static const String plan = 'Запланировать';
+  static const String chooseTime = 'Выбрать время';
+  static const String cancel2 = 'Отменить';
   static const String emptyToVisit = 'Отмечайте понравившиеся\nместа и они появиятся здесь.';
   static const String emptyVisited = 'Завершите маршрут,\nчтобы место попало сюда.';
   static const String slide1Title = 'Добро пожаловать\nв Путеводитель';

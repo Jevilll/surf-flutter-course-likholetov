@@ -40,10 +40,10 @@ class AppThemes {
 
   static ThemeData get lightTheme {
     return ThemeData(
+      colorScheme: const ColorScheme.light().copyWith(primary: AppColors.lightMain),
       brightness: Brightness.light,
       primaryColor: AppColors.secondary,
       splashColor: AppColors.inactiveBlack,
-      cardColor: AppColors.lightBackground,
       backgroundColor: AppColors.white,
       scaffoldBackgroundColor: AppColors.white,
       appBarTheme: _appBarTheme.copyWith(
@@ -80,6 +80,7 @@ class AppThemes {
 
   static ThemeData get darkTheme {
     return ThemeData(
+      colorScheme: const ColorScheme.dark().copyWith(primary: AppColors.white),
       brightness: Brightness.dark,
       splashColor: AppColors.inactiveBlack,
       primaryColor: AppColors.white,

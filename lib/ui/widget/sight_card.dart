@@ -13,13 +13,15 @@ class SightCard extends StatelessWidget {
   final Sight sight;
   final CardType type;
   final VoidCallback? onDelete;
+  final VoidCallback? onDatePick;
 
   const SightCard(
-      this.sight, {
-        this.onDelete,
-        this.type = CardType.interesting,
-        Key? key,
-      }): super(key: key);
+    this.sight, {
+    this.onDelete,
+    this.onDatePick,
+    this.type = CardType.interesting,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +59,7 @@ class SightCard extends StatelessWidget {
                       child: CardButtons(
                         type,
                         onDelete: onDelete,
+                        onDatePick: onDatePick,
                       ),
                     ),
                   ],
@@ -134,8 +137,9 @@ class TimeToVisitText extends StatelessWidget {
 class CardButtons extends StatelessWidget {
   final CardType type;
   final VoidCallback? onDelete;
+  final VoidCallback? onDatePick;
 
-  const CardButtons(this.type, {this.onDelete, Key? key}) : super(key: key);
+  const CardButtons(this.type, {this.onDelete, this.onDatePick, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +158,7 @@ class CardButtons extends StatelessWidget {
           case CardType.toVisit:
             result = ToVisitButtons(
               onDelete: onDelete,
+              onDatePick: onDatePick,
             );
             break;
           case CardType.visited:
@@ -172,8 +177,10 @@ class CardButtons extends StatelessWidget {
 /// Кнопки мест к посящению.
 class ToVisitButtons extends StatelessWidget {
   final VoidCallback? onDelete;
+  final VoidCallback? onDatePick;
 
-  const ToVisitButtons({this.onDelete, Key? key}) : super(key: key);
+  const ToVisitButtons({this.onDelete, this.onDatePick, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -181,9 +188,7 @@ class ToVisitButtons extends StatelessWidget {
       children: [
         ButtonSvgIcon(
           icon: AppIcons.calendar,
-          onPressed: () {
-            logger.i('Нажатие на кнопку calendar');
-          },
+          onPressed: onDatePick,
         ),
         ButtonSvgIcon(
           icon: AppIcons.close,
