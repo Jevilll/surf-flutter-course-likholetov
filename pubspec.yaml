@@ -13,6 +13,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   flutter_svg: ^1.0.3
   gradient_progress_indicator: ^1.0.0+5
@@ -28,4 +30,3 @@ flutter:
 
   assets:
     - assets/icons/
-    - assets/test_photos/
