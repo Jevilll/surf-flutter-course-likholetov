@@ -106,25 +106,36 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   },
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(AppStrings.distance),
-                  Text(
-                    '${AppStrings.from} ${_convert(values.start)} ${AppStrings.to} ${_convert(values.end)}',
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(AppStrings.distance),
+                    Text(
+                      '${AppStrings.from} ${_convert(values.start)} ${AppStrings.to} ${_convert(values.end)}',
+                    ),
+                  ],
+                ),
               ),
-              RangeSlider(
-                min: 100,
-                max: 10000,
-                values: values,
-                divisions: 99,
-                onChanged: (newRange) {
-                  setState(() {
-                    values = newRange;
-                  });
-                },
+              Padding(
+                padding: const EdgeInsets.only(left: 8, top: 16, right: 8),
+                child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    overlayShape: SliderComponentShape.noOverlay,
+                  ),
+                  child: RangeSlider(
+                    min: 100,
+                    max: 10000,
+                    values: values,
+                    divisions: 99,
+                    onChanged: (newRange) {
+                      setState(() {
+                        values = newRange;
+                      });
+                    },
+                  ),
+                ),
               ),
               const Spacer(),
               CountButtonText(
@@ -192,27 +203,50 @@ class _CategoriesGridState extends State<CategoriesGrid> {
   @override
   Widget build(BuildContext context) {
     final selected = SelectedCategories.of(context).selected;
+    final isHighResolution = MediaQuery.of(context).size.height *
+            MediaQuery.of(context).devicePixelRatio > 800;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: widget._categories.length,
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-        ),
-        itemBuilder: (context, index) => CategoryItem(
-          widget._categories[index],
-          isSelected: selected[index],
-          onTap: () {
-            setState(() {
-              selected[index] = !selected[index];
-              widget.onPressed();
-            });
-          },
-        ),
-      ),
+      child: isHighResolution
+          ? GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: widget._categories.length,
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+              ),
+              itemBuilder: (context, index) => CategoryItem(
+                widget._categories[index],
+                isSelected: selected[index],
+                onTap: () {
+                  setState(() {
+                    selected[index] = !selected[index];
+                    widget.onPressed();
+                  });
+                },
+              ),
+            )
+          : SizedBox(
+              height: 92,
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: widget._categories.length,
+                itemBuilder: (context, index) {
+                  return CategoryItem(
+                    widget._categories[index],
+                    isSelected: selected[index],
+                    onTap: () {
+                      setState(() {
+                        selected[index] = !selected[index];
+                        widget.onPressed();
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
     );
   }
 }

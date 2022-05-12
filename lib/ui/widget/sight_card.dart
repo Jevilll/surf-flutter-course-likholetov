@@ -66,7 +66,8 @@ class SightCard extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Padding(
+                child: Container(
+                  color: theme.colorScheme.background2,
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [

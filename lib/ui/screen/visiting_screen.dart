@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/sight.dart';
@@ -155,23 +158,54 @@ class _ReorderableDismissibleListState
 
   Future<void> _putRemainder() async {
     final now = DateTime.now();
-    final dateResult = await showDatePicker(
-      context: context,
-      locale: const Locale("ru", "RU"),
-      helpText: AppStrings.chooseDateOfVisit,
-      confirmText: AppStrings.chooseTime,
-      cancelText: AppStrings.cancel2,
-      initialDate: now,
-      firstDate: now,
-      lastDate: now.add(const Duration(days: 360)),
-    );
-    if (dateResult != null) {
-      final timeResult = await showTimePicker(
+    DateTime? selectedDateTime = null;
+    if (Platform.isAndroid) {
+      final dateResult = await showDatePicker(
+        context: context,
+        locale: const Locale("ru", "RU"),
+        helpText: AppStrings.chooseDateOfVisit,
+        confirmText: AppStrings.chooseTime,
+        cancelText: AppStrings.cancel2,
+        initialDate: now,
+        firstDate: now,
+        lastDate: now.add(const Duration(days: 360)),
+      );
+      if (dateResult != null) {
+        final timeResult = await showTimePicker(
           context: context,
           helpText: AppStrings.chooseTimeOfVisit,
           cancelText: AppStrings.cancel2,
           confirmText: AppStrings.plan,
-          initialTime: TimeOfDay.now(),);
+          initialTime: TimeOfDay.now(),
+        );
+        if (timeResult != null) {
+          selectedDateTime = DateTime(
+            dateResult.year,
+            dateResult.month,
+            dateResult.day,
+            timeResult.hour,
+            timeResult.minute,
+          );
+        }
+      }
+    } else {
+      await showCupertinoModalPopup<DateTime>(
+        context: context,
+        builder: (_) {
+          return Container(
+            height: MediaQuery.of(context).copyWith().size.height * 0.25,
+            color: Colors.white,
+            child: CupertinoDatePicker(
+              onDateTimeChanged: (value) {
+                selectedDateTime = value;
+              },
+              initialDateTime: DateTime.now(),
+              minimumYear: now.year,
+              maximumYear: now.year + 1,
+            ),
+          );
+        },
+      );
     }
   }
 }

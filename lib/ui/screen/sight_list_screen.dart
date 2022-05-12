@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:places/domain/sight.dart';
 import 'package:places/mocks.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
@@ -23,6 +24,8 @@ class _SightListScreenState extends State<SightListScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       body: CustomScrollView(
@@ -30,11 +33,18 @@ class _SightListScreenState extends State<SightListScreen> {
         slivers: [
           SliverAppBar(
             pinned: true,
-            expandedHeight: 140,
+            expandedHeight: isPortrait ? 140 : 56,
             flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.all(16.0),
+              titlePadding: isPortrait
+                  ? const EdgeInsets.all(16)
+                  : const EdgeInsets.only(
+                      left: 34,
+                      top: 16,
+                      right: 34,
+                      bottom: 16,
+                    ),
               expandedTitleScale: 1.8,
-              centerTitle: true,
+              centerTitle: isPortrait,
               title: Text(
                 AppStrings.listOfInterestingPlacesTwoLines,
                 style: Theme.of(context).textTheme.titleMedium,
@@ -43,7 +53,9 @@ class _SightListScreenState extends State<SightListScreen> {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: isPortrait
+                  ? const EdgeInsets.only(bottom: 16)
+                  : const EdgeInsets.only(left: 18, right: 18, bottom: 16),
               child: SearchBar(
                 isReadOnly: true,
                 onTap: () {
@@ -74,20 +86,16 @@ class _SightListScreenState extends State<SightListScreen> {
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: SightCard(
-                      mocks[index],
-                    ),
-                  );
-                },
-                childCount: mocks.length,
-              ),
-            ),
+            padding: isPortrait
+                ? const EdgeInsets.only(left: 16, top: 16, right: 16)
+                : const EdgeInsets.only(left: 34, top: 16, right: 34),
+            sliver: isPortrait
+                ? _SightsListPortrait(
+                    sights: mocks,
+                  )
+                : _SightsListLandscape(
+                    sights: mocks,
+                  ),
           ),
         ],
       ),
@@ -120,6 +128,58 @@ class _SightListScreenState extends State<SightListScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+}
+
+/// Список достопримечательностей при портретной ориентации.
+class _SightsListPortrait extends StatelessWidget {
+  final List<Sight> sights;
+
+  const _SightsListPortrait({required this.sights, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: SightCard(
+              sights[index],
+            ),
+          );
+        },
+        childCount: sights.length,
+      ),
+    );
+  }
+}
+
+/// Список достопримечательностей при альбомной ориентации.
+class _SightsListLandscape extends StatelessWidget {
+  final List<Sight> sights;
+
+  const _SightsListLandscape({required this.sights, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverGrid(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: SightCard(
+              sights[index],
+            ),
+          );
+        },
+        childCount: sights.length,
+      ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 36,
+      ),
     );
   }
 }
