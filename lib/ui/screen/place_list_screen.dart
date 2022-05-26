@@ -1,26 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/domain/sight.dart';
-import 'package:places/mocks.dart';
+import 'package:places/domain/interactor/places_interactor.dart';
+import 'package:places/domain/model/place.dart';
+import 'package:places/domain/model/result.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_themes.dart';
-import 'package:places/ui/screen/add_sight_screen.dart';
+import 'package:places/ui/screen/add_place_screen.dart';
 import 'package:places/ui/screen/filters_screen.dart';
-import 'package:places/ui/screen/sight_search_screen.dart';
+import 'package:places/ui/screen/place_search_screen.dart';
+import 'package:places/ui/widget/place_card.dart';
+import 'package:places/ui/widget/progress.dart';
 import 'package:places/ui/widget/search_bar.dart';
-import 'package:places/ui/widget/sight_card.dart';
 
-/// Экран списка достопримечательностей.
-class SightListScreen extends StatefulWidget {
-  const SightListScreen({Key? key}) : super(key: key);
+/// Экран списка мест.
+class PlaceListScreen extends StatefulWidget {
+  const PlaceListScreen({Key? key}) : super(key: key);
 
   @override
-  State<SightListScreen> createState() => _SightListScreenState();
+  State<PlaceListScreen> createState() => _PlaceListScreenState();
 }
 
-class _SightListScreenState extends State<SightListScreen> {
+class _PlaceListScreenState extends State<PlaceListScreen> {
+  Result<List<Place>, Exception>? _placesData;
+
+  @override
+  void initState() {
+    placesInteractor.getPlaces().then((result) {
+      setState(() {
+        _placesData = result;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -61,9 +75,9 @@ class _SightListScreenState extends State<SightListScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute<SightSearchScreen>(
+                    MaterialPageRoute<PlaceSearchScreen>(
                       builder: <BuildContext>(context) =>
-                          const SightSearchScreen(),
+                          const PlaceSearchScreen(),
                     ),
                   );
                 },
@@ -85,17 +99,8 @@ class _SightListScreenState extends State<SightListScreen> {
               ),
             ),
           ),
-          SliverPadding(
-            padding: isPortrait
-                ? const EdgeInsets.only(left: 16, top: 16, right: 16)
-                : const EdgeInsets.only(left: 34, top: 16, right: 34),
-            sliver: isPortrait
-                ? _SightsListPortrait(
-                    sights: mocks,
-                  )
-                : _SightsListLandscape(
-                    sights: mocks,
-                  ),
+          _PlacesList(
+            placesData: _placesData,
           ),
         ],
       ),
@@ -112,8 +117,8 @@ class _SightListScreenState extends State<SightListScreen> {
           onPressed: () async {
             await Navigator.push(
               context,
-              MaterialPageRoute<AddSightScreen>(
-                builder: <BuildContext>(context) => const AddSightScreen(),
+              MaterialPageRoute<AddPlaceScreen>(
+                builder: <BuildContext>(context) => const AddPlaceScreen(),
               ),
             );
             setState(() {});
@@ -132,35 +137,89 @@ class _SightListScreenState extends State<SightListScreen> {
   }
 }
 
-/// Список достопримечательностей при портретной ориентации.
-class _SightsListPortrait extends StatelessWidget {
-  final List<Sight> sights;
+class _PlacesList extends StatelessWidget {
+  final Result<List<Place>, Exception>? placesData;
 
-  const _SightsListPortrait({required this.sights, Key? key}) : super(key: key);
+  const _PlacesList({required this.placesData, Key? key}) : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return placesData != null
+        ? placesData!.when(
+            success: (places) {
+              return SliverPadding(
+                padding: isPortrait
+                    ? const EdgeInsets.only(left: 16, top: 16, right: 16)
+                    : const EdgeInsets.only(left: 34, top: 16, right: 34),
+                sliver: isPortrait
+                    ? _PlacesListPortrait(
+                        places: places,
+                      )
+                    : _PlacesListLandscape(
+                        places: places,
+                      ),
+              );
+            },
+            failure: (failure) {
+              return const SliverToBoxAdapter(
+                child: Center(child: Text('ошибка')),
+              );
+            },
+          )
+        : const SliverToBoxAdapter(child: Center(child: GradientProgress()));
+  }
+}
+
+/// Список мест при портретной ориентации.
+class _PlacesListPortrait extends StatefulWidget {
+  final List<Place> places;
+
+  const _PlacesListPortrait({required this.places, Key? key}) : super(key: key);
+
+  @override
+  State<_PlacesListPortrait> createState() => _PlacesListPortraitState();
+}
+
+class _PlacesListPortraitState extends State<_PlacesListPortrait> {
   @override
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
+          final place = widget.places[index];
+
           return Padding(
             padding: const EdgeInsets.only(bottom: 16),
-            child: SightCard(
-              sights[index],
+            child: PlaceCard(
+              place,
+              onFavorite: () {
+                setState(() {
+                  if (place.isFavorite) {
+                    placesInteractor.removeFromFavorites(place);
+                  } else {
+                    placesInteractor.addToFavorites(place);
+                  }
+                  place.isFavorite = !place.isFavorite;
+                });
+              },
             ),
           );
         },
-        childCount: sights.length,
+        childCount: widget.places.length,
       ),
     );
   }
 }
 
-/// Список достопримечательностей при альбомной ориентации.
-class _SightsListLandscape extends StatelessWidget {
-  final List<Sight> sights;
+/// Список мест при альбомной ориентации.
+class _PlacesListLandscape extends StatelessWidget {
+  final List<Place> places;
 
-  const _SightsListLandscape({required this.sights, Key? key}) : super(key: key);
+  const _PlacesListLandscape({required this.places, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -169,12 +228,12 @@ class _SightsListLandscape extends StatelessWidget {
         (context, index) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 16),
-            child: SightCard(
-              sights[index],
+            child: PlaceCard(
+              places[index],
             ),
           );
         },
-        childCount: sights.length,
+        childCount: places.length,
       ),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

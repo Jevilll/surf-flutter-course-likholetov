@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/mocks.dart';
 import 'package:places/res/app_icons.dart';
-import 'package:places/ui/screen/add_sight_screen.dart';
+import 'package:places/ui/screen/favorites_screen.dart';
 import 'package:places/ui/screen/filters_screen.dart';
-import 'package:places/ui/screen/on_boarding_screen.dart';
+import 'package:places/ui/screen/place_list_screen.dart';
 import 'package:places/ui/screen/settings_screen.dart';
-import 'package:places/ui/bottom_sheet/sight_details_bottom_sheet.dart';
-import 'package:places/ui/screen/sight_list_screen.dart';
-import 'package:places/ui/screen/sight_search_screen.dart';
-import 'package:places/ui/screen/visiting_screen.dart';
 
 /// Экран разводной.
 class HomePage extends StatefulWidget {
@@ -19,27 +14,35 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   final scenes = [
-    // const OnBoardingScreen(),
-    // const SightSearchScreen(),
-    const SightListScreen(),
-    // const AddSightScreen(),
-    // const SightSearchScreen(),
+    const PlaceListScreen(),
     const FiltersScreen(),
-    const VisitingScreen(),
+    const FavoritesScreen(),
     const SettingsScreen(),
   ];
 
-  int currentIndex = 0;
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this)
+      ..addListener(() => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: scenes[currentIndex],
+      body: TabBarView(
+        controller: _tabController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: scenes,
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (index) => setState(() => currentIndex = index),
+        currentIndex: _tabController.index,
+        onTap: _tabController.animateTo,
         items: [
           _getItem(
             context,
@@ -64,6 +67,12 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   BottomNavigationBarItem _getItem(

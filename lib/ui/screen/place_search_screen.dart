@@ -2,40 +2,42 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gradient_progress_indicator/gradient_progress_indicator.dart';
-import 'package:places/domain/sight.dart';
+import 'package:places/domain/interactor/search_interactor.dart';
+import 'package:places/domain/model/place.dart';
 import 'package:places/mocks.dart';
-import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_themes.dart';
-import 'package:places/ui/bottom_sheet/sight_details_bottom_sheet.dart';
+import 'package:places/ui/bottom_sheet/place_details_bottom_sheet.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
-import 'package:places/ui/widget/image_preview.dart';
 import 'package:places/ui/widget/center_content.dart';
+import 'package:places/ui/widget/image_preview.dart';
+import 'package:places/ui/widget/progress.dart';
 import 'package:places/ui/widget/search_bar.dart';
 
-/// Экран поиска достопримечательностей.
-class SightSearchScreen extends StatefulWidget {
-  const SightSearchScreen({Key? key}) : super(key: key);
+/// Экран поиска мест.
+class PlaceSearchScreen extends StatefulWidget {
+  const PlaceSearchScreen({Key? key}) : super(key: key);
 
   @override
-  State<SightSearchScreen> createState() => _SightSearchScreenState();
+  State<PlaceSearchScreen> createState() => _PlaceSearchScreenState();
 }
 
-class _SightSearchScreenState extends State<SightSearchScreen> {
+class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
+  late final SearchInteractor _interactor;
   late final ValueChanged<String>? _onChanged;
   final List<String> _history = [];
   bool _showProgress = false;
-  List<Sight> _searchedSights = [];
+  List<Place> _searchedPlaces = [];
   late TextEditingController _controller;
   Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
+    _interactor = SearchInteractor();
     _controller = TextEditingController();
     _onChanged = (value) => setState(() {
           _onSearchChanged(value);
@@ -66,7 +68,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                     onTap: () {
                       setState(() {
                         _controller.clear();
-                        _searchedSights.clear();
+                        _searchedPlaces.clear();
                       });
                     },
                     child: SvgPicture.asset(
@@ -79,29 +81,16 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
         ),
       ),
       body: _showProgress
-          ? Center(
-              child: GradientProgressIndicator(
-                radius: 20,
-                gradientColors: [
-                  AppColors.secondary2,
-                  theme.colorScheme.inactive,
-                ],
-                gradientStops: const [
-                  0.2,
-                  0.8,
-                ],
-                duration: 1,
-                strokeWidth: 4,
-                child: const SizedBox(),
-              ),
+          ? const Center(
+              child: GradientProgress(),
             )
-          : _searchedSights.isEmpty && _controller.text.isNotEmpty
+          : _searchedPlaces.isEmpty && _controller.text.isNotEmpty
               ? const CenterContent(
                   icon: AppIcons.search64,
                   title: AppStrings.nothingFound,
                   subtitle: AppStrings.tryToChangeSearchParameters,
                 )
-              : _searchedSights.isEmpty && _controller.text.isEmpty
+              : _searchedPlaces.isEmpty && _controller.text.isEmpty
                   ? History(_history, (historyElement) {
                       setState(() {
                         _controller
@@ -114,26 +103,26 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                   : ListView.separated(
                       padding: const EdgeInsets.only(top: 16),
                       physics: const BouncingScrollPhysics(),
-                      itemCount: _searchedSights.length,
+                      itemCount: _searchedPlaces.length,
                       separatorBuilder: (context, index) => const Divider(
                         height: 1,
                       ),
                       itemBuilder: (context, index) => ListTile(
                         onTap: () {
-                          showDetails(_searchedSights[index], context);
+                          showDetails(_searchedPlaces[index].id, context);
                         },
                         leading: ImagePreview(
-                          imgUrl: _searchedSights[index].images[0],
+                          imgUrl: _searchedPlaces[index].urls[0],
                           height: 56,
                           width: 56,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         title: HighlightText(
-                          _searchedSights[index].name,
+                          _searchedPlaces[index].name,
                           _controller.text,
                         ),
                         subtitle: Text(
-                          _searchedSights[index].type.name,
+                          _searchedPlaces[index].type.name,
                           style: theme.textTheme.bodySmall,
                         ),
                       ),
@@ -156,8 +145,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
       }
       if (_debounce?.isActive ?? false) _debounce?.cancel();
       _debounce = Timer(const Duration(milliseconds: 2000), () {
-        final suggestions = mocks.where((sight) {
-          final name = sight.name.toLowerCase();
+        final suggestions = mocks.where((place) {
+          final name = place.name.toLowerCase();
           final input = value.toLowerCase();
 
           return input.isNotEmpty && name.contains(input);
@@ -166,12 +155,12 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
         _history.add(value);
 
         setState(() {
-          _searchedSights = suggestions;
+          _searchedPlaces = suggestions;
           _showProgress = false;
         });
       });
     } else {
-      _searchedSights.clear();
+      _searchedPlaces.clear();
     }
   }
 }
