@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/domain/sight.dart';
+import 'package:places/domain/model/place.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_themes.dart';
@@ -8,17 +8,17 @@ import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_rounded.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 
-/// Экран выбора типа достопримечательности.
-class SightTypeSelectorScreen extends StatefulWidget {
+/// Экран выбора типа места.
+class PlaceTypeSelectorScreen extends StatefulWidget {
   final Type? type;
-  const SightTypeSelectorScreen({this.type, Key? key}) : super(key: key);
+  const PlaceTypeSelectorScreen({this.type, Key? key}) : super(key: key);
 
   @override
-  State<SightTypeSelectorScreen> createState() =>
-      _SightTypeSelectorScreenState();
+  State<PlaceTypeSelectorScreen> createState() =>
+      _PlaceTypeSelectorScreenState();
 }
 
-class _SightTypeSelectorScreenState extends State<SightTypeSelectorScreen> {
+class _PlaceTypeSelectorScreenState extends State<PlaceTypeSelectorScreen> {
   final _types = Type.values;
   int? _selectedIndex;
 

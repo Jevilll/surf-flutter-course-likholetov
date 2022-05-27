@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:places/domain/interactor/settings_interactor.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
@@ -7,7 +8,6 @@ import 'package:places/res/app_themes.dart';
 import 'package:places/ui/screen/on_boarding_screen.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
-import 'package:places/utils/common.dart';
 
 /// Экран настроек.
 class SettingsScreen extends StatefulWidget {
@@ -18,6 +18,13 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  late final SettingsInteractor _settingsInteractor;
+
+  @override
+  void initState() {
+    _settingsInteractor = SettingsInteractor();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -39,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 trackColor: AppColors.inactiveBlack,
                 value: value,
                 onChanged: (currentValue) {
-                  themeNotifier.notifyListeners();
+                  _settingsInteractor.switchTheme();
                 },
               ),
             ),

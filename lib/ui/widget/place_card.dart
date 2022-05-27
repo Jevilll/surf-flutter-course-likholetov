@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:places/domain/sight.dart';
+import 'package:places/domain/model/place.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
-import 'package:places/ui/bottom_sheet/sight_details_bottom_sheet.dart';
+import 'package:places/ui/bottom_sheet/place_details_bottom_sheet.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/image_preview.dart';
 import 'package:places/utils/common.dart';
 
-/// Виджет карточки достопримечательности.
-class SightCard extends StatelessWidget {
-  final Sight sight;
+/// Виджет карточки места.
+class PlaceCard extends StatelessWidget {
+  final Place place;
   final CardType type;
+  final String favoriteIcon;
   final VoidCallback? onDelete;
   final VoidCallback? onDatePick;
+  final VoidCallback? onFavorite;
 
-  const SightCard(
-    this.sight, {
+  const PlaceCard(
+    this.place, {
     this.onDelete,
     this.onDatePick,
+    this.onFavorite,
     this.type = CardType.interesting,
+    this.favoriteIcon = AppIcons.heart,
     Key? key,
   }) : super(key: key);
 
@@ -33,7 +37,7 @@ class SightCard extends StatelessWidget {
         margin: EdgeInsets.zero,
         child: InkWell(
           onTap: () {
-            showDetails(sight, context);
+            showDetails(place.id, context);
           },
           child: Column(
             children: [
@@ -42,13 +46,13 @@ class SightCard extends StatelessWidget {
                   fit: StackFit.expand,
                   children: [
                     ImagePreview(
-                      imgUrl: sight.images[0],
+                      imgUrl: place.urls[0],
                     ),
                     Positioned(
                       left: 16,
                       top: 16,
                       child: Text(
-                        sight.type.name,
+                        place.type.name,
                         style: AppTextStyles.smallBold
                             .copyWith(color: theme.colorScheme.white),
                       ),
@@ -60,6 +64,10 @@ class SightCard extends StatelessWidget {
                         type,
                         onDelete: onDelete,
                         onDatePick: onDatePick,
+                        onFavorite: onFavorite,
+                        favoriteIcon: place.isFavorite
+                            ? AppIcons.heartFull
+                            : AppIcons.heart,
                       ),
                     ),
                   ],
@@ -74,18 +82,18 @@ class SightCard extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: Text(
-                          sight.name,
+                          place.name,
                           maxLines: 2,
                           style: theme.textTheme.bodyMedium,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      TimeToVisitText(type, sight),
+                      TimeToVisitText(type, place),
                       Container(
                         margin: const EdgeInsets.only(top: 2),
                         width: double.infinity,
                         child: Text(
-                          sight.workingHours,
+                          place.workingHours,
                           textAlign: TextAlign.left,
                           style: AppTextStyles.small.copyWith(
                             color: theme.colorScheme.secondary2,
@@ -107,22 +115,22 @@ class SightCard extends StatelessWidget {
 /// Виджет текста, зависящик от типа карточки [CardType].
 class TimeToVisitText extends StatelessWidget {
   final CardType type;
-  final Sight sight;
+  final Place place;
 
-  const TimeToVisitText(this.type, this.sight, {Key? key}) : super(key: key);
+  const TimeToVisitText(this.type, this.place, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return sight.timeToVisit.isEmpty || type == CardType.interesting
+    return place.timeToVisit.isEmpty || type == CardType.interesting
         ? const SizedBox.shrink()
         : Container(
             margin: const EdgeInsets.symmetric(vertical: 2),
             height: 28,
             width: double.infinity,
             child: Text(
-              sight.timeToVisit,
+              place.timeToVisit,
               style: AppTextStyles.small.copyWith(
                 color: type == CardType.toVisit
                     ? theme.colorScheme.green
@@ -135,36 +143,63 @@ class TimeToVisitText extends StatelessWidget {
 }
 
 /// Виджет отображения кнопок, зависящик от типа карточки [CardType].
-class CardButtons extends StatelessWidget {
+class CardButtons extends StatefulWidget {
   final CardType type;
   final VoidCallback? onDelete;
   final VoidCallback? onDatePick;
+  final VoidCallback? onFavorite;
+  String favoriteIcon;
 
-  const CardButtons(this.type, {this.onDelete, this.onDatePick, Key? key}) : super(key: key);
+  CardButtons(
+    this.type, {
+    this.onDelete,
+    this.onDatePick,
+    this.onFavorite,
+    required this.favoriteIcon,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<CardButtons> createState() => _CardButtonsState();
+}
+
+class _CardButtonsState extends State<CardButtons> {
+  late String _favoriteIcon;
+
+  @override
+  void initState() {
+    _favoriteIcon = widget.favoriteIcon;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
         late final Widget result;
-        switch (type) {
+        switch (widget.type) {
           case CardType.interesting:
             result = ButtonSvgIcon(
-              icon: AppIcons.heart,
+              icon: _favoriteIcon,
               onPressed: () {
-                logger.i('Нажатие на кнопку heart');
+                setState(() {
+                  _favoriteIcon = _favoriteIcon == AppIcons.heart
+                      ? AppIcons.heartFull
+                      : AppIcons.heart;
+                });
+                widget.onFavorite?.call();
               },
             );
             break;
           case CardType.toVisit:
             result = ToVisitButtons(
-              onDelete: onDelete,
-              onDatePick: onDatePick,
+              onDelete: widget.onDelete,
+              onDatePick: widget.onDatePick,
             );
             break;
           case CardType.visited:
             result = VisitedButtons(
-              onDelete: onDelete,
+              onDelete: widget.onDelete,
             );
             break;
         }

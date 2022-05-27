@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/domain/position.dart';
-import 'package:places/domain/sight.dart';
-import 'package:places/mocks.dart';
+import 'package:places/domain/interactor/places_interactor.dart';
+import 'package:places/domain/model/place.dart';
+import 'package:places/domain/model/position.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
-import 'package:places/ui/screen/sight_type_selector_screen.dart';
+import 'package:places/ui/screen/place_type_selector_screen.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_rounded.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/custom_text_field.dart';
 import 'package:places/ui/widget/photo_dialog_picker.dart';
 
-/// Экран добавления достопримечательности.
-class AddSightScreen extends StatefulWidget {
-  const AddSightScreen({Key? key}) : super(key: key);
+/// Экран добавления нового места.
+class AddPlaceScreen extends StatefulWidget {
+  const AddPlaceScreen({Key? key}) : super(key: key);
 
   @override
-  State<AddSightScreen> createState() => _AddSightScreenState();
+  State<AddPlaceScreen> createState() => _AddPlaceScreenState();
 }
 
-class _AddSightScreenState extends State<AddSightScreen> {
+class _AddPlaceScreenState extends State<AddPlaceScreen> {
   late final TextEditingController _controllerName;
   late final TextEditingController _controllerLat;
   late final TextEditingController _controllerLong;
@@ -33,7 +33,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
   final _focusNodeDescription = FocusNode();
   final _formKey = GlobalKey<FormState>();
   final _photos = ['add'];
-  Type? _sightType;
+  Type? _placeType;
 
   @override
   void initState() {
@@ -129,18 +129,18 @@ class _AddSightScreenState extends State<AddSightScreen> {
                         final result = await Navigator.push<Type>(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SightTypeSelectorScreen(
-                              type: _sightType,
+                            builder: (context) => PlaceTypeSelectorScreen(
+                              type: _placeType,
                             ),
                           ),
                         );
                         setState(() {
-                          _sightType = result ?? _sightType;
+                          _placeType = result ?? _placeType;
                         });
                       },
                       leading: Text(
-                        _sightType != null
-                            ? _sightType!.name
+                        _placeType != null
+                            ? _placeType!.name
                             : AppStrings.notChosen,
                         style: theme.textTheme.bodySmall,
                       ),
@@ -241,10 +241,12 @@ class _AddSightScreenState extends State<AddSightScreen> {
                     title: AppStrings.create.toUpperCase(),
                     onPressed: _isButtonEnabled()
                         ? () {
-                            mocks.add(Sight(
-                              _controllerName.text,
-                              details: _controllerDescription.text,
-                              type: _sightType!,
+                            placesInteractor.addPlace(Place(
+                              id: 0,
+                              name: _controllerName.text,
+                              description: _controllerDescription.text,
+                              type: _placeType!,
+                              urls: [],
                               position: Position(
                                 double.tryParse(_controllerLat.text) ?? 0,
                                 double.tryParse(_controllerLong.text) ?? 0,
@@ -259,7 +261,9 @@ class _AddSightScreenState extends State<AddSightScreen> {
                           }
                         : null,
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(
+                    height: 16,
+                  ),
                 ],
               ),
             ),
@@ -282,7 +286,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
         _controllerLat.text.isNotEmpty &&
         _controllerLong.text.isNotEmpty &&
         _controllerDescription.text.isNotEmpty &&
-        _sightType != null &&
+        _placeType != null &&
         _formKey.currentState!.validate();
   }
 }
@@ -414,7 +418,6 @@ class _PhotoCard extends StatelessWidget {
             ),
           ),
         ],
-
       ),
     );
   }
@@ -431,28 +434,28 @@ class AddPhotoButton extends StatelessWidget {
     final theme = Theme.of(context);
 
     return UnconstrainedBox(
-          child: Container(
-            margin: const EdgeInsets.only(left: 16, right: 16),
-            width: 72,
-            height: 72,
-            child: OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                  width: 2.0,
-                  color: theme.colorScheme.green.withOpacity(0.5),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: onPressed,
-              child: SvgPicture.asset(
-                AppIcons.plus,
-                height: 40,
-                color: theme.colorScheme.green,
-              ),
+      child: Container(
+        margin: const EdgeInsets.only(left: 16, right: 16),
+        width: 72,
+        height: 72,
+        child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(
+              width: 2.0,
+              color: theme.colorScheme.green.withOpacity(0.5),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
+          onPressed: onPressed,
+          child: SvgPicture.asset(
+            AppIcons.plus,
+            height: 40,
+            color: theme.colorScheme.green,
+          ),
+        ),
+      ),
     );
   }
 }

@@ -3,25 +3,28 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/domain/sight.dart';
-import 'package:places/mocks.dart';
+import 'package:places/domain/interactor/places_interactor.dart';
+import 'package:places/domain/model/place.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_themes.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/center_content.dart';
-import 'package:places/ui/widget/sight_card.dart';
+import 'package:places/ui/widget/place_card.dart';
 
 /// Экран избранных мест.
-class VisitingScreen extends StatefulWidget {
-  const VisitingScreen({Key? key}) : super(key: key);
+class FavoritesScreen extends StatefulWidget {
+  const FavoritesScreen({Key? key}) : super(key: key);
 
   @override
-  State<VisitingScreen> createState() => _VisitingScreenState();
+  State<FavoritesScreen> createState() => _FavoritesScreenState();
 }
 
-class _VisitingScreenState extends State<VisitingScreen> {
+class _FavoritesScreenState extends State<FavoritesScreen> {
+  final List<Place> _favoritesData = placesInteractor.getFavorites();
+  final List<Place> _visitedData = placesInteractor.getVisited();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -52,11 +55,11 @@ class _VisitingScreenState extends State<VisitingScreen> {
             child: TabBarView(
               children: [
                 ReorderableDismissibleList(
-                  sights: mocksToVisit,
+                  places: _favoritesData,
                   type: CardType.toVisit,
                 ),
                 ReorderableDismissibleList(
-                  sights: mocksVisited,
+                  places: _visitedData,
                   type: CardType.visited,
                 ),
               ],
@@ -68,14 +71,13 @@ class _VisitingScreenState extends State<VisitingScreen> {
   }
 }
 
-/// Сортируемый список достопримечательностей,
-/// с возможностью удалить элемент путем смахивания.
+/// Сортируемый список мест, с возможностью удалить элемент путем смахивания.
 class ReorderableDismissibleList extends StatefulWidget {
-  final List<Sight> sights;
+  final List<Place> places;
   final CardType type;
 
   const ReorderableDismissibleList({
-    required this.sights,
+    required this.places,
     required this.type,
     Key? key,
   }) : super(key: key);
@@ -99,36 +101,36 @@ class _ReorderableDismissibleListState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return widget.sights.isNotEmpty
+    return widget.places.isNotEmpty
         ? ReorderableListView.builder(
             padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
             physics: const BouncingScrollPhysics(),
-            itemCount: widget.sights.length,
+            itemCount: widget.places.length,
             itemBuilder: (context, index) {
-              final sight = widget.sights[index];
+              final place = widget.places[index];
 
               return Padding(
-                key: ObjectKey(sight),
+                key: ObjectKey(place),
                 padding: const EdgeInsets.only(bottom: 16),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Dismissible(
                     direction: DismissDirection.endToStart,
-                    key: ObjectKey(sight),
+                    key: ObjectKey(place),
                     background: const DeleteBackground(),
                     onDismissed: (_) {
                       setState(() {
-                        widget.sights.remove(sight);
+                        _removeFavorite(place);
                       });
                     },
                     child: Container(
                       color: theme.colorScheme.red,
-                      child: SightCard(
-                        sight,
+                      child: PlaceCard(
+                        place,
                         type: _type,
                         onDelete: () {
                           setState(() {
-                            widget.sights.remove(sight);
+                            _removeFavorite(place);
                           });
                         },
                         onDatePick: _putRemainder,
@@ -149,10 +151,17 @@ class _ReorderableDismissibleListState
           );
   }
 
+  void _removeFavorite(Place place) {
+    setState(() {
+      widget.places.remove(place);
+      placesInteractor.removeFromFavorites(place);
+    });
+  }
+
   void _reorderData(int oldItem, int newItem) {
     setState(() {
-      final items = widget.sights.removeAt(oldItem);
-      widget.sights.insert(newItem > oldItem ? newItem - 1 : newItem, items);
+      final items = widget.places.removeAt(oldItem);
+      widget.places.insert(newItem > oldItem ? newItem - 1 : newItem, items);
     });
   }
 

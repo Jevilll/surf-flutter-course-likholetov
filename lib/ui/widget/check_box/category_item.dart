@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/domain/category.dart';
+import 'package:places/domain/model/category.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_themes.dart';
 

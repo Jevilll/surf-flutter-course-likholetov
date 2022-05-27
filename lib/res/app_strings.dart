@@ -3,10 +3,13 @@ abstract class AppStrings {
   static const String listOfInterestingPlacesTwoLines = 'Список интересных\u00A0мест';
   static const String hotel = 'отель';
   static const String restaurant = 'ресторан';
-  static const String special = 'особое место';
   static const String park = 'парк';
   static const String museum = 'музей';
+  static const String theatre = 'театр';
   static const String cafe = 'кафе';
+  static const String other = 'другое';
+  static const String temple = 'храм';
+  static const String monument = 'памятник';
   static const String buildARoute = 'Построить маршрут';
   static const String toSchedule = 'Запланировать';
   static const String toFavorites = 'В Избранное';

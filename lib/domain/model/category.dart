@@ -1,4 +1,4 @@
-import 'package:places/domain/sight.dart';
+import 'package:places/domain/model/place.dart';
 
 /// Модель данных категории.
 class Category {

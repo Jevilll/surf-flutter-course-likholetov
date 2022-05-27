@@ -3,9 +3,11 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:places/domain/category.dart';
-import 'package:places/domain/position.dart';
-import 'package:places/domain/sight.dart';
+import 'package:places/domain/interactor/places_interactor.dart';
+import 'package:places/domain/model/category.dart';
+import 'package:places/domain/model/place.dart';
+import 'package:places/domain/model/position.dart';
+import 'package:places/domain/model/result.dart';
 import 'package:places/mocks.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
@@ -16,7 +18,7 @@ import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/check_box/category_item.dart';
 
-/// Экран фильтрации списка достопримечательностей.
+/// Экран фильтрации списка мест.
 class FiltersScreen extends StatefulWidget {
   const FiltersScreen({Key? key}) : super(key: key);
 
@@ -42,7 +44,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
       name: 'Особое место',
     ),
     Category(type: Type.park, icon: AppIcons.park, name: 'Парк'),
-    Category(type: Type.special, icon: AppIcons.particularPlace, name: 'Музей'),
+    Category(type: Type.other, icon: AppIcons.particularPlace, name: 'Музей'),
     Category(type: Type.restaurant, icon: AppIcons.restaurant, name: 'Кафе'),
   ];
 
@@ -52,6 +54,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   RangeValues values = const RangeValues(100, 10000);
   int numberOfFound = 0;
   List<bool> _selected = List.generate(6, (index) => false);
+  Result<List<Place>, Exception>? _placesData;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +78,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
               onPressed: () {
                 setState(() {
                   _clearCategories();
-                  countSights();
+                  countPlaces();
                 });
               },
             ),
@@ -102,7 +105,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 child: CategoriesGrid(
                   _categories,
                   onPressed: () {
-                    setState(countSights);
+                    setState(countPlaces);
                   },
                 ),
               ),
@@ -129,6 +132,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     max: 10000,
                     values: values,
                     divisions: 99,
+                    onChangeEnd: (range) {
+                      _getPlaces();
+                    },
                     onChanged: (newRange) {
                       setState(() {
                         values = newRange;
@@ -151,13 +157,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
     );
   }
 
-  int countSights() {
+  int countPlaces() {
     numberOfFound = 0;
     _selected.forEachIndexed((index, selectedCategory) {
       if (selectedCategory) {
         final type = _categories[index].type;
         numberOfFound =
-            numberOfFound + mocks.where((sight) => sight.type == type).length;
+            numberOfFound + mocks.where((place) => place.type == type).length;
       }
     });
 
@@ -182,6 +188,19 @@ class _FiltersScreenState extends State<FiltersScreen> {
   void _clearCategories() {
     _selected = _selected.map((e) => false).toList();
   }
+
+  void _getPlaces() {
+    placesInteractor
+        .getFilteredPlaces(
+      minRadius: values.start,
+      maxRadius: values.end,
+    )
+        .then((result) {
+      setState(() {
+        _placesData = result;
+      });
+    });
+  }
 }
 
 /// Виджет списка категорий.
@@ -204,7 +223,8 @@ class _CategoriesGridState extends State<CategoriesGrid> {
   Widget build(BuildContext context) {
     final selected = SelectedCategories.of(context).selected;
     final isHighResolution = MediaQuery.of(context).size.height *
-            MediaQuery.of(context).devicePixelRatio > 800;
+            MediaQuery.of(context).devicePixelRatio >
+        800;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -251,7 +271,7 @@ class _CategoriesGridState extends State<CategoriesGrid> {
   }
 }
 
-/// Кнопка показать отфильтрованные достопримечательности.
+/// Кнопка показать отфильтрованные места.
 class CategoriesButton extends StatefulWidget {
   final VoidCallback onPressed;
 
@@ -296,7 +316,7 @@ class SelectedCategories extends InheritedWidget {
   }
 }
 
-/// Виджет для проброса количества выбранных достопримечательностей вниз по дереву.
+/// Виджет для проброса количества выбранных мест вниз по дереву.
 class CountButtonText extends InheritedWidget {
   final int count;
 
