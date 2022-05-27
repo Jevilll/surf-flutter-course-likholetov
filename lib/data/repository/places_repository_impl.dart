@@ -1,3 +1,4 @@
+import 'package:places/data/api/api_urls.dart';
 import 'package:places/data/api/rest_api.dart';
 import 'package:places/data/api/rest_deserializer.dart';
 import 'package:places/data/api/rest_impl.dart';
@@ -21,7 +22,7 @@ class PlacesRepositoryImpl extends PlacesRepository {
   @override
   Future<Result<Place, Exception>> getPlace({required int id}) async {
     try {
-      final response = await api.get('/place/$id');
+      final response = await api.get('${ApiUrls.place}/$id');
 
       final placeDto = RestDeserializer.map<PlaceDto, PlaceDto>(response, PlaceDto.fromJson);
       final place = placeMapper.fromDto(placeDto);
@@ -35,7 +36,7 @@ class PlacesRepositoryImpl extends PlacesRepository {
   @override
   Future<Result<List<Place>, Exception>> getPlaces() async {
     try {
-      final response = await api.get('/place');
+      final response = await api.get(ApiUrls.place);
 
       final placesDto = RestDeserializer.map<List<PlaceDto>, PlaceDto>(response, PlaceDto.fromJson);
       final places = placesDto.map<Place>(placeMapper.fromDto).toList();
@@ -50,7 +51,7 @@ class PlacesRepositoryImpl extends PlacesRepository {
   Future<Result<List<Place>, Exception>> getFilteredPlaces({required PlaceFilterRequest filterRequest}) async {
     try {
       final response = await api.post(
-        '/filtered_places',
+        ApiUrls.filteredPlaces,
         data: filterRequest.toJson(),
       );
 
@@ -67,7 +68,7 @@ class PlacesRepositoryImpl extends PlacesRepository {
   Future<Result<Place, Exception>> addNewPlace(Place newPlace) async {
     try {
       final newPlaceDto = placeMapper.toDto(newPlace);
-      final response = await api.post('/place', params: newPlaceDto.toJson());
+      final response = await api.post(ApiUrls.place, params: newPlaceDto.toJson());
 
       final placeDto = RestDeserializer.map<PlaceDto, PlaceDto>(response, PlaceDto.fromJson);
       final place = placeMapper.fromDto(placeDto);

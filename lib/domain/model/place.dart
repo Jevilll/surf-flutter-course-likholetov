@@ -5,7 +5,7 @@ import 'package:places/res/app_strings.dart';
 part '../../gen/domain/model/place.freezed.dart';
 
 /// Модель данных места.
-@unfreezed
+@freezed
 class Place with _$Place {
 
   factory Place({

@@ -23,11 +23,8 @@ mixin _$Place {
   Type get type => throw _privateConstructorUsedError;
   List<String> get urls => throw _privateConstructorUsedError;
   double? get distance => throw _privateConstructorUsedError;
-  set distance(double? value) => throw _privateConstructorUsedError;
   bool get isFavorite => throw _privateConstructorUsedError;
-  set isFavorite(bool value) => throw _privateConstructorUsedError;
   String get timeToVisit => throw _privateConstructorUsedError;
-  set timeToVisit(String value) => throw _privateConstructorUsedError;
   String get workingHours => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -191,7 +188,7 @@ class __$$_PlaceCopyWithImpl<$Res> extends _$PlaceCopyWithImpl<$Res>
           : type // ignore: cast_nullable_to_non_nullable
               as Type,
       urls: urls == freezed
-          ? _value.urls
+          ? _value._urls
           : urls // ignore: cast_nullable_to_non_nullable
               as List<String>,
       distance: distance == freezed
@@ -223,11 +220,12 @@ class _$_Place implements _Place {
       required this.position,
       required this.description,
       required this.type,
-      required this.urls,
+      required final List<String> urls,
       this.distance,
       this.isFavorite = false,
       this.timeToVisit = '',
-      this.workingHours = ''});
+      this.workingHours = ''})
+      : _urls = urls;
 
   @override
   final int id;
@@ -239,16 +237,21 @@ class _$_Place implements _Place {
   final String description;
   @override
   final Type type;
+  final List<String> _urls;
   @override
-  final List<String> urls;
+  List<String> get urls {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_urls);
+  }
+
   @override
-  double? distance;
+  final double? distance;
   @override
   @JsonKey()
-  bool isFavorite;
+  final bool isFavorite;
   @override
   @JsonKey()
-  String timeToVisit;
+  final String timeToVisit;
   @override
   @JsonKey()
   final String workingHours;
@@ -257,6 +260,41 @@ class _$_Place implements _Place {
   String toString() {
     return 'Place(id: $id, name: $name, position: $position, description: $description, type: $type, urls: $urls, distance: $distance, isFavorite: $isFavorite, timeToVisit: $timeToVisit, workingHours: $workingHours)';
   }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_Place &&
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality().equals(other.position, position) &&
+            const DeepCollectionEquality()
+                .equals(other.description, description) &&
+            const DeepCollectionEquality().equals(other.type, type) &&
+            const DeepCollectionEquality().equals(other._urls, _urls) &&
+            const DeepCollectionEquality().equals(other.distance, distance) &&
+            const DeepCollectionEquality()
+                .equals(other.isFavorite, isFavorite) &&
+            const DeepCollectionEquality()
+                .equals(other.timeToVisit, timeToVisit) &&
+            const DeepCollectionEquality()
+                .equals(other.workingHours, workingHours));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(name),
+      const DeepCollectionEquality().hash(position),
+      const DeepCollectionEquality().hash(description),
+      const DeepCollectionEquality().hash(type),
+      const DeepCollectionEquality().hash(_urls),
+      const DeepCollectionEquality().hash(distance),
+      const DeepCollectionEquality().hash(isFavorite),
+      const DeepCollectionEquality().hash(timeToVisit),
+      const DeepCollectionEquality().hash(workingHours));
 
   @JsonKey(ignore: true)
   @override
@@ -272,9 +310,9 @@ abstract class _Place implements Place {
       required final String description,
       required final Type type,
       required final List<String> urls,
-      double? distance,
-      bool isFavorite,
-      String timeToVisit,
+      final double? distance,
+      final bool isFavorite,
+      final String timeToVisit,
       final String workingHours}) = _$_Place;
 
   @override

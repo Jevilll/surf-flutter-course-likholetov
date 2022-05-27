@@ -167,13 +167,9 @@ class _CardButtonsState extends State<CardButtons> {
   late String _favoriteIcon;
 
   @override
-  void initState() {
-    _favoriteIcon = widget.favoriteIcon;
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    _favoriteIcon = widget.favoriteIcon;
+
     return Builder(
       builder: (context) {
         late final Widget result;
@@ -182,11 +178,6 @@ class _CardButtonsState extends State<CardButtons> {
             result = ButtonSvgIcon(
               icon: _favoriteIcon,
               onPressed: () {
-                setState(() {
-                  _favoriteIcon = _favoriteIcon == AppIcons.heart
-                      ? AppIcons.heartFull
-                      : AppIcons.heart;
-                });
                 widget.onFavorite?.call();
               },
             );

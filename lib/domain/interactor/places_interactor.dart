@@ -14,10 +14,26 @@ class PlacesInteractor {
   late final LocationRepository _locationRepository;
   final List<Place> _favoritesList = [];
   final List<Place> _visitedList = [];
+  late final _placesController =
+      StreamController<Result<List<Place>, Exception>>.broadcast();
+  List<Place> _actualPlaces = [];
+
+  Stream<Result<List<Place>, Exception>> get placesStream =>
+      _placesController.stream;
 
   PlacesInteractor() {
     _placesRepository = PlacesRepositoryImpl();
     _locationRepository = LocationRepositoryImpl();
+    placesStream.listen((result) {
+      result.ifSuccess((places) {
+        _actualPlaces = places;
+      });
+    });
+  }
+
+  /// Закрытие [StreamController].
+  void dispose() {
+    _placesController.close();
   }
 
   /// Возвращает место по его [id].
@@ -27,16 +43,12 @@ class PlacesInteractor {
 
   /// Возвращает список всех мест.
   Future<Result<List<Place>, Exception>> getPlaces() async {
-    final Result<List<Place>, Exception> result = await _placesRepository.getPlaces();
+    final result = await _placesRepository.getPlaces();
 
-    return result.when(
-      success: (places) {
-        return Result.success(_mapPlacesWithFavorites(places));
-      },
-      failure: (failure) {
-        return Result.failure(failure);
-      },
-    );
+    final mappedResult = result.mapSuccess(_mapPlacesWithFavorites);
+    _placesController.add(mappedResult);
+
+    return mappedResult;
   }
 
   /// Возвращает отфильтрованный список мест.
@@ -69,20 +81,17 @@ class PlacesInteractor {
     final result =
         await _placesRepository.getFilteredPlaces(filterRequest: filterRequest);
 
-    return maxRadius != null && minRadius != null
-        ? result.when(
-            success: (places) {
-              final placesOverMinimumRadius = places
-                  .where((place) => (place.distance! / 1000) >= minRadius)
-                  .toList();
-
-              return Result.success(placesOverMinimumRadius);
-            },
-            failure: (failure) {
-              return Result.failure(failure);
-            },
-          )
+    final filteredPlaces = maxRadius != null && minRadius != null
+        ? result.mapSuccess((places) {
+            return places
+                .where((place) => (place.distance! / 1000) >= minRadius)
+                .toList();
+          })
         : result;
+
+    _placesController.add(filteredPlaces);
+
+    return filteredPlaces;
   }
 
   /// Добавить новое место.
@@ -98,11 +107,13 @@ class PlacesInteractor {
   /// Добавить место в избранное.
   void addToFavorites(Place place) {
     _favoritesList.add(place);
+    _updatePlaces();
   }
 
   /// Удалить место из избранного.
   void removeFromFavorites(Place place) {
-    _favoritesList.remove(place);
+    _favoritesList.removeWhere((element) => element.id == place.id);
+    _updatePlaces();
   }
 
   /// Возвращает список посещенных мест.
@@ -115,12 +126,17 @@ class PlacesInteractor {
     _visitedList.add(place);
   }
 
+  void _updatePlaces() {
+    _placesController
+        .add(Result.success(_mapPlacesWithFavorites(_actualPlaces)));
+  }
+
   List<Place> _mapPlacesWithFavorites(List<Place> places) {
     final placesWithFavorites = <Place>[];
     for (final place in places) {
-      final isFavorite = _favoritesList.contains(place);
       placesWithFavorites.add(place.copyWith(
-        isFavorite: isFavorite,
+        isFavorite:
+            _favoritesList.where((favorite) => favorite.id == place.id).isNotEmpty,
       ));
     }
 
