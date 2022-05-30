@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:places/data/api/api_urls.dart';
 import 'package:places/data/api/interceptor.dart';
 import 'package:places/data/api/rest_api.dart';
 
@@ -7,13 +8,14 @@ class RestImpl extends RestApi {
   final Dio _dio;
 
   RestImpl()
-      : _dio = Dio(BaseOptions(
-          baseUrl: 'https://test-backend-flutter.surfstudio.ru',
-          connectTimeout: 15000,
-          receiveTimeout: 15000,
-          sendTimeout: 15000,
-        ))
-          ..interceptors.add(LoggerInterceptor());
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: ApiUrls.base,
+            connectTimeout: 15000,
+            receiveTimeout: 15000,
+            sendTimeout: 15000,
+          ),
+        )..interceptors.add(LoggerInterceptor());
 
   @override
   Future<Response<dynamic>> get(
@@ -32,10 +34,10 @@ class RestImpl extends RestApi {
 
   @override
   Future<Response<dynamic>> put(
-      String path, {
-        Map<String, dynamic>? params,
-        Map<String, dynamic>? data,
-      }) async =>
+    String path, {
+    Map<String, dynamic>? params,
+    Map<String, dynamic>? data,
+  }) async =>
       _rawRequest(
         path,
         method: 'PUT',
@@ -45,9 +47,9 @@ class RestImpl extends RestApi {
 
   @override
   Future<void> delete(
-      String path, {
-        Map<String, dynamic>? params,
-      }) async =>
+    String path, {
+    Map<String, dynamic>? params,
+  }) async =>
       _rawRequest(
         path,
         method: 'DELETE',

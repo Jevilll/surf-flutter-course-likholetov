@@ -107,8 +107,8 @@ class __$$_SuccessCopyWithImpl<S, F extends Exception, $Res>
 
 /// @nodoc
 
-class _$_Success<S, F extends Exception> implements _Success<S, F> {
-  const _$_Success(this.data);
+class _$_Success<S, F extends Exception> extends _Success<S, F> {
+  const _$_Success(this.data) : super._();
 
   @override
   final S data;
@@ -198,8 +198,9 @@ class _$_Success<S, F extends Exception> implements _Success<S, F> {
   }
 }
 
-abstract class _Success<S, F extends Exception> implements Result<S, F> {
+abstract class _Success<S, F extends Exception> extends Result<S, F> {
   const factory _Success(final S data) = _$_Success<S, F>;
+  const _Success._() : super._();
 
   S get data => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -241,8 +242,8 @@ class __$$_FailureCopyWithImpl<S, F extends Exception, $Res>
 
 /// @nodoc
 
-class _$_Failure<S, F extends Exception> implements _Failure<S, F> {
-  const _$_Failure(this.error);
+class _$_Failure<S, F extends Exception> extends _Failure<S, F> {
+  const _$_Failure(this.error) : super._();
 
   @override
   final F error;
@@ -332,8 +333,9 @@ class _$_Failure<S, F extends Exception> implements _Failure<S, F> {
   }
 }
 
-abstract class _Failure<S, F extends Exception> implements Result<S, F> {
+abstract class _Failure<S, F extends Exception> extends Result<S, F> {
   const factory _Failure(final F error) = _$_Failure<S, F>;
+  const _Failure._() : super._();
 
   F get error => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)

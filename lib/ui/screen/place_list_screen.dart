@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/domain/interactor/places_interactor.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/result.dart';
+import 'package:places/presentation/model/ui_state.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
@@ -14,6 +17,8 @@ import 'package:places/ui/widget/place_card.dart';
 import 'package:places/ui/widget/progress.dart';
 import 'package:places/ui/widget/search_bar.dart';
 
+typedef OperationResult = Result<List<Place>, Exception>;
+
 /// Экран списка мест.
 class PlaceListScreen extends StatefulWidget {
   const PlaceListScreen({Key? key}) : super(key: key);
@@ -23,15 +28,16 @@ class PlaceListScreen extends StatefulWidget {
 }
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
-  Result<List<Place>, Exception>? _placesData;
+  final _placesStreamController =
+      StreamController<UiState<OperationResult>>();
 
   @override
   void initState() {
-    placesInteractor.getPlaces().then((result) {
-      setState(() {
-        _placesData = result;
-      });
+    placesInteractor.placesStream.listen((result) {
+      _placesStreamController.add(UiState.result(result));
     });
+
+    placesInteractor.getPlaces();
     super.initState();
   }
 
@@ -100,7 +106,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
             ),
           ),
           _PlacesList(
-            placesData: _placesData,
+            placesStreamController: _placesStreamController,
           ),
         ],
       ),
@@ -135,41 +141,66 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
+
+  @override
+  void dispose() {
+    _placesStreamController.close();
+    super.dispose();
+  }
 }
 
-class _PlacesList extends StatelessWidget {
-  final Result<List<Place>, Exception>? placesData;
+class _PlacesList extends StatefulWidget {
+  final StreamController<UiState<OperationResult>> placesStreamController;
 
-  const _PlacesList({required this.placesData, Key? key}) : super(key: key);
+  const _PlacesList({required this.placesStreamController, Key? key})
+      : super(key: key);
 
+  @override
+  State<_PlacesList> createState() => _PlacesListState();
+}
+
+class _PlacesListState extends State<_PlacesList> {
   @override
   Widget build(BuildContext context) {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    return placesData != null
-        ? placesData!.when(
-            success: (places) {
-              return SliverPadding(
-                padding: isPortrait
-                    ? const EdgeInsets.only(left: 16, top: 16, right: 16)
-                    : const EdgeInsets.only(left: 34, top: 16, right: 34),
-                sliver: isPortrait
-                    ? _PlacesListPortrait(
-                        places: places,
-                      )
-                    : _PlacesListLandscape(
-                        places: places,
-                      ),
-              );
-            },
-            failure: (failure) {
-              return const SliverToBoxAdapter(
-                child: Center(child: Text('ошибка')),
-              );
-            },
-          )
-        : const SliverToBoxAdapter(child: Center(child: GradientProgress()));
+    return StreamBuilder(
+      stream: widget.placesStreamController.stream,
+      initialData: const UiState<OperationResult>.loading(),
+      builder: (context, snapShot) {
+        return (snapShot.data as UiState<OperationResult>).when(
+          result: (result) {
+            return result.when(
+              success: (places) {
+                return SliverPadding(
+                  padding: isPortrait
+                      ? const EdgeInsets.only(left: 16, top: 16, right: 16)
+                      : const EdgeInsets.only(left: 34, top: 16, right: 34),
+                  sliver: isPortrait
+                      ? _PlacesListPortrait(
+                          places: places,
+                        )
+                      : _PlacesListLandscape(
+                          places: places,
+                        ),
+                );
+              },
+              failure: (failure) {
+                return const SliverToBoxAdapter(
+                  child: Center(child: Text('ошибка')),
+                );
+              },
+            );
+          },
+          loading: () {
+            return const SliverToBoxAdapter(
+              child: Center(child: GradientProgress()),
+            );
+          },
+        );
+      },
+    );
   }
 }
 
@@ -196,14 +227,11 @@ class _PlacesListPortraitState extends State<_PlacesListPortrait> {
             child: PlaceCard(
               place,
               onFavorite: () {
-                setState(() {
-                  if (place.isFavorite) {
-                    placesInteractor.removeFromFavorites(place);
-                  } else {
-                    placesInteractor.addToFavorites(place);
-                  }
-                  place.isFavorite = !place.isFavorite;
-                });
+                if (place.isFavorite) {
+                  placesInteractor.removeFromFavorites(place);
+                } else {
+                  placesInteractor.addToFavorites(place);
+                }
               },
             ),
           );
