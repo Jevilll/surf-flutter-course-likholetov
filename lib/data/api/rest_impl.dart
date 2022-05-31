@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:places/data/api/api_urls.dart';
 import 'package:places/data/api/interceptor.dart';
 import 'package:places/data/api/rest_api.dart';
+import 'package:places/data/exception/network_exception.dart';
 
 /// Реализация REST api для взаимодействия с сетью.
 class RestImpl extends RestApi {
@@ -69,35 +72,36 @@ class RestImpl extends RestApi {
         data: data,
         options: Options(method: method),
       );
-    } on DioError catch (e) {
+    } on SocketException catch (e) {
+      ConnectException(errorMessage: e.message);
+      rethrow;
+    }
+    on DioError catch (e) {
       _getError(e);
       rethrow;
     }
   }
 
-  void _getError(DioError err) {
-    switch (err.type) {
+  void _getError(DioError dioError) {
+    switch (dioError.type) {
       case DioErrorType.response:
-        ServerException();
+        ServerException(
+          requestPath: dioError.requestOptions.path,
+          statusCode: dioError.response?.statusCode,
+          statusMessage: dioError.response?.statusMessage,
+        );
         break;
       default:
-        ConnectException();
+        _getSocketError(dioError.error);
+    }
+  }
+
+  // ignore: avoid_annotating_with_dynamic
+  void _getSocketError(dynamic error) {
+    if (error is SocketException) {
+      ConnectException(errorMessage: error.message);
+    } else {
+      OtherException();
     }
   }
 }
-
-/// todo(Jevilll) временное решение по ошибкам, до прохождения темы их обработки.
-abstract class RestException implements Exception {
-  @override
-  String toString() {
-    final name = runtimeType.toString();
-
-    return name.endsWith('Exception')
-        ? name.substring(0, name.length - 9)
-        : name;
-  }
-}
-
-class ConnectException extends RestException {}
-
-class ServerException extends RestException {}
