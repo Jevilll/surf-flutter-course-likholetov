@@ -9,10 +9,12 @@ import 'package:places/presentation/model/ui_state.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
+import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
 import 'package:places/ui/screen/add_place_screen.dart';
 import 'package:places/ui/screen/filters_screen.dart';
 import 'package:places/ui/screen/place_search_screen.dart';
+import 'package:places/ui/widget/center_content.dart';
 import 'package:places/ui/widget/place_card.dart';
 import 'package:places/ui/widget/progress.dart';
 import 'package:places/ui/widget/search_bar.dart';
@@ -129,7 +131,10 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
             );
             setState(() {});
           },
-          label: const Text(AppStrings.newPlace),
+          label: Text(
+            AppStrings.newPlace.toUpperCase(),
+            style: AppTextStyles.button.copyWith(color: AppColors.white),
+          ),
           backgroundColor: Colors.transparent,
           elevation: 0,
           icon: SvgPicture.asset(
@@ -187,14 +192,18 @@ class _PlacesListState extends State<_PlacesList> {
                 );
               },
               failure: (failure) {
-                return const SliverToBoxAdapter(
-                  child: Center(child: Text('ошибка')),
+                return const SliverFillRemaining(
+                  child: CenterContent(
+                    icon: AppIcons.delete64,
+                    title: AppStrings.error,
+                    subtitle: AppStrings.somethingGoneWrong,
+                  ),
                 );
               },
             );
           },
           loading: () {
-            return const SliverToBoxAdapter(
+            return const SliverFillRemaining(
               child: Center(child: GradientProgress()),
             );
           },

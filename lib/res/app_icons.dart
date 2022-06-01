@@ -17,7 +17,7 @@ abstract class AppIcons {
   static const geolocation = '$_baseAssetsPath/geolocation.svg';
   static const go = '$_baseAssetsPath/go.svg';
   static const go64 = '$_baseAssetsPath/go64.svg';
-  static const group64 = '$_baseAssetsPath/group64.svg';
+  static const delete64 = '$_baseAssetsPath/group64.svg';
   static const heart = '$_baseAssetsPath/heart.svg';
   static const heartFull = '$_baseAssetsPath/heart_full.svg';
   static const info = '$_baseAssetsPath/info.svg';
