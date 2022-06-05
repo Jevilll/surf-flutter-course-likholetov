@@ -13,6 +13,7 @@ import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/image_preview.dart';
 import 'package:places/ui/widget/progress.dart';
 import 'package:places/utils/common.dart';
+import 'package:provider/provider.dart';
 
 /// Команда показать [BottomSheet] детализации места.
 void showDetails(int id, BuildContext context) {
@@ -43,7 +44,7 @@ class _PlaceDetailsState extends State<_PlaceDetails> {
 
   @override
   void initState() {
-    placesInteractor.getPlace(id: widget.id).then((result) {
+    context.read<PlacesInteractor>().getPlace(id: widget.id).then((result) {
       setState(() {
         _placeData = result;
       });
@@ -102,7 +103,10 @@ class _PlaceDetailsState extends State<_PlaceDetails> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 16, top: 2, right: 16,),
+                                  left: 16,
+                                  top: 2,
+                                  right: 16,
+                                ),
                                 child: Row(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.baseline,
@@ -131,7 +135,10 @@ class _PlaceDetailsState extends State<_PlaceDetails> {
                                     const BoxConstraints(minHeight: 76),
                                 child: Container(
                                   padding: const EdgeInsets.only(
-                                      left: 16, top: 24, right: 16,),
+                                    left: 16,
+                                    top: 24,
+                                    right: 16,
+                                  ),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(

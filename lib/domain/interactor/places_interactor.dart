@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:places/data/model/place_filter_request.dart';
-import 'package:places/data/repository/location_repository_impl.dart';
-import 'package:places/data/repository/places_repository_impl.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/result.dart';
 import 'package:places/domain/repository/location_repository.dart';
@@ -10,20 +8,17 @@ import 'package:places/domain/repository/places_repository.dart';
 
 /// Интерактор для работы с местами.
 class PlacesInteractor {
-  late final PlacesRepository _placesRepository;
-  late final LocationRepository _locationRepository;
+  final PlacesRepository _placesRepository;
+  final LocationRepository _locationRepository;
   final List<Place> _favoritesList = [];
   final List<Place> _visitedList = [];
   late final _placesController =
       StreamController<Result<List<Place>, Exception>>.broadcast();
-  List<Place> _actualPlaces = [];
-
   Stream<Result<List<Place>, Exception>> get placesStream =>
       _placesController.stream;
+  List<Place> _actualPlaces = [];
 
-  PlacesInteractor() {
-    _placesRepository = PlacesRepositoryImpl();
-    _locationRepository = LocationRepositoryImpl();
+  PlacesInteractor(this._placesRepository, this._locationRepository) {
     placesStream.listen((result) {
       result.ifSuccess((places) {
         _actualPlaces = places;
@@ -143,5 +138,3 @@ class PlacesInteractor {
     return placesWithFavorites;
   }
 }
-
-final placesInteractor = PlacesInteractor();

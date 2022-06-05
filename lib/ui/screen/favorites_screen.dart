@@ -12,6 +12,7 @@ import 'package:places/res/app_themes.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/center_content.dart';
 import 'package:places/ui/widget/place_card.dart';
+import 'package:provider/provider.dart';
 
 /// Экран избранных мест.
 class FavoritesScreen extends StatefulWidget {
@@ -22,8 +23,17 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  final List<Place> _favoritesData = placesInteractor.getFavorites();
-  final List<Place> _visitedData = placesInteractor.getVisited();
+  late final PlacesInteractor _placesInteractor;
+  late final List<Place> _favoritesData;
+  late final List<Place> _visitedData;
+
+  @override
+  void initState() {
+    _placesInteractor = context.read<PlacesInteractor>();
+    _favoritesData = _placesInteractor.getFavorites();
+    _visitedData = _placesInteractor.getVisited();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +99,12 @@ class ReorderableDismissibleList extends StatefulWidget {
 
 class _ReorderableDismissibleListState
     extends State<ReorderableDismissibleList> {
+  late final PlacesInteractor _placesInteractor;
   late final CardType _type;
 
   @override
   void initState() {
+    _placesInteractor = context.read<PlacesInteractor>();
     _type = widget.type;
     super.initState();
   }
@@ -154,7 +166,7 @@ class _ReorderableDismissibleListState
   void _removeFavorite(Place place) {
     setState(() {
       widget.places.remove(place);
-      placesInteractor.removeFromFavorites(place);
+      _placesInteractor.removeFromFavorites(place);
     });
   }
 
