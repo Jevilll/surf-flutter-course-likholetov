@@ -1,5 +1,4 @@
 import 'package:places/data/model/place_filter_request.dart';
-import 'package:places/data/repository/places_repository_impl.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/result.dart';
 import 'package:places/domain/repository/places_repository.dart';
@@ -9,9 +8,7 @@ class SearchInteractor {
   late final PlacesRepository _placesRepository;
   final Set<String> _searchQueries = {};
 
-  SearchInteractor() {
-    _placesRepository = PlacesRepositoryImpl();
-  }
+  SearchInteractor(this._placesRepository);
 
   /// Найти место в зависимости от поискового запроса [searchQuery].
   Future<Result<List<Place>, Exception>> searchPlaces(String searchQuery) {

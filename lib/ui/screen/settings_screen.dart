@@ -8,6 +8,7 @@ import 'package:places/res/app_themes.dart';
 import 'package:places/ui/screen/on_boarding_screen.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
+import 'package:provider/provider.dart';
 
 /// Экран настроек.
 class SettingsScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
-    _settingsInteractor = SettingsInteractor();
+    _settingsInteractor = context.read<SettingsInteractor>();
     super.initState();
   }
   @override

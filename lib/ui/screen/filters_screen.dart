@@ -17,6 +17,7 @@ import 'package:places/ui/widget/button/button_rounded.dart';
 import 'package:places/ui/widget/button/button_svg_icon.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/check_box/category_item.dart';
+import 'package:provider/provider.dart';
 
 /// Экран фильтрации списка мест.
 class FiltersScreen extends StatefulWidget {
@@ -190,11 +191,12 @@ class _FiltersScreenState extends State<FiltersScreen> {
   }
 
   void _getPlaces() {
-    placesInteractor
+    context
+        .read<PlacesInteractor>()
         .getFilteredPlaces(
-      minRadius: values.start,
-      maxRadius: values.end,
-    )
+          minRadius: values.start,
+          maxRadius: values.end,
+        )
         .then((result) {
       setState(() {
         _placesData = result;

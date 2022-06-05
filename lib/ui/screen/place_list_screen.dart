@@ -18,6 +18,7 @@ import 'package:places/ui/widget/center_content.dart';
 import 'package:places/ui/widget/place_card.dart';
 import 'package:places/ui/widget/progress.dart';
 import 'package:places/ui/widget/search_bar.dart';
+import 'package:provider/provider.dart';
 
 typedef OperationResult = Result<List<Place>, Exception>;
 
@@ -30,11 +31,12 @@ class PlaceListScreen extends StatefulWidget {
 }
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
-  final _placesStreamController =
-      StreamController<UiState<OperationResult>>();
+  late final PlacesInteractor placesInteractor;
+  final _placesStreamController = StreamController<UiState<OperationResult>>();
 
   @override
   void initState() {
+    placesInteractor = context.read<PlacesInteractor>();
     placesInteractor.placesStream.listen((result) {
       _placesStreamController.add(UiState.result(result));
     });
@@ -224,6 +226,14 @@ class _PlacesListPortrait extends StatefulWidget {
 }
 
 class _PlacesListPortraitState extends State<_PlacesListPortrait> {
+  late final PlacesInteractor _placesInteractor;
+
+  @override
+  void initState() {
+    _placesInteractor = context.read<PlacesInteractor>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverList(
@@ -237,9 +247,9 @@ class _PlacesListPortraitState extends State<_PlacesListPortrait> {
               place,
               onFavorite: () {
                 if (place.isFavorite) {
-                  placesInteractor.removeFromFavorites(place);
+                  _placesInteractor.removeFromFavorites(place);
                 } else {
-                  placesInteractor.addToFavorites(place);
+                  _placesInteractor.addToFavorites(place);
                 }
               },
             ),

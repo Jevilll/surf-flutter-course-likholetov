@@ -16,6 +16,7 @@ import 'package:places/ui/widget/center_content.dart';
 import 'package:places/ui/widget/image_preview.dart';
 import 'package:places/ui/widget/progress.dart';
 import 'package:places/ui/widget/search_bar.dart';
+import 'package:provider/provider.dart';
 
 /// Экран поиска мест.
 class PlaceSearchScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class PlaceSearchScreen extends StatefulWidget {
 }
 
 class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
-  late final SearchInteractor _interactor;
+  late final SearchInteractor _searchInteractor;
   late final ValueChanged<String>? _onChanged;
   final List<String> _history = [];
   bool _showProgress = false;
@@ -37,7 +38,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
   @override
   void initState() {
     super.initState();
-    _interactor = SearchInteractor();
+    _searchInteractor = context.read<SearchInteractor>();
     _controller = TextEditingController();
     _onChanged = (value) => setState(() {
           _onSearchChanged(value);

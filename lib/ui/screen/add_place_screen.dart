@@ -14,6 +14,7 @@ import 'package:places/ui/widget/button/button_rounded.dart';
 import 'package:places/ui/widget/button/button_without_borders.dart';
 import 'package:places/ui/widget/custom_text_field.dart';
 import 'package:places/ui/widget/photo_dialog_picker.dart';
+import 'package:provider/provider.dart';
 
 /// Экран добавления нового места.
 class AddPlaceScreen extends StatefulWidget {
@@ -241,17 +242,17 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                     title: AppStrings.create.toUpperCase(),
                     onPressed: _isButtonEnabled()
                         ? () {
-                            placesInteractor.addPlace(Place(
-                              id: 0,
-                              name: _controllerName.text,
-                              description: _controllerDescription.text,
-                              type: _placeType!,
-                              urls: [],
-                              position: Position(
-                                double.tryParse(_controllerLat.text) ?? 0,
-                                double.tryParse(_controllerLong.text) ?? 0,
-                              ),
-                            ));
+                            context.read<PlacesInteractor>().addPlace(Place(
+                                  id: 0,
+                                  name: _controllerName.text,
+                                  description: _controllerDescription.text,
+                                  type: _placeType!,
+                                  urls: [],
+                                  position: Position(
+                                    double.tryParse(_controllerLat.text) ?? 0,
+                                    double.tryParse(_controllerLong.text) ?? 0,
+                                  ),
+                                ));
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
