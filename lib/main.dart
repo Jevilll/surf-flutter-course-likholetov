@@ -8,6 +8,7 @@ import 'package:places/domain/interactor/settings_interactor.dart';
 import 'package:places/domain/repository/location_repository.dart';
 import 'package:places/domain/repository/places_repository.dart';
 import 'package:places/res/app_themes.dart';
+import 'package:places/store/place_list_store.dart';
 import 'package:places/ui/screen/splash_screen.dart';
 import 'package:places/utils/common.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +58,9 @@ class _AppState extends State<App> {
           ),
         ),
         Provider<SettingsInteractor>(create: (context) => SettingsInteractor()),
+        Provider<PlaceListStore>(
+          create: (context) => PlaceListStore(context.read<PlacesRepository>()),
+        ),
       ],
       child: MaterialApp(
         home: const SplashScreen(),
