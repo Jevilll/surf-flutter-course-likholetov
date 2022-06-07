@@ -1,16 +1,16 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobx/mobx.dart';
 import 'package:places/domain/interactor/places_interactor.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/result.dart';
-import 'package:places/presentation/model/ui_state.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
 import 'package:places/res/app_strings.dart';
 import 'package:places/res/app_text_styles.dart';
 import 'package:places/res/app_themes.dart';
+import 'package:places/store/place_list_store.dart';
 import 'package:places/ui/screen/add_place_screen.dart';
 import 'package:places/ui/screen/filters_screen.dart';
 import 'package:places/ui/screen/place_search_screen.dart';
@@ -31,20 +31,6 @@ class PlaceListScreen extends StatefulWidget {
 }
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
-  late final PlacesInteractor placesInteractor;
-  final _placesStreamController = StreamController<UiState<OperationResult>>();
-
-  @override
-  void initState() {
-    placesInteractor = context.read<PlacesInteractor>();
-    placesInteractor.placesStream.listen((result) {
-      _placesStreamController.add(UiState.result(result));
-    });
-
-    placesInteractor.getPlaces();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -109,9 +95,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
               ),
             ),
           ),
-          _PlacesList(
-            placesStreamController: _placesStreamController,
-          ),
+          _PlacesList(),
         ],
       ),
       floatingActionButton: Container(
@@ -148,70 +132,62 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
-
-  @override
-  void dispose() {
-    _placesStreamController.close();
-    super.dispose();
-  }
 }
 
 class _PlacesList extends StatefulWidget {
-  final StreamController<UiState<OperationResult>> placesStreamController;
-
-  const _PlacesList({required this.placesStreamController, Key? key})
-      : super(key: key);
-
   @override
   State<_PlacesList> createState() => _PlacesListState();
 }
 
 class _PlacesListState extends State<_PlacesList> {
+  late final PlaceListStore _placeListStore;
+
+  @override
+  void initState() {
+    _placeListStore = context.read<PlaceListStore>();
+    _placeListStore.getPlaces();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    return StreamBuilder(
-      stream: widget.placesStreamController.stream,
-      initialData: const UiState<OperationResult>.loading(),
-      builder: (context, snapShot) {
-        return (snapShot.data as UiState<OperationResult>).when(
-          result: (result) {
-            return result.when(
-              success: (places) {
-                return SliverPadding(
-                  padding: isPortrait
-                      ? const EdgeInsets.only(left: 16, top: 16, right: 16)
-                      : const EdgeInsets.only(left: 34, top: 16, right: 34),
-                  sliver: isPortrait
-                      ? _PlacesListPortrait(
-                          places: places,
-                        )
-                      : _PlacesListLandscape(
-                          places: places,
-                        ),
-                );
-              },
-              failure: (failure) {
-                return const SliverFillRemaining(
-                  child: CenterContent(
-                    icon: AppIcons.delete64,
-                    title: AppStrings.error,
-                    subtitle: AppStrings.somethingGoneWrong,
-                  ),
-                );
-              },
-            );
-          },
-          loading: () {
-            return const SliverFillRemaining(
+    return Observer(builder: (_) {
+      return _placeListStore.getPlacesFuture?.status == FutureStatus.pending
+          ? const SliverFillRemaining(
               child: Center(child: GradientProgress()),
-            );
-          },
-        );
-      },
-    );
+            )
+          : _placeListStore.getPlacesFuture?.value?.when(
+                success: (places) {
+                  return SliverPadding(
+                    padding: isPortrait
+                        ? const EdgeInsets.only(left: 16, top: 16, right: 16)
+                        : const EdgeInsets.only(left: 34, top: 16, right: 34),
+                    sliver: isPortrait
+                        ? _PlacesListPortrait(
+                            places: places,
+                          )
+                        : _PlacesListLandscape(
+                            places: places,
+                          ),
+                  );
+                },
+                failure: (failure) {
+                  return const SliverFillRemaining(
+                    child: CenterContent(
+                      icon: AppIcons.delete64,
+                      title: AppStrings.error,
+                      subtitle: AppStrings.somethingGoneWrong,
+                    ),
+                  );
+                },
+              ) ??
+              const SliverFillRemaining(
+                child: Center(child: GradientProgress()),
+              );
+    });
   }
 }
 
