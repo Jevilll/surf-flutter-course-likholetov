@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/domain/interactor/places_interactor.dart';
+import 'package:places/domain/block/favorites/favorites_bloc.dart';
+import 'package:places/domain/block/favorites/favorites_event.dart';
+import 'package:places/domain/block/favorites/favorites_state.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/res/app_colors.dart';
 import 'package:places/res/app_icons.dart';
@@ -12,7 +15,7 @@ import 'package:places/res/app_themes.dart';
 import 'package:places/ui/widget/app_bar.dart';
 import 'package:places/ui/widget/center_content.dart';
 import 'package:places/ui/widget/place_card.dart';
-import 'package:provider/provider.dart';
+import 'package:places/ui/widget/progress.dart';
 
 /// Экран избранных мест.
 class FavoritesScreen extends StatefulWidget {
@@ -23,15 +26,12 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  late final PlacesInteractor _placesInteractor;
-  late final List<Place> _favoritesData;
-  late final List<Place> _visitedData;
+  late final Bloc _favoritesBloc;
 
   @override
   void initState() {
-    _placesInteractor = context.read<PlacesInteractor>();
-    _favoritesData = _placesInteractor.getFavorites();
-    _visitedData = _placesInteractor.getVisited();
+    _favoritesBloc = context.read<FavoritesBloc>()
+      ..add(FavoritesGetPlacesEvent());
     super.initState();
   }
 
@@ -43,39 +43,54 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       length: 2,
       child: Scaffold(
         appBar: const CustomAppBar(title: AppStrings.favorites),
-        body: Column(children: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              color: theme.cardColor,
+        body: BlocProvider.value(
+          value: _favoritesBloc,
+          child: Column(children: [
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: theme.colorScheme.background2,
+              ),
+              child: const TabBar(
+                tabs: [
+                  Tab(
+                    text: AppStrings.wantToVisit,
+                  ),
+                  Tab(
+                    text: AppStrings.visited,
+                  ),
+                ],
+              ),
             ),
-            child: const TabBar(
-              tabs: [
-                Tab(
-                  text: AppStrings.wantToVisit,
-                ),
-                Tab(
-                  text: AppStrings.visited,
-                ),
-              ],
+            Expanded(
+              child: BlocConsumer<FavoritesBloc, FavoritesState>(
+                builder: (_, state) {
+                  return state.when(
+                    loading: () {
+                      return const Center(child: GradientProgress());
+                    },
+                    success: (favorites, visited) {
+                      return TabBarView(
+                        children: [
+                          ReorderableDismissibleList(
+                            places: favorites,
+                            type: CardType.toVisit,
+                          ),
+                          ReorderableDismissibleList(
+                            places: visited,
+                            type: CardType.visited,
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                listener: (context, state) {},
+              ),
             ),
-          ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                ReorderableDismissibleList(
-                  places: _favoritesData,
-                  type: CardType.toVisit,
-                ),
-                ReorderableDismissibleList(
-                  places: _visitedData,
-                  type: CardType.visited,
-                ),
-              ],
-            ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
@@ -99,12 +114,10 @@ class ReorderableDismissibleList extends StatefulWidget {
 
 class _ReorderableDismissibleListState
     extends State<ReorderableDismissibleList> {
-  late final PlacesInteractor _placesInteractor;
   late final CardType _type;
 
   @override
   void initState() {
-    _placesInteractor = context.read<PlacesInteractor>();
     _type = widget.type;
     super.initState();
   }
@@ -164,10 +177,7 @@ class _ReorderableDismissibleListState
   }
 
   void _removeFavorite(Place place) {
-    setState(() {
-      widget.places.remove(place);
-      _placesInteractor.removeFromFavorites(place);
-    });
+    context.read<FavoritesBloc>().add(FavoritesRemovePlaceEvent(place));
   }
 
   void _reorderData(int oldItem, int newItem) {

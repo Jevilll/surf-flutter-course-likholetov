@@ -95,8 +95,8 @@ class PlacesInteractor {
   }
 
   /// Возвращает список избранных мест.
-  List<Place> getFavorites() {
-    return _favoritesList;
+  Future<List<Place>> getFavorites() {
+    return Future.value(_favoritesList);
   }
 
   /// Добавить место в избранное.
@@ -112,8 +112,8 @@ class PlacesInteractor {
   }
 
   /// Возвращает список посещенных мест.
-  List<Place> getVisited() {
-    return _visitedList;
+  Future<List<Place>> getVisited() {
+    return Future.value(_visitedList);
   }
 
   /// Добавить место в посещенное.
