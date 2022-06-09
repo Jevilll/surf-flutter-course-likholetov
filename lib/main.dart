@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:places/data/repository/location_repository_impl.dart';
 import 'package:places/data/repository/places_repository_impl.dart';
+import 'package:places/domain/block/favorites/favorites_bloc.dart';
 import 'package:places/domain/interactor/places_interactor.dart';
 import 'package:places/domain/interactor/search_interactor.dart';
 import 'package:places/domain/interactor/settings_interactor.dart';
@@ -39,9 +40,9 @@ class _AppState extends State<App> {
 
     return MultiProvider(
       providers: [
-        Provider<PlacesRepository>(create: (context) => PlacesRepositoryImpl()),
+        Provider<PlacesRepository>(create: (_) => PlacesRepositoryImpl()),
         Provider<LocationRepository>(
-          create: (context) => LocationRepositoryImpl(),
+          create: (_) => LocationRepositoryImpl(),
         ),
         Provider<PlacesInteractor>(
           create: (context) => PlacesInteractor(
@@ -57,9 +58,12 @@ class _AppState extends State<App> {
             context.read<PlacesRepository>(),
           ),
         ),
-        Provider<SettingsInteractor>(create: (context) => SettingsInteractor()),
+        Provider<SettingsInteractor>(create: (_) => SettingsInteractor()),
         Provider<PlaceListStore>(
           create: (context) => PlaceListStore(context.read<PlacesRepository>()),
+        ),
+        Provider<FavoritesBloc>(
+          create: (context) => FavoritesBloc(context.read<PlacesInteractor>()),
         ),
       ],
       child: MaterialApp(

@@ -59,7 +59,7 @@ abstract class AppStrings {
   static const String cancel2 = 'Отменить';
   static const String error = 'Ошибка';
   static const String somethingGoneWrong = 'Что то пошло не так\nПопробуйте позже.';
-  static const String emptyToVisit = 'Отмечайте понравившиеся\nместа и они появиятся здесь.';
+  static const String emptyToVisit = 'Отмечайте понравившиеся\nместа и они появятся здесь.';
   static const String emptyVisited = 'Завершите маршрут,\nчтобы место попало сюда.';
   static const String slide1Title = 'Добро пожаловать\nв Путеводитель';
   static const String slide2Title = 'Построй маршрут\nи отправляйся в путь';
